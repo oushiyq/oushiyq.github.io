@@ -12,8 +12,7 @@
     <meta name="description" content="1. 引用计数引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
 引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
 我们可以通过下面的列子来看引用计数的变化：
-`
-int main(int a">
+1int main(int ar">
     
     
     
@@ -40,7 +39,7 @@ int main(int a">
 				<h1 class="site-name"><a href="/" title="羊琪的博客">羊琪的博客</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -77,7 +76,7 @@ int main(int a">
     </p>
   <p class="article-time">
     <time datetime="2016-01-12T01:49:39.000Z" itemprop="datePublished">2016-01-12</time>
-    更新日期:<time datetime="2016-01-12T08:27:20.000Z" itemprop="dateModified">2016-01-12</time>
+    更新日期:<time datetime="2016-01-12T08:57:01.000Z" itemprop="dateModified">2016-01-12</time>
     
   </p>
 </header>
@@ -85,29 +84,14 @@ int main(int a">
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目錄</strong>
+			<strong class="toc-title">文章目录</strong>
 		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-__u5F15_u7528_u8BA1_u6570"><span class="toc-number">1.</span> <span class="toc-text">1. 引用计数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_ARC"><span class="toc-number">2.</span> <span class="toc-text">2. ARC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_Core_Fundation"><span class="toc-number">3.</span> <span class="toc-text">3. Core Fundation</span></a></li></ol>
 		</div>
 		
 		<h2 id="1-__u5F15_u7528_u8BA1_u6570"><a href="#1-__u5F15_u7528_u8BA1_u6570" class="headerlink" title="1. 引用计数"></a>1. 引用计数</h2><pre><code>引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
 引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
 </code></pre><p>我们可以通过下面的列子来看引用计数的变化：</p>
-<p>`</p>
-<pre><code>int main(int argc, const char * argv[]) {
-
-NSObject *object = [[NSObject alloc]init];
-NSLog(@&quot;Reference Count = %lu&quot;, (unsigned long)[object retainCount]);
-
-NSObject *another = [object retain];
-NSLog(@&quot;Reference Count = %lu&quot;, (unsigned long)[object retainCount]);
-
-[another release];
-NSLog(@&quot;Reference Count = %lu&quot;, (unsigned long)[object retainCount]);
-
-[object release];
-return 0;
-} 
-</code></pre><p>`</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;&#9;&#9;&#10;&#9;NSObject *object = [[NSObject alloc]init];&#10;&#9;NSLog(@&#34;Reference Count = %lu&#34;, (unsigned long)[object retainCount]);&#10;&#9;&#10;&#9;NSObject *another = [object retain];&#10;&#9;NSLog(@&#34;Reference Count = %lu&#34;, (unsigned long)[object retainCount]);&#10;&#9;&#10;&#9;[another release];&#10;&#9;NSLog(@&#34;Reference Count = %lu&#34;, (unsigned long)[object retainCount]);&#10;&#9;&#10;&#9;[object release];&#10;&#9;return 0;&#10;&#9;&#125;</span><br></pre></td></tr></table></figure>
 <hr>
 <h2 id="2-_ARC"><a href="#2-_ARC" class="headerlink" title="2. ARC"></a>2. ARC</h2><hr>
 <h2 id="3-_Core_Fundation"><a href="#3-_Core_Fundation" class="headerlink" title="3. Core Fundation"></a>3. Core Fundation</h2>  
@@ -128,15 +112,15 @@ return 0;
 	
 	
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目錄</strong>
+  <strong class="toc-title">文章目录</strong>
   <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-__u5F15_u7528_u8BA1_u6570"><span class="toc-number">1.</span> <span class="toc-text">1. 引用计数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_ARC"><span class="toc-number">2.</span> <span class="toc-text">2. ARC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_Core_Fundation"><span class="toc-number">3.</span> <span class="toc-text">3. Core Fundation</span></a></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -144,7 +128,7 @@ return 0;
   
 
   <div class="rsspart">
-	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
 </aside>
