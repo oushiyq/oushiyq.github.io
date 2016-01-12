@@ -3,17 +3,27 @@
 <head>
   <meta charset="utf-8">
   
-  <title>羊琪的博客</title>
+  <title>引用计数 | 羊琪的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="羊琪的博客">
-<meta property="og:url" content="http://oushiyq.github.io/index.html">
+  <meta name="description" content="引用计数引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
+引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
+我们可以通过下面的列子来看引用计数的变化：
+123456789101112131415int main(int argc, const char * argv[]) &amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="引用计数">
+<meta property="og:url" content="http://oushiyq.github.io/2016/01/12/引用计数/index.html">
 <meta property="og:site_name" content="羊琪的博客">
-<meta property="og:description" content="个人博客">
+<meta property="og:description" content="引用计数引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
+引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
+我们可以通过下面的列子来看引用计数的变化：
+123456789101112131415int main(int argc, const char * argv[]) &amp;#123;">
+<meta property="og:updated_time" content="2016-01-12T12:28:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="羊琪的博客">
-<meta name="twitter:description" content="个人博客">
+<meta name="twitter:title" content="引用计数">
+<meta name="twitter:description" content="引用计数引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
+引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
+我们可以通过下面的列子来看引用计数的变化：
+123456789101112131415int main(int argc, const char * argv[]) &amp;#123;">
   
     <link rel="alternative" href="/atom.xml" title="羊琪的博客" type="application/atom+xml">
   
@@ -59,9 +69,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-引用计数" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-引用计数" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/01/12/引用计数/" class="article-date">
   <time datetime="2016-01-12T01:49:39.000Z" itemprop="datePublished">2016-01-12</time>
@@ -74,8 +82,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/12/引用计数/">引用计数</a>
+    <h1 class="article-title" itemprop="name">
+      引用计数
     </h1>
   
 
@@ -104,11 +112,10 @@
     </footer>
   </div>
   
+    
+  
 </article>
 
-
-  
-  
 </section>
         
           <aside id="sidebar">
