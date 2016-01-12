@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>引用计数 | 羊琪的博客</title>
+  <title>内存管理-引用计数 | 羊琪的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="引用计数引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
+  <meta name="description" content="概念引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
 引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
 我们可以通过下面的列子来看引用计数的变化：
 123456789101112131415int main(int argc, const char * argv[]) &amp;#123;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="引用计数">
-<meta property="og:url" content="http://oushiyq.github.io/2016/01/12/引用计数/index.html">
+<meta property="og:title" content="内存管理-引用计数">
+<meta property="og:url" content="http://oushiyq.github.io/2016/01/12/内侧管理-引用计数/index.html">
 <meta property="og:site_name" content="羊琪的博客">
-<meta property="og:description" content="引用计数引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
+<meta property="og:description" content="概念引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
 引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
 我们可以通过下面的列子来看引用计数的变化：
 123456789101112131415int main(int argc, const char * argv[]) &amp;#123;">
-<meta property="og:updated_time" content="2016-01-12T12:28:08.000Z">
+<meta property="og:updated_time" content="2016-01-12T12:30:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="引用计数">
-<meta name="twitter:description" content="引用计数引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
+<meta name="twitter:title" content="内存管理-引用计数">
+<meta name="twitter:description" content="概念引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
 引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
 我们可以通过下面的列子来看引用计数的变化：
 123456789101112131415int main(int argc, const char * argv[]) &amp;#123;">
@@ -69,9 +69,9 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-引用计数" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-内侧管理-引用计数" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/01/12/引用计数/" class="article-date">
+    <a href="/2016/01/12/内侧管理-引用计数/" class="article-date">
   <time datetime="2016-01-12T01:49:39.000Z" itemprop="datePublished">2016-01-12</time>
 </a>
     
@@ -83,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      引用计数
+      内存管理-引用计数
     </h1>
   
 
@@ -91,7 +91,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="u5F15_u7528_u8BA1_u6570"><a href="#u5F15_u7528_u8BA1_u6570" class="headerlink" title="引用计数"></a>引用计数</h1><pre><code>引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
+        <h1 id="u6982_u5FF5"><a href="#u6982_u5FF5" class="headerlink" title="概念"></a>概念</h1><pre><code>引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
 引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
 </code></pre><p>我们可以通过下面的列子来看引用计数的变化：</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSObject</span> *object = [[<span class="built_in">NSObject</span> alloc]init];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %lu"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>)[object retainCount]);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSObject</span> *another = [object retain];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %lu"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>)[object retainCount]);</span><br><span class="line"></span><br><span class="line">    [another release];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %lu"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>)[object retainCount]);</span><br><span class="line"></span><br><span class="line">    [object release];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %lu"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>)[object retainCount]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -106,7 +106,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/12/引用计数/" data-id="cijbdk9pc00008hr5nsdeuamh" class="article-share-link">Share</a>
+      <a data-url="http://oushiyq.github.io/2016/01/12/内侧管理-引用计数/" data-id="cijbdmlci00009br54gnra6qn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -142,7 +142,7 @@
       <ul>
         
           <li>
-            <a href="/2016/01/12/引用计数/">引用计数</a>
+            <a href="/2016/01/12/内侧管理-引用计数/">内存管理-引用计数</a>
           </li>
         
       </ul>
