@@ -3,17 +3,27 @@
 <head>
   <meta charset="utf-8">
   
-  <title>羊琪的博客</title>
+  <title>内存管理-objc中的new和alloc/init | 羊琪的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="羊琪的博客">
-<meta property="og:url" content="http://oushiyq.github.io/index.html">
+  <meta name="description" content="内存管理原则1. 谁创建谁释放。当你通过alloc、new或者copy来创建一个对象时，那么在你不使用该对象时，你必须调用release或者autorelease来释放该对象占有的内存；
+2. 谁retain谁release。当你调用了retain，无论该对象是如何生成的，你都必须调用release来释放；
+3. 除alloc、new或者copy创建的对象都被声明了autorelease。
+new">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存管理-objc中的new和alloc/init">
+<meta property="og:url" content="http://oushiyq.github.io/2016/01/19/内存管理-objc中的new和alloc-init/index.html">
 <meta property="og:site_name" content="羊琪的博客">
-<meta property="og:description" content="个人博客">
+<meta property="og:description" content="内存管理原则1. 谁创建谁释放。当你通过alloc、new或者copy来创建一个对象时，那么在你不使用该对象时，你必须调用release或者autorelease来释放该对象占有的内存；
+2. 谁retain谁release。当你调用了retain，无论该对象是如何生成的，你都必须调用release来释放；
+3. 除alloc、new或者copy创建的对象都被声明了autorelease。
+new">
+<meta property="og:updated_time" content="2016-01-19T06:55:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="羊琪的博客">
-<meta name="twitter:description" content="个人博客">
+<meta name="twitter:title" content="内存管理-objc中的new和alloc/init">
+<meta name="twitter:description" content="内存管理原则1. 谁创建谁释放。当你通过alloc、new或者copy来创建一个对象时，那么在你不使用该对象时，你必须调用release或者autorelease来释放该对象占有的内存；
+2. 谁retain谁release。当你调用了retain，无论该对象是如何生成的，你都必须调用release来释放；
+3. 除alloc、new或者copy创建的对象都被声明了autorelease。
+new">
   
     <link rel="alternative" href="/atom.xml" title="羊琪的博客" type="application/atom+xml">
   
@@ -59,9 +69,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-内存管理-objc中的new和alloc-init" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-内存管理-objc中的new和alloc-init" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/01/19/内存管理-objc中的new和alloc-init/" class="article-date">
   <time datetime="2016-01-19T06:27:38.000Z" itemprop="datePublished">2016-01-19</time>
@@ -74,8 +82,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/19/内存管理-objc中的new和alloc-init/">内存管理-objc中的new和alloc/init</a>
+    <h1 class="article-title" itemprop="name">
+      内存管理-objc中的new和alloc/init
     </h1>
   
 
@@ -101,102 +109,20 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-MapKit-for-iOS8-later" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/01/14/MapKit-for-iOS8-later/" class="article-date">
-  <time datetime="2016-01-14T08:30:28.000Z" itemprop="datePublished">2016-01-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/14/MapKit-for-iOS8-later/">MapKit for iOS8 &amp; later</a>
-    </h1>
+    <a href="/2016/01/14/MapKit-for-iOS8-later/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">MapKit for iOS8 &amp; later</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="MapKit_u6846_u67B6"><a href="#MapKit_u6846_u67B6" class="headerlink" title="MapKit框架"></a>MapKit框架</h1><pre><code>MapKit框架能显示世界地图，其大部分功能由MKMapView实例提供，负责显示地图、跟踪触摸屏幕动作以及显示标注等功能。
-</code></pre><p>使用MapKit可以短短三行代码实现定位功能，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [worldMap setShowsUserLocation:<span class="number">1</span>];</span><br><span class="line">    [worldMap setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>然而这里需要注意的地方是：在iOS8版本以后，在Supporting Files下需要info.plis里面添加NSLocationAlwaysUsageDescription 和 NSLocationWhenInUseDescription 两个String字段，value设置为YES </li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/14/MapKit-for-iOS8-later/" data-id="cijl1pjvo0002wfr5bo39j6tl" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
 
-
-  
-    <article id="post-内存管理-引用计数" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/01/12/内存管理-引用计数/" class="article-date">
-  <time datetime="2016-01-12T01:49:39.000Z" itemprop="datePublished">2016-01-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/12/内存管理-引用计数/">内存管理-引用计数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="u6982_u5FF5"><a href="#u6982_u5FF5" class="headerlink" title="概念"></a>概念</h1><pre><code>引用计数可以有效管理对象生命周期，当alloc一个对象时，其引用计数为1；当有其他对象指向该对象时，
-引用计数+1；当指向对象release时，引用计数-1，直至引用计数为0时，我们就将该对象销毁，回收内存。
-</code></pre><p>我们可以通过下面的列子来看引用计数的变化：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSObject</span> *object = [[<span class="built_in">NSObject</span> alloc]init];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %lu"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>)[object retainCount]);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSObject</span> *another = [object retain];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %lu"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>)[object retainCount]);</span><br><span class="line"></span><br><span class="line">    [another release];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %lu"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>)[object retainCount]);</span><br><span class="line"></span><br><span class="line">    [object release];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %lu"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>)[object retainCount]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>运行结果如下：</p>
-<p>Reference Count = 1</p>
-<p>Reference Count = 2</p>
-<p>Reference Count = 1</p>
-<p>Reference Count = 1</p>
-<p><em>这里需要注意的是最后一次输出，引用计数并没有变为0</em></p>
-<p>这是因为该对象的内存已经被回收，当我们向一个回收了的对象发送retain消息时，他的输出结果是不确定。在最后一次执行release的时候，系统知道马上要回收内存。因此为了减少内存操作，系统不将对象减为0</p>
-<h1 id="u53C2_u8003_u8D44_u6599"><a href="#u53C2_u8003_u8D44_u6599" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li>《iOS开发进阶》 唐巧</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/12/内存管理-引用计数/" data-id="cijl1pjuz0000wfr5xqrcl7uc" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-  
 </section>
         
           <aside id="sidebar">
