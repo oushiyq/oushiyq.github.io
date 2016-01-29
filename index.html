@@ -61,6 +61,80 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-iOS编程中一些类似的概念" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/29/iOS编程中一些类似的概念/" class="article-date">
+  <time datetime="2016-01-29T07:29:36.000Z" itemprop="datePublished">2016-01-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/29/iOS编程中一些类似的概念/">iOS编程中一些类似的概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="self_u4E0Esuper"><a href="#self_u4E0Esuper" class="headerlink" title="self与super"></a>self与super</h2><p>写过objc的程序猿对这俩个对象应该都已经写烂了吧，每次进行init基本都会敲一段以下代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (instancetype)init&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        statements</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>self是一个隐式局部变量，代表当前方法的调用者，相当于JAVA中的this；</li>
+<li><p>super某种意义上来说相当于self，当向super发消息时，其实是向self发消息。但是系统在查找方法时会跳过当前对象，从父类开始查找。</p>
+<p>  在调用父类指定初始化方法之后，代码检查父类的初始化结果，如果不能正确初始化，就会返回nil。</p>
+</li>
+</ul>
+<h2 id="bounds_u4E0Eframe"><a href="#bounds_u4E0Eframe" class="headerlink" title="bounds与frame"></a>bounds与frame</h2><ul>
+<li>bounds表示矩形位于自己的坐标系，表示自身。用于确定绘制区域，避免将自己绘制到自己的图层外面；</li>
+<li>frame表示矩形位于父视图的坐标系，相对于父视图。用于确定与视图层次结构中其他视图的相对位置。</li>
+</ul>
+<h2 id="viewDidLoad_uFF1A_u4E0EviewWillAppear_uFF1A"><a href="#viewDidLoad_uFF1A_u4E0EviewWillAppear_uFF1A" class="headerlink" title="viewDidLoad：与viewWillAppear："></a>viewDidLoad：与viewWillAppear：</h2><ul>
+<li>viewDidLoad：在视图控制器加载完NIB文件后被调用，只设置一次视图对象；</li>
+<li>viewWillAppear：在视图控制器的view添加到引用窗口之前被调用，视图控制器view被加载都进行设置。</li>
+</ul>
+<h2 id="@class_u4E0E_23import"><a href="#@class_u4E0E_23import" class="headerlink" title="@class与#import"></a>@class与#import</h2><ul>
+<li>@class用于定义类，编译器无须知道其实现细节。当某个文件使用@class声明类时，当其头文件发生变化时，编译器不用重新编译，节约编程时间。但是无法向该类实例化后的对象发送消息；</li>
+<li>#import引入头文件，可以对头文件的类发送消息，使编译器知道所有的实现细节。</li>
+</ul>
+<ul>
+<li>参考资料 《iOS编程（第4版）》 Christian Keur， Aaron Hillegass &amp; Joe Conway</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://oushiyq.github.io/2016/01/29/iOS编程中一些类似的概念/" data-id="cijzf8t330004dxr5hza3z0k4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="index.html" data-title="undefined" data-url="undefined"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"yangqiweb"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+
+  
     <article id="post-本地通知-for-iOS8-later" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/01/28/本地通知-for-iOS8-later/" class="article-date">
@@ -97,7 +171,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/28/本地通知-for-iOS8-later/" data-id="cijy4myxu0001t2r5jqv0ikxc" class="article-share-link">Share</a>
+      <a data-url="http://oushiyq.github.io/2016/01/28/本地通知-for-iOS8-later/" data-id="cijzf8t2q0001dxr5aemozezb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -176,7 +250,7 @@ views：传入含有变量绑定的字典，该字典会把作为变量名的字
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/21/浅尝Auto-Layout/" data-id="cijy4myxm0000t2r51wrwpuwm" class="article-share-link">Share</a>
+      <a data-url="http://oushiyq.github.io/2016/01/21/浅尝Auto-Layout/" data-id="cijzf8t2i0000dxr53ddvoghe" class="article-share-link">Share</a>
       
       
     </footer>
@@ -236,7 +310,7 @@ var duoshuoQuery = {short_name:"yangqiweb"};
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/19/内存管理-objc中的new和alloc-init/" data-id="cijy4myy30003t2r583q5clsr" class="article-share-link">Share</a>
+      <a data-url="http://oushiyq.github.io/2016/01/19/内存管理-objc中的new和alloc-init/" data-id="cijzf8t2z0003dxr5tqjnjvqd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -293,7 +367,7 @@ var duoshuoQuery = {short_name:"yangqiweb"};
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/14/MapKit-for-iOS8-later/" data-id="cijy4myy70004t2r55bu6pyp0" class="article-share-link">Share</a>
+      <a data-url="http://oushiyq.github.io/2016/01/14/MapKit-for-iOS8-later/" data-id="cijzf8t370005dxr5urea7m39" class="article-share-link">Share</a>
       
       
     </footer>
@@ -359,7 +433,7 @@ var duoshuoQuery = {short_name:"yangqiweb"};
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/12/内存管理-引用计数/" data-id="cijy4myxy0002t2r581rwezhj" class="article-share-link">Share</a>
+      <a data-url="http://oushiyq.github.io/2016/01/12/内存管理-引用计数/" data-id="cijzf8t2v0002dxr5mq3cjjtt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -400,7 +474,7 @@ var duoshuoQuery = {short_name:"yangqiweb"};
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">5</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -410,6 +484,10 @@ var duoshuoQuery = {short_name:"yangqiweb"};
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/01/29/iOS编程中一些类似的概念/">iOS编程中一些类似的概念</a>
+          </li>
         
           <li>
             <a href="/2016/01/28/本地通知-for-iOS8-later/">本地通知 for iOS8 &amp; later</a>
@@ -425,10 +503,6 @@ var duoshuoQuery = {short_name:"yangqiweb"};
         
           <li>
             <a href="/2016/01/14/MapKit-for-iOS8-later/">MapKit for iOS8 &amp; later</a>
-          </li>
-        
-          <li>
-            <a href="/2016/01/12/内存管理-引用计数/">内存管理-引用计数</a>
           </li>
         
       </ul>
