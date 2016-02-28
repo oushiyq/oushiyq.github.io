@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>内存管理-objc中的new和alloc/init | Daniel Young&#39;s blog</title>
+  <title>内存管理-objc中的new和alloc/init | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="内存管理原则1. 谁创建谁释放。当你通过alloc、new或者copy来创建一个对象时，那么在你不使用该对象时，你必须调用release或者autorelease来释放该对象占有的内存；
 2. 谁retain谁release。当你调用了retain，无论该对象是如何生成的，你都必须调用release来释放；
@@ -11,8 +11,8 @@
 new">
 <meta property="og:type" content="article">
 <meta property="og:title" content="内存管理-objc中的new和alloc/init">
-<meta property="og:url" content="http://oushiyq.github.io/2016/01/19/内存管理-objc中的new和alloc-init/index.html">
-<meta property="og:site_name" content="Daniel Young's blog">
+<meta property="og:url" content="http://yoursite.com/2016/01/19/内存管理-objc中的new和alloc-init/index.html">
+<meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="内存管理原则1. 谁创建谁释放。当你通过alloc、new或者copy来创建一个对象时，那么在你不使用该对象时，你必须调用release或者autorelease来释放该对象占有的内存；
 2. 谁retain谁release。当你调用了retain，无论该对象是如何生成的，你都必须调用release来释放；
 3. 除alloc、new或者copy创建的对象都被声明了autorelease。
@@ -25,7 +25,7 @@ new">
 3. 除alloc、new或者copy创建的对象都被声明了autorelease。
 new">
   
-    <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -43,7 +43,7 @@ new">
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">Daniel Young&#39;s blog</a>
+        <a href="/" id="logo">Hexo</a>
       </h1>
       
     </div>
@@ -63,7 +63,7 @@ new">
         <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://oushiyq.github.io"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
       </div>
     </div>
   </div>
@@ -103,7 +103,7 @@ new">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://oushiyq.github.io/2016/01/19/内存管理-objc中的new和alloc-init/" data-id="cil5xmld10006fyr5t526ggw3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/19/内存管理-objc中的new和alloc-init/" data-id="cil5xs1c50006g9r5zkv0dehb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -132,22 +132,6 @@ new">
   
 </article>
 
-<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/01/19/内存管理-objc中的new和alloc-init/" data-title="内存管理-objc中的new和alloc/init" data-url="undefined"></div>
-<!-- 多说评论框 end -->
-<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-var duoshuoQuery = {short_name:"yangqiweb"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-<!-- 多说公共JS代码 end -->
 </section>
         
           <aside id="sidebar">
@@ -162,7 +146,7 @@ var duoshuoQuery = {short_name:"yangqiweb"};
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -172,6 +156,10 @@ var duoshuoQuery = {short_name:"yangqiweb"};
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/02/28/hello-world/">Hello World</a>
+          </li>
         
           <li>
             <a href="/2016/02/25/插入排序/">插入排序</a>
@@ -189,10 +177,6 @@ var duoshuoQuery = {short_name:"yangqiweb"};
             <a href="/2016/01/29/iOS编程中一些类似的概念/">iOS编程中一些类似的概念</a>
           </li>
         
-          <li>
-            <a href="/2016/01/28/本地通知-for-iOS8-later/">本地通知 for iOS8 &amp; later</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -205,7 +189,7 @@ var duoshuoQuery = {short_name:"yangqiweb"};
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Daniel Young<br>
+      &copy; 2016 John Doe<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
