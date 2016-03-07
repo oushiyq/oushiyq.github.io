@@ -61,6 +61,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-MapKit-for-iOS8-later" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/14/MapKit-for-iOS8-later/" class="article-date">
+  <time datetime="2016-01-14T08:30:28.000Z" itemprop="datePublished">2016-01-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/14/MapKit-for-iOS8-later/">MapKit for iOS8 &amp; later</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="MapKit_u6846_u67B6"><a href="#MapKit_u6846_u67B6" class="headerlink" title="MapKit框架"></a>MapKit框架</h1><pre><code>MapKit框架能显示世界地图，其大部分功能由MKMapView实例提供，负责显示地图、跟踪触摸屏幕动作以及显示标注等功能。
+</code></pre><p>使用MapKit可以短短三行代码实现定位功能，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [worldMap setShowsUserLocation:<span class="number">1</span>];</span><br><span class="line">    [worldMap setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>然而这里需要注意的地方是：在iOS8版本以后，在Supporting Files下需要info.plis里面添加NSLocationAlwaysUsageDescription 和 NSLocationWhenInUseDescription 两个String字段，value设置为YES </li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/01/14/MapKit-for-iOS8-later/" data-id="cilhz3fn4000alsr53ug0vk4a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-内存管理-引用计数" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/01/12/内存管理-引用计数/" class="article-date">
@@ -101,7 +142,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/12/内存管理-引用计数/" data-id="cil9egm370005gdr54alyxwhs" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/12/内存管理-引用计数/" data-id="cilhz3fma0006lsr5v7rqt07l" class="article-share-link">Share</a>
       
       
     </footer>
@@ -130,7 +171,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -140,6 +181,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/03/07/浅析category和class-extension/">浅析category和class extension</a>
+          </li>
         
           <li>
             <a href="/2016/03/01/Effective-Objective-C-2-0学习笔记/">Effective Objective-C 2.0学习笔记</a>
@@ -155,10 +200,6 @@
         
           <li>
             <a href="/2016/02/24/纸牌游戏/">纸牌游戏</a>
-          </li>
-        
-          <li>
-            <a href="/2016/02/17/简易微信红包/">简易微信红包</a>
           </li>
         
       </ul>

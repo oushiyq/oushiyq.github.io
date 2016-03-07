@@ -61,6 +61,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-浅析category和class-extension" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/07/浅析category和class-extension/" class="article-date">
+  <time datetime="2016-03-07T11:42:52.000Z" itemprop="datePublished">2016-03-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/07/浅析category和class-extension/">浅析category和class extension</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h2><p>一直都在用继承来扩展类的功能，后来发现原来还有category和class extension这种更加简洁的方法来实现对class的扩展。但是对于其实现以及二者的区别并不大了解，网上的资料也写的比较简单，但是category和class extension的内容其实还是比较丰富的，于是写下这篇文章。</p>
+<h2 id="u58F0_u660E_u4E0E_u5B9E_u73B0"><a href="#u58F0_u660E_u4E0E_u5B9E_u73B0" class="headerlink" title="声明与实现"></a>声明与实现</h2><h3 id="category_uFF1A"><a href="#category_uFF1A" class="headerlink" title="category："></a>category：</h3><ol>
+<li><p>声明：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">className</span> (<span class="title">categoryName</span>)</span></span><br><span class="line"><span class="comment">//方法声明</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">className</span> (<span class="title">categoryName</span>)</span></span><br><span class="line"><span class="comment">//方法实现</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="class_extension_uFF1A"><a href="#class_extension_uFF1A" class="headerlink" title="class extension："></a>class extension：</h3><ol>
+<li><p>声明：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">className</span> ()</span></span><br><span class="line"><span class="comment">//方法声明</span></span><br><span class="line"><span class="comment">//实例变量声明</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">className</span> ()</span></span><br><span class="line"><span class="comment">//方法实现</span></span><br><span class="line"><span class="comment">//实例变量实现</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>从上面category和class extension的声明和实现可以看出，class extension在语法上相当于匿名的category。不过category</p>
+<h2 id="category_u548Cclass_extension_u7684_u533A_u522B"><a href="#category_u548Cclass_extension_u7684_u533A_u522B" class="headerlink" title="category和class extension的区别"></a>category和class extension的区别</h2><h2 id="u5173_u8054_u5F15_u7528"><a href="#u5173_u8054_u5F15_u7528" class="headerlink" title="关联引用"></a>关联引用</h2><h2 id="category_u867D_u597D_uFF0C_u53EF_u522B_u6EE5_u7528"><a href="#category_u867D_u597D_uFF0C_u53EF_u522B_u6EE5_u7528" class="headerlink" title="category虽好，可别滥用"></a>category虽好，可别滥用</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/07/浅析category和class-extension/" data-id="cilhz3flu0002lsr5rrhau0ly" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Effective-Objective-C-2-0学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/03/01/Effective-Objective-C-2-0学习笔记/" class="article-date">
@@ -99,7 +153,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/01/Effective-Objective-C-2-0学习笔记/" data-id="cil9egm3p000agdr54qlvi54t" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/01/Effective-Objective-C-2-0学习笔记/" data-id="cilhz3fn8000blsr5psyrtak9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -151,7 +205,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/28/copy没那么简单/" data-id="cil9egm3k0008gdr5fh118yaf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/28/copy没那么简单/" data-id="cilhz3fn00009lsr51y5w8hku" class="article-share-link">Share</a>
       
       
     </footer>
@@ -187,7 +241,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="cil9egm2u0004gdr5vv8cb4vi" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="cilhz3fm70005lsr5wo3t8lxm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -233,7 +287,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/24/纸牌游戏/" data-id="cil9egm270000gdr5e8npbs0p" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/24/纸牌游戏/" data-id="cilhz3flh0000lsr5r9qv21t0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -287,7 +341,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/17/简易微信红包/" data-id="cil9egm2h0001gdr5vbvr1y1o" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/17/简易微信红包/" data-id="cilhz3flp0001lsr5xvsepvh2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -345,7 +399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/29/iOS编程中一些类似的概念/" data-id="cil9egm3h0007gdr5t99w7hn2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/29/iOS编程中一些类似的概念/" data-id="cilhz3fml0008lsr5sqtmg9oa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -391,7 +445,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/28/本地通知-for-iOS8-later/" data-id="cil9egm2p0003gdr56eo20vri" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/28/本地通知-for-iOS8-later/" data-id="cilhz3fm40004lsr5q4rnyyyq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -454,7 +508,7 @@ views：传入含有变量绑定的字典，该字典会把作为变量名的字
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/21/浅尝Auto-Layout/" data-id="cil9egm2l0002gdr5p7g99ek7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/21/浅尝Auto-Layout/" data-id="cilhz3flz0003lsr5nd6bk8k1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -498,48 +552,7 @@ views：传入含有变量绑定的字典，该字典会把作为变量名的字
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/19/内存管理-objc中的new和alloc-init/" data-id="cil9egm3a0006gdr5d4ybxkl5" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-MapKit-for-iOS8-later" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/01/14/MapKit-for-iOS8-later/" class="article-date">
-  <time datetime="2016-01-14T08:30:28.000Z" itemprop="datePublished">2016-01-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/14/MapKit-for-iOS8-later/">MapKit for iOS8 &amp; later</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="MapKit_u6846_u67B6"><a href="#MapKit_u6846_u67B6" class="headerlink" title="MapKit框架"></a>MapKit框架</h1><pre><code>MapKit框架能显示世界地图，其大部分功能由MKMapView实例提供，负责显示地图、跟踪触摸屏幕动作以及显示标注等功能。
-</code></pre><p>使用MapKit可以短短三行代码实现定位功能，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [worldMap setShowsUserLocation:<span class="number">1</span>];</span><br><span class="line">    [worldMap setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>然而这里需要注意的地方是：在iOS8版本以后，在Supporting Files下需要info.plis里面添加NSLocationAlwaysUsageDescription 和 NSLocationWhenInUseDescription 两个String字段，value设置为YES </li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/14/MapKit-for-iOS8-later/" data-id="cil9egm3n0009gdr5oldma9to" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/19/内存管理-objc中的new和alloc-init/" data-id="cilhz3fmi0007lsr56q9xo0x3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -568,7 +581,7 @@ views：传入含有变量绑定的字典，该字典会把作为变量名的字
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -578,6 +591,10 @@ views：传入含有变量绑定的字典，该字典会把作为变量名的字
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/03/07/浅析category和class-extension/">浅析category和class extension</a>
+          </li>
         
           <li>
             <a href="/2016/03/01/Effective-Objective-C-2-0学习笔记/">Effective Objective-C 2.0学习笔记</a>
@@ -593,10 +610,6 @@ views：传入含有变量绑定的字典，该字典会把作为变量名的字
         
           <li>
             <a href="/2016/02/24/纸牌游戏/">纸牌游戏</a>
-          </li>
-        
-          <li>
-            <a href="/2016/02/17/简易微信红包/">简易微信红包</a>
           </li>
         
       </ul>
