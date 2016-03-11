@@ -15,7 +15,7 @@
 <meta property="og:image" content="http://7xqzfr.com1.z0.glb.clouddn.com/1.2.png?imageView/2/w/800/q/90">
 <meta property="og:image" content="http://7xqzfr.com1.z0.glb.clouddn.com/4.1.png?imageView/2/w/800/q/90">
 <meta property="og:image" content="http://7xqzfr.com1.z0.glb.clouddn.com/6.1.png?imageView/2/w/800/q/90">
-<meta property="og:updated_time" content="2016-03-11T08:17:59.000Z">
+<meta property="og:updated_time" content="2016-03-11T10:31:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="我所理解的RunLoop">
 <meta name="twitter:description" content="起因一直都知道RunLoop是个非常重要的点，可是自己在实际开发中一直都没有遇到。而且对其一直都抱着高山仰止的态度，感觉RunLoop对于我来说是一个特别难理解的东西。但是，就在昨天接到了腾讯的电面，一开始就问我『是否知道什么是RunLoop』，还好RunLoop的概念我还是很熟，回答了上来；接下来，HR又问『RunLoop和多线程的关系』，直接蒙圈了。于是，自己疼定思疼，狠狠的把之前找到的关于R">
@@ -116,7 +116,8 @@
 <p>RunLoop 的核心就是一个mach_msg()，RunLoop调用这个函数去接收消息，如果没有别人发送port消息过来，内核会将线程置于sleep状态。</p>
 <h2 id="6-_RunLoop_u7684_u6267_u884C_u987A_u5E8F"><a href="#6-_RunLoop_u7684_u6267_u884C_u987A_u5E8F" class="headerlink" title="6. RunLoop的执行顺序"></a>6. RunLoop的执行顺序</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/6.1.png?imageView/2/w/800/q/90" alt="图6.1"></p>
 <p>可以看到，实际上 RunLoop 就是这样一个函数，其内部是一个 do-while 循环。当你调用 CFRunLoopRun() 时，线程就会一直停留在这个循环里；直到超时或被手动停止，该函数才会返回。</p>
-<h2 id="7-__u603B_u7ED3"><a href="#7-__u603B_u7ED3" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>参考资料：</p>
+<h2 id="7-__u603B_u7ED3"><a href="#7-__u603B_u7ED3" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>上面的文字大多都是综合参考资料中的两篇博客，加上了一点自己对于RunLoop的理解合成了这篇文章。</p>
+<p>参考资料：</p>
 <p>1.<a href="http://blog.ibireme.com/2015/05/18/runloop/" target="_blank" rel="external">深入理解RunLoop</a> ibireme<br>2.<a href="http://yun.baidu.com/share/home?uk=2885973690" target="_blank" rel="external">sunnyxx的视频runloop.mov</a> sunnyxx</p>
 
       
