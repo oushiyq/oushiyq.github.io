@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>插入排序 | Daniel Young&#39;s blog</title>
+  <title>ARC模式下的OC对象与Core Fundation的桥接 | Daniel Young&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="什么是Toll_Free Bridge通常来说为了代码在底层级上的正确，在iOS开发中对基于C的API的调用所传入的参数一般都是CF对象，而Objective-C的API调用都是传入NSObject对象。因此在采用toll_free bridge来调用C语言API的时候就需要进行转换。但是在使用ARC编译的时候，因为内存管理的原因，编译器需要知道对这些桥接对象要实行什么样的操作。如果一个NSURL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="插入排序">
-<meta property="og:url" content="http://yoursite.com/2016/02/25/插入排序/index.html">
+<meta property="og:title" content="ARC模式下的OC对象与Core Fundation的桥接">
+<meta property="og:url" content="http://yoursite.com/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/index.html">
 <meta property="og:site_name" content="Daniel Young's blog">
-<meta property="og:description">
-<meta property="og:updated_time" content="2016-02-25T14:39:55.000Z">
+<meta property="og:description" content="什么是Toll_Free Bridge通常来说为了代码在底层级上的正确，在iOS开发中对基于C的API的调用所传入的参数一般都是CF对象，而Objective-C的API调用都是传入NSObject对象。因此在采用toll_free bridge来调用C语言API的时候就需要进行转换。但是在使用ARC编译的时候，因为内存管理的原因，编译器需要知道对这些桥接对象要实行什么样的操作。如果一个NSURL">
+<meta property="og:updated_time" content="2016-03-11T12:33:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="插入排序">
-<meta name="twitter:description">
+<meta name="twitter:title" content="ARC模式下的OC对象与Core Fundation的桥接">
+<meta name="twitter:description" content="什么是Toll_Free Bridge通常来说为了代码在底层级上的正确，在iOS开发中对基于C的API的调用所传入的参数一般都是CF对象，而Objective-C的API调用都是传入NSObject对象。因此在采用toll_free bridge来调用C语言API的时候就需要进行转换。但是在使用ARC编译的时候，因为内存管理的原因，编译器需要知道对这些桥接对象要实行什么样的操作。如果一个NSURL">
   
     <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
   
@@ -60,10 +60,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-插入排序" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-ARC模式下的OC对象与Core-Fundation的桥接" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/02/25/插入排序/" class="article-date">
-  <time datetime="2016-02-25T14:39:55.000Z" itemprop="datePublished">2016-02-25</time>
+    <a href="/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" class="article-date">
+  <time datetime="2016-03-11T10:36:26.000Z" itemprop="datePublished">2016-03-11</time>
 </a>
     
   </div>
@@ -74,7 +74,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      插入排序
+      ARC模式下的OC对象与Core Fundation的桥接
     </h1>
   
 
@@ -82,11 +82,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h3 id="u4EC0_u4E48_u662FToll_Free_Bridge"><a href="#u4EC0_u4E48_u662FToll_Free_Bridge" class="headerlink" title="什么是Toll_Free Bridge"></a>什么是Toll_Free Bridge</h3><p>通常来说为了代码在底层级上的正确，在iOS开发中对基于C的API的调用所传入的参数一般都是CF对象，而Objective-C的API调用都是传入NSObject对象。因此在采用toll_free bridge来调用C语言API的时候就需要进行转换。但是在使用ARC编译的时候，因为内存管理的原因，编译器需要知道对这些桥接对象要实行什么样的操作。如果一个NSURL对象替代了CFURLRef，那么在作用区域外，应该由谁来决定内存释放和对象销毁呢？为了解决这个问题，引入了<strong>bridge,bridge_transfer和</strong>bridge_retained三个关键字。关于选取哪个关键字做转换，需要由实际的代码行为来决定。</p>
+<h3 id="Bridge_u5173_u952E_u5B57"><a href="#Bridge_u5173_u952E_u5B57" class="headerlink" title="Bridge关键字"></a>Bridge关键字</h3><ul>
+<li><p>__bridge：用来完成CF和OC对象的转换，不涉及对象所有权的改变</p>
+</li>
+<li><p>__bridge_transfer：用来完成CF到OC对象的转换，给予ARC拥有对象，无需手动释放</p>
+</li>
+<li><p>__bridge_retained：用来完成OC对象到CF的转换，解除ARC对于对象的拥有，需手动释放</p>
+</li>
+</ul>
+<p>参考资料：<br><a href="http://gracelancy.com/blog/2014/04/21/toll-free-bridging/" target="_blank" rel="external">Toll-Free Bridging</a> Lancy<br><a href="https://onevcat.com/2012/06/arc-hand-by-hand/" target="_blank" rel="external">手把手教你ARC——iOS/Mac开发ARC入门和使用</a> OneV’s Den</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="cilnop85r0005e0r55nhr5mj7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" data-id="cilnop86w000de0r548nqut2z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -95,19 +105,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/02/28/copy没那么简单/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          copy没那么简单
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/02/24/纸牌游戏/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/03/11/我所理解的RunLoop/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">纸牌游戏</div>
+      <div class="article-nav-title">我所理解的RunLoop</div>
     </a>
   
 </nav>
