@@ -61,6 +61,63 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-深入理解KVO" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/16/深入理解KVO/" class="article-date">
+  <time datetime="2016-03-16T12:03:19.000Z" itemprop="datePublished">2016-03-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/16/深入理解KVO/">深入理解KVO</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="KVC_u7684_u6982_u5FF5"><a href="#KVC_u7684_u6982_u5FF5" class="headerlink" title="KVC的概念"></a>KVC的概念</h2><h2 id="KVO_u4E0ERuntime"><a href="#KVO_u4E0ERuntime" class="headerlink" title="KVO与Runtime"></a>KVO与Runtime</h2><p>KVO的实现也依赖于Objective-C的Runtime，官方文档《Key-Value Observing Programming Guide》中在《Key-Value Observing Implementation Details》部分简单提到它的实现：</p>
+<hr>
+<p>Automatic key-value observing is implemented using a technique called isa-swizzling.</p>
+<p>The isa pointer, as the name suggests, points to the object’s class which maintains a dispatch table. This dispatch table essentially contains pointers to the methods the class implements, among other data.</p>
+<p>When an observer is registered for an attribute of an object the isa pointer of the observed object is modified, pointing to an intermediate class rather than at the true class. As a result the value of the isa pointer does not necessarily reflect the actual class of the instance.</p>
+<p>You should never rely on the isa pointer to determine class membership. Instead, you should use the class method to determine the class of an object instance.</p>
+<hr>
+<p>大概的意思就是KVO的实现是通过isa-swizzling技术。这个技术表示，当观察者观察一个对象时，会产生一个新的类，这个类继承于被观察对象，并重写其setter方法，再将被观察对象的isa指针指向新的类。这样被观察对象就神奇的成为了新类的实例。这样看来，KVO的实现还是有点黑魔法的意思啊。</p>
+<h2 id="KVO_u7684_u4F7F_u7528"><a href="#KVO_u7684_u4F7F_u7528" class="headerlink" title="KVO的使用"></a>KVO的使用</h2><h3 id="u8BA2_u9605"><a href="#u8BA2_u9605" class="headerlink" title="订阅"></a>订阅</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)addObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">         forKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">            options:(<span class="built_in">NSKeyValueObservingOptions</span>)options</span><br><span class="line">            context:(<span class="keyword">void</span> *)context;</span><br></pre></td></tr></table></figure>
+<h3 id="u54CD_u5E94"><a href="#u54CD_u5E94" class="headerlink" title="响应"></a>响应</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)observeValueForKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">                      ofObject:(<span class="keyword">id</span>)object</span><br><span class="line">                        change:(<span class="built_in">NSDictionary</span> *)change</span><br><span class="line">                       context:(<span class="keyword">void</span> *)context;</span><br></pre></td></tr></table></figure>
+<h3 id="u79FB_u9664"><a href="#u79FB_u9664" class="headerlink" title="移除"></a>移除</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)removeObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">            forKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">               context:(<span class="keyword">void</span> *)context;</span><br><span class="line">               </span><br><span class="line">- (<span class="keyword">void</span>)removeObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">            forKeyPath:(<span class="built_in">NSString</span> *)keyPath;</span><br></pre></td></tr></table></figure>
+<h2 id="u6CE8_u610F_u4E8B_u9879"><a href="#u6CE8_u610F_u4E8B_u9879" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li>keypath的拼写。因为keypath为一字符串，所以很容易产生拼写错误导致无法监听。比如本来keypath = @”contents”，但有时未注意可能会拼写成keypath = @”content”，而编译器在编译时也无法发现错误。因此可以定义一个常量static const NSString *contens = @”contents”；</li>
+<li>多次使用removeObserver导致程序crash。在同一个文件中执行两次相同的removeObserver比较容易debug出来；但是跨文件执行两次相同的removeObserver就不是那么容易发现了。因此Apple推荐在dealloc中进行removeObserver；</li>
+</ol>
+<p>参考资料：</p>
+<ol>
+<li>Key-Value Observing Programming Guide</li>
+<li><a href="http://objccn.io/issue-7-3/" target="_blank" rel="external">KVC 和 KVO</a> 翻译：卢思豪 </li>
+<li><a href="http://khanlou.com/2013/12/kvo-considered-harmful/" target="_blank" rel="external">KVO Considered Harmful</a> KHANLOU</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/16/深入理解KVO/" data-id="ciluu9tdb0002str5z2n1ws3j" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-ARC模式下的OC对象与Core-Fundation的桥接" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" class="article-date">
@@ -97,7 +154,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" data-id="cilnop86w000de0r548nqut2z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" data-id="ciluu9tf2000estr5wwwho39w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -166,7 +223,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/11/我所理解的RunLoop/" data-id="cilnop85w0006e0r5i7juv1dn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/11/我所理解的RunLoop/" data-id="ciluu9tef0007str5c15o4d6m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -258,7 +315,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/07/浅析category和class-extension/" data-id="cilnop85e0002e0r51uccqmuz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/07/浅析category和class-extension/" data-id="ciluu9tdi0003str5ta3hr8x5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -306,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/01/Effective-Objective-C-2-0学习笔记/" data-id="cilnop86t000ce0r5un20utwu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/01/Effective-Objective-C-2-0学习笔记/" data-id="ciluu9tez000dstr5805qzf8c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -358,7 +415,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/28/copy没那么简单/" data-id="cilnop86l000ae0r57h98tzka" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/28/copy没那么简单/" data-id="ciluu9tes000bstr5165tq9jc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -382,7 +439,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/02/25/插入排序/">插入排序</a>
+      <a class="article-title" href="/2016/02/25/插入排序/">基本算法--排序</a>
     </h1>
   
 
@@ -390,11 +447,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h2 id="u4E00_u3001_u63D2_u5165_u6392_u5E8F"><a href="#u4E00_u3001_u63D2_u5165_u6392_u5E8F" class="headerlink" title="一、插入排序"></a>一、插入排序</h2><h2 id="u4E8C_u3001_u5FEB_u901F_u6392_u5E8F"><a href="#u4E8C_u3001_u5FEB_u901F_u6392_u5E8F" class="headerlink" title="二、快速排序"></a>二、快速排序</h2><h2 id="u4E09_u3001_u9009_u62E9_u6392_u5E8F"><a href="#u4E09_u3001_u9009_u62E9_u6392_u5E8F" class="headerlink" title="三、选择排序"></a>三、选择排序</h2><h2 id="u56DB_u3001_u5F52_u5E76_u6392_u5E8F"><a href="#u56DB_u3001_u5F52_u5E76_u6392_u5E8F" class="headerlink" title="四、归并排序"></a>四、归并排序</h2><h2 id="u4E94_u3001_u57FA_u6570_u6392_u5E8F"><a href="#u4E94_u3001_u57FA_u6570_u6392_u5E8F" class="headerlink" title="五、基数排序"></a>五、基数排序</h2>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="cilnop85r0005e0r55nhr5mj7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="ciluu9te50006str5kavexj6p" class="article-share-link">Share</a>
       
       
     </footer>
@@ -440,7 +497,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/24/纸牌游戏/" data-id="cilnop8510000e0r5dcefdx7b" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/24/纸牌游戏/" data-id="ciluu9tcz0000str5qjm4kt1r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -494,7 +551,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/17/简易微信红包/" data-id="cilnop85a0001e0r5n2sp048v" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/17/简易微信红包/" data-id="ciluu9td70001str5rqcd431x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -552,53 +609,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/29/iOS编程中一些类似的概念/" data-id="cilnop86j0009e0r524argw7h" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-本地通知-for-iOS8-later" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/01/28/本地通知-for-iOS8-later/" class="article-date">
-  <time datetime="2016-01-28T10:11:26.000Z" itemprop="datePublished">2016-01-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/28/本地通知-for-iOS8-later/">本地通知 for iOS8 &amp; later</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="u7B80_u5355_u8BB0_u4E00_u7B14"><a href="#u7B80_u5355_u8BB0_u4E00_u7B14" class="headerlink" title="简单记一笔"></a>简单记一笔</h2><p>今天在写一个简单代码，用到了本地通知，代码如下</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)addReminder:(<span class="keyword">id</span>)sender&#123;</span><br><span class="line">    <span class="built_in">NSDate</span> *reminderDate = [datePicker date];</span><br><span class="line">    <span class="built_in">UILocalNotification</span> *notice = [[<span class="built_in">UILocalNotification</span> alloc]init];</span><br><span class="line">    notice<span class="variable">.alertBody</span> = <span class="string">@"Hypnotize me"</span>;</span><br><span class="line">    notice<span class="variable">.fireDate</span> = reminderDate;</span><br><span class="line">    </span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] scheduleLocalNotification:notice];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码没错，不过控制台出现了这样一行错误：</p>
-<blockquote>
-<p>Attempting to schedule a local notification ，with an alert but haven’t received permission from the user to display alerts，with a sound but haven’t received permission from the user to play sounds</p>
-</blockquote>
-<ul>
-<li>原因在于iOS8以后，系统需要在appdelegate中进行注册，才能实现本地通知。于是需要在appdelegate.m中加入下列代码：<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions &#123;</span><br><span class="line">    <span class="comment">// Override point for customization after application launch.</span></span><br><span class="line">    [application registerUserNotificationSettings:[<span class="built_in">UIUserNotificationSettings</span> settingsForTypes:<span class="built_in">UIUserNotificationTypeAlert</span>|<span class="built_in">UIUserNotificationTypeBadge</span>|<span class="built_in">UIUserNotificationTypeSound</span> categories:<span class="literal">nil</span>]];<span class="comment">//注册本地推送</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="P-S_uFF1A_u81EA_u5B66_u7684_u8FC7_u7A0B_u8FD8_u662F_u6BD4_u8F83_u7D2F_u4EBA_uFF0C_u5F88_u591A_u4E66_u4E0A_u6216_u8005blog_u4E0A_u7684_u65B9_u6CD5_u90FD_u662F_u6BD4_u8F83_u8001_u7684_uFF0C_u800C_u82F9_u679C_u516C_u53F8_u53C8_u4E00_u76F4_u5728_u66F4_u65B0_u65B0_u7684_u5185_u5BB9_uFF0C_u5F88_u591A_u8FC7_u65F6_u7684_u4E1C_u897F_u5728_u65B0_u7248_u672C_u7684_u7CFB_u7EDF_u4E2D_u5DF2_u7ECF_u6452_u5F03_u4E86_u3002"><a href="#P-S_uFF1A_u81EA_u5B66_u7684_u8FC7_u7A0B_u8FD8_u662F_u6BD4_u8F83_u7D2F_u4EBA_uFF0C_u5F88_u591A_u4E66_u4E0A_u6216_u8005blog_u4E0A_u7684_u65B9_u6CD5_u90FD_u662F_u6BD4_u8F83_u8001_u7684_uFF0C_u800C_u82F9_u679C_u516C_u53F8_u53C8_u4E00_u76F4_u5728_u66F4_u65B0_u65B0_u7684_u5185_u5BB9_uFF0C_u5F88_u591A_u8FC7_u65F6_u7684_u4E1C_u897F_u5728_u65B0_u7248_u672C_u7684_u7CFB_u7EDF_u4E2D_u5DF2_u7ECF_u6452_u5F03_u4E86_u3002" class="headerlink" title="P.S：自学的过程还是比较累人，很多书上或者blog上的方法都是比较老的，而苹果公司又一直在更新新的内容，很多过时的东西在新版本的系统中已经摒弃了。"></a>P.S：自学的过程还是比较累人，很多书上或者blog上的方法都是比较老的，而苹果公司又一直在更新新的内容，很多过时的东西在新版本的系统中已经摒弃了。</h3>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/28/本地通知-for-iOS8-later/" data-id="cilnop85o0004e0r5wkkurv8m" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/29/iOS编程中一些类似的概念/" data-id="ciluu9teo000astr5pmpnnuwa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -627,7 +638,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -637,6 +648,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/03/16/深入理解KVO/">深入理解KVO</a>
+          </li>
         
           <li>
             <a href="/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/">ARC模式下的OC对象与Core Fundation的桥接</a>
@@ -652,10 +667,6 @@
         
           <li>
             <a href="/2016/03/01/Effective-Objective-C-2-0学习笔记/">Effective Objective-C 2.0学习笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2016/02/28/copy没那么简单/">copy没那么简单</a>
           </li>
         
       </ul>
