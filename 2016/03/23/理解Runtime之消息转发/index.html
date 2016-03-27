@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="Daniel Young's blog">
 <meta property="og:description" content="消息传递机制消息是由接受者、选择子和参数构成，给某对象『发送消息』也就相当于『调用方法』。发给某对象的全部消息都要由『动态消息派发系统』来处理，该系统会查出相应的方法，并执行代码。举个例子：12345id returnValue = [someObject messageName:parameter];//[someObject messageName:parameter]就是消息//someOb">
 <meta property="og:image" content="http://7xqzfr.com1.z0.glb.clouddn.com/QQ20150427-1.png">
-<meta property="og:updated_time" content="2016-03-27T12:03:36.000Z">
+<meta property="og:updated_time" content="2016-03-27T12:06:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解Runtime之消息转发">
 <meta name="twitter:description" content="消息传递机制消息是由接受者、选择子和参数构成，给某对象『发送消息』也就相当于『调用方法』。发给某对象的全部消息都要由『动态消息派发系统』来处理，该系统会查出相应的方法，并执行代码。举个例子：12345id returnValue = [someObject messageName:parameter];//[someObject messageName:parameter]就是消息//someOb">
@@ -97,6 +97,7 @@
 </li>
 </ol>
 <p>用流程图表示如下：<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/QQ20150427-1.png" alt=""><br>Receiver在每一步中均有机会处理消息。步骤越往后，处理消息的代价就越大；最好能在第一步就处理完，这样的话，runtime系统就可以将此方法缓存起来，进而提高效率。若想在第三步里把消息转发给备援的receiver，那还不如把转发操作提前到第二步。因为第三步只是修改了调用目标，这项改动放在第二步会更为简单，不然的话，还得创建并处理完整的NSInvocation。</p>
+<p>参考资料：<br>《Effective Objective-C 2.0》</p>
 
       
     </div>
