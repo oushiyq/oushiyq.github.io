@@ -61,6 +61,67 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-iOS中的MVC设计模式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/14/iOS中的MVC设计模式/" class="article-date">
+  <time datetime="2016-04-14T08:48:43.000Z" itemprop="datePublished">2016-04-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/14/iOS中的MVC设计模式/">iOS中的MVC设计模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>MVC（Model-View-Controller）,作为iOS开发的一个主流设计模式，很多初学者第一次接触设计模式也是从MVC开始的。虽然我一直在用这种模式，但是对于他的理解还一直处于一个很模糊的状态，于是又回去看了看斯坦福的iOS教程。同时，也Google了一些别人的blog，慢慢开始对MVC越来越清晰。</p>
+<h2 id="MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="MVC设计模式"></a>MVC设计模式</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/97B060C0-E1B8-46B0-95B7-2740392E9ABE.png" alt="MVC"></p>
+<p>如上图所示</p>
+<ol>
+<li>Model与View永远不能直接通信；</li>
+<li>Controller和Model之间的通信需借助Notification和KVO模式；</li>
+<li>Controller和View之间的通信可以通过outlet直接操作view，即outlet直接对应View中的控件。View通过action-target机制向Controller报告事件的发生。另外，Controller作为View的delegate协助View处理数据，来达到View和Controller之间的同步。</li>
+</ol>
+<h2 id="MVC_u5B58_u5728_u7684_u95EE_u9898_u4EE5_u53CA_u6539_u8FDB"><a href="#MVC_u5B58_u5728_u7684_u95EE_u9898_u4EE5_u53CA_u6539_u8FDB" class="headerlink" title="MVC存在的问题以及改进"></a>MVC存在的问题以及改进</h2><p>不可否认MVC是一个非常优秀的设计模式，它能很直观的体现app中的各个组件的相关关系。但是由于Controller集中了大量代码，使得其Controller层过于臃肿。<br>而设计模式很多时候是为了 Don’t repeat yourself 原则来做的，该原则要求能够复用的代码要尽量复用，来保证重用。MVC的View和Model都符合该原则。但是Controller并不易于复用。那么在MVC中，我们应该把哪些代码放在Controller中呢？因为其难以复用，那么把一些不需要复用代码放入其中，如：</p>
+<ol>
+<li>初始化时，构造相应的View和Model；</li>
+<li>监听Model层的事件，将数据传给View层；</li>
+<li>监听View层的事件，将数据传给Model层。</li>
+</ol>
+<h2 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h2><p>MVVM（Model-View-ViewModel）在使用当中，通常还会利用双向绑定技术，使得Model变化时，ViewModel 会自动更新，而ViewModel变化时，View也会自动变化。所以，MVVM模式有些时候又被称作：model-view-binder模式。<br>MVVM模式和MVC模式一样，主要目的是分离视图（View）和模型（Model），有几大优点</p>
+<ol>
+<li>低耦合。视图（View）可以独立于Model变化和修改，一个ViewModel可以绑定到不同的”View”上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li>可重用性。你可以把一些视图逻辑放在一个ViewModel里面，让很多view重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注于业务逻辑和数据的开发（ViewModel），设计人员可以专注于页面设计。</li>
+<li>可测试。界面素来是比较难于测试的，而现在测试可以针对ViewModel来写。</li>
+</ol>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>参考资料:<br>1.《iOS开发进阶》 唐巧<br>2.《斯坦福大学公开课:iOS 7应用开发》 Paul Hegarty</p>
+<ol>
+<li><a href="http://blog.devtang.com/2015/11/02/mvc-and-mvvm/" target="_blank" rel="external">被误解的 MVC 和被神化的 MVVM</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/04/14/iOS中的MVC设计模式/" data-id="cin072jmt000djsr5f82qxofh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-字符串翻转" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/04/03/字符串翻转/" class="article-date">
@@ -90,7 +151,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/03/字符串翻转/" data-id="cimjy1omv0009efr5kjm6kqxt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/03/字符串翻转/" data-id="cin072jm90009jsr5z73sxlbq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -141,7 +202,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/23/理解Runtime之消息转发/" data-id="cimjy1olp0002efr585z9qu6b" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/23/理解Runtime之消息转发/" data-id="cin072jla0002jsr5hjrw8mcv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -203,7 +264,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/16/深入理解KVO/" data-id="cimjy1olv0003efr5eij1le71" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/16/深入理解KVO/" data-id="cin072jlh0003jsr5sy40uo5u" class="article-share-link">Share</a>
       
       
     </footer>
@@ -249,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" data-id="cimjy1onx000gefr5r6ehfhef" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" data-id="cin072jn1000gjsr5fwoa2vwy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -318,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/11/我所理解的RunLoop/" data-id="cimjy1omr0008efr51pw3varv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/11/我所理解的RunLoop/" data-id="cin072jm70008jsr51b2bjz8y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -410,55 +471,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/07/浅析category和class-extension/" data-id="cimjy1om20004efr51w0yacdb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Effective-Objective-C-2-0学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/03/01/Effective-Objective-C-2-0学习笔记/" class="article-date">
-  <time datetime="2016-03-01T01:24:49.000Z" itemprop="datePublished">2016-03-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/01/Effective-Objective-C-2-0学习笔记/">Effective Objective-C 2.0学习笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="u5728_u7C7B_u7684_u5934_u6587_u4EF6_u4E2D_u5C3D_u91CF_u5C11_u5F15_u5165_u5176_u4ED6_u5934_u6587_u4EF6"><a href="#u5728_u7C7B_u7684_u5934_u6587_u4EF6_u4E2D_u5C3D_u91CF_u5C11_u5F15_u5165_u5176_u4ED6_u5934_u6587_u4EF6" class="headerlink" title="在类的头文件中尽量少引入其他头文件"></a>在类的头文件中尽量少引入其他头文件</h3><ol>
-<li>除非确有必要，否则不要引入头文件。一般只需在头文件中使用@class来提及其他类，再在m文件中引入该头文件。这样可以避免两个头文件循环引用，引起头文件无法正确编译.</li>
-<li>在无法使用@class的情况下，如声明协议，可以将其放入一个包含protocol的头文件中引入</li>
-</ol>
-<h3 id="u591A_u7528_u5B57_u9762_u91CF_u8BED_u6CD5_u7684_u5C40_u9650_u6027"><a href="#u591A_u7528_u5B57_u9762_u91CF_u8BED_u6CD5_u7684_u5C40_u9650_u6027" class="headerlink" title="多用字面量语法的局限性"></a>多用字面量语法的局限性</h3><ol>
-<li>除了字符串以外，所创建出来的对象必须属于Fundation框架</li>
-<li>使用字面量语法创建出来的字符串、数组、字典对象都是immutable</li>
-</ol>
-<h3 id="u591A_u7528_u7C7B_u578B_u5E38_u6570_uFF0C_u5C11_u7528_23define"><a href="#u591A_u7528_u7C7B_u578B_u5E38_u6570_uFF0C_u5C11_u7528_23define" class="headerlink" title="多用类型常数，少用#define"></a>多用类型常数，少用#define</h3><ol>
-<li>用static const +类型 代替 #define，可以带有类型信息</li>
-<li>除非需对外公开某个常量，否则不应该在头文件中定义常量。需要使用extern关键字，并在m文件中定义其值</li>
-</ol>
-<h3 id="u7528_u679A_u4E3E_u8868_u793A_u72B6_u6001_u3001_u9009_u9879_u3001_u72B6_u6001_u7801"><a href="#u7528_u679A_u4E3E_u8868_u793A_u72B6_u6001_u3001_u9009_u9879_u3001_u72B6_u6001_u7801" class="headerlink" title="用枚举表示状态、选项、状态码"></a>用枚举表示状态、选项、状态码</h3>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/01/Effective-Objective-C-2-0学习笔记/" data-id="cimjy1onu000fefr5bbda8un2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/07/浅析category和class-extension/" data-id="cin072jlo0004jsr5bkapp7zj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -510,7 +523,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/28/copy没那么简单/" data-id="cimjy1onp000defr5j89tsn43" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/28/copy没那么简单/" data-id="cin072jmv000ejsr5h58p6db2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -624,7 +637,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="cimjy1omo0007efr504tc44nm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="cin072jm50007jsr5z0ac72qu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -670,7 +683,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/24/纸牌游戏/" data-id="cimjy1ol40000efr5x6utv1tc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/24/纸牌游戏/" data-id="cin072jky0000jsr5290x7wl3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -699,7 +712,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -709,6 +722,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/04/14/iOS中的MVC设计模式/">iOS中的MVC设计模式</a>
+          </li>
         
           <li>
             <a href="/2016/04/03/字符串翻转/">字符串翻转</a>
@@ -724,10 +741,6 @@
         
           <li>
             <a href="/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/">ARC模式下的OC对象与Core Fundation的桥接</a>
-          </li>
-        
-          <li>
-            <a href="/2016/03/11/我所理解的RunLoop/">我所理解的RunLoop</a>
           </li>
         
       </ul>
