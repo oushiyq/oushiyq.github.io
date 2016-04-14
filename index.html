@@ -61,6 +61,48 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-protocol和delegate" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/14/protocol和delegate/" class="article-date">
+  <time datetime="2016-04-14T11:31:56.000Z" itemprop="datePublished">2016-04-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/14/protocol和delegate/">Protocol和Delegate</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>说来惭愧，直到昨天，我还对protocol和delegate之间的区别有所疑惑。总认为他们俩之间有些相似之处，然而他们俩者完全是不同的东西！</p>
+<h2 id="u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981protocol"><a href="#u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981protocol" class="headerlink" title="为什么我们需要protocol"></a>为什么我们需要protocol</h2><p>在Objective-C中，继承是单一继承，即不支持如C++的多继承方式。然而，我们有时候又强烈的需要多继承的方法，这就是protocol的作用了。我们可以把某个类应该实现的一系列方法定义在protocol里面，其他的类采用该protocol，那么就相对于他同时继承了父类和protocol中定义的一系列方法。</p>
+<h2 id="protocol"><a href="#protocol" class="headerlink" title="protocol"></a>protocol</h2><p>protocol是一系列方法的声明列表，只要某个类采用了这个protocol，那么这个类便拥有了协议中的所有方法声明。但是协议只是负责声明对象需要的方法，而这些个实现方法与protocol无关。其语法如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">myProtocol</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line">    <span class="comment">//方法声明1</span></span><br><span class="line">    <span class="comment">//方法声明2</span></span><br><span class="line">    <span class="comment">//方法声明3</span></span><br><span class="line">    ……</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p>要拥有协议中声明的方法，就必须遵守protocol，如果某个类遵守的协议有多个，则用逗号进行分隔。其语法如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> 类名 : 父类&lt;<span class="title">protocol_1</span>，<span class="title">protocol_2</span>, ……&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h2><p>delegate是一种设计模式，这种模式用于应用程序的一个对象delegate另外一个对象和其他对象交互。总而言之，delegate只是一种设计模式而已，是大家约定俗成的一种做法。在OC中，通常使用协议来实现代理，即把协议当成用户和代理中间的『中转站』，在协议中定义一些和代理沟通的方法。也就是因为这个原因，初学者会经常把Protocol和Delegate弄混淆。<br>这里举个例子吧：<br>假如有个A类，他把需要的事交给B类处理，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">classA</span> : <span class="title">NSObject</span></span>&#123;</span><br><span class="line">	classB *B；</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p>只需要在A类中声明一个B类的ivar就行了，这就是delegate……他真的只是一个设计模式而已。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/04/14/protocol和delegate/" data-id="cin0axnj6000comr52iz8n5aa" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-iOS中的MVC设计模式" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/04/14/iOS中的MVC设计模式/" class="article-date">
@@ -85,7 +127,7 @@
       
         <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>MVC（Model-View-Controller）,作为iOS开发的一个主流设计模式，很多初学者第一次接触设计模式也是从MVC开始的。虽然我一直在用这种模式，但是对于他的理解还一直处于一个很模糊的状态，于是又回去看了看斯坦福的iOS教程。同时，也Google了一些别人的blog，慢慢开始对MVC越来越清晰。</p>
 <h2 id="MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="MVC设计模式"></a>MVC设计模式</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/97B060C0-E1B8-46B0-95B7-2740392E9ABE.png" alt="MVC"></p>
-<p>如上图所示</p>
+<p>Model:封装了应用程序的数据，并定义了处理逻辑；<br>View:应用程序中，用户看到的对象；<br>Controller:视图与模型之间通信的媒介。<br>如上图所示，他们的之间的通信方式如下：</p>
 <ol>
 <li>Model与View永远不能直接通信；</li>
 <li>Controller和Model之间的通信需借助Notification和KVO模式；</li>
@@ -109,7 +151,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/14/iOS中的MVC设计模式/" data-id="cin072jmt000djsr5f82qxofh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/14/iOS中的MVC设计模式/" data-id="cin0axnja000eomr59qyoqgmp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -148,7 +190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/03/字符串翻转/" data-id="cin072jm90009jsr5z73sxlbq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/03/字符串翻转/" data-id="cin0axniw0009omr5nay5cugc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -199,7 +241,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/23/理解Runtime之消息转发/" data-id="cin072jla0002jsr5hjrw8mcv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/23/理解Runtime之消息转发/" data-id="cin0axnhu0002omr5mmjs2xia" class="article-share-link">Share</a>
       
       
     </footer>
@@ -261,7 +303,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/16/深入理解KVO/" data-id="cin072jlh0003jsr5sy40uo5u" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/16/深入理解KVO/" data-id="cin0axnhz0003omr5wzwy8l4i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -307,7 +349,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" data-id="cin072jn1000gjsr5fwoa2vwy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" data-id="cin0axnjj000homr561t8cknr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -376,7 +418,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/11/我所理解的RunLoop/" data-id="cin072jm70008jsr51b2bjz8y" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/11/我所理解的RunLoop/" data-id="cin0axniu0008omr5zsrgeofm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -468,7 +510,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/07/浅析category和class-extension/" data-id="cin072jlo0004jsr5bkapp7zj" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/07/浅析category和class-extension/" data-id="cin0axnic0004omr5l8g1y56d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -520,7 +562,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/28/copy没那么简单/" data-id="cin072jmv000ejsr5h58p6db2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/28/copy没那么简单/" data-id="cin0axnjd000fomr5yl9a960n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -634,53 +676,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="cin072jm50007jsr5z0ac72qu" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-纸牌游戏" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/02/24/纸牌游戏/" class="article-date">
-  <time datetime="2016-02-24T12:20:42.000Z" itemprop="datePublished">2016-02-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/02/24/纸牌游戏/">纸牌游戏</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近被同学推荐看了一下Stanford的iOS开放教程，于是自己动手做了一下前3讲提到的Machismo游戏。</p>
-<h3 id="UI_u8BBE_u8BA1"><a href="#UI_u8BBE_u8BA1" class="headerlink" title="UI设计"></a>UI设计</h3><p>在一张桌布上摆放12个UIButton作为纸牌，点击时翻面。</p>
-<p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/Simulator%20Screen%20Shot%202016%E5%B9%B42%E6%9C%8828%E6%97%A5%20%E4%B8%8B%E5%8D%887.57.51.png?imageView/2/w/300/q/90" alt=""></p>
-<h3 id="u6E38_u620F_u89C4_u5219"><a href="#u6E38_u620F_u89C4_u5219" class="headerlink" title="游戏规则"></a>游戏规则</h3><p>点击一张纸牌A，翻面。再点击一张纸牌B，翻面后，存在以下几种情况：</p>
-<ol>
-<li>A与B的点数相同，两张纸牌同时被锁定，score+4;</li>
-<li>A与B的花色相同，两张纸牌同时被锁定，score+2;</li>
-<li>A与B的点数和花色都不同，A翻面,score-1.<h3 id="u5B9E_u9645_u6548_u679C"><a href="#u5B9E_u9645_u6548_u679C" class="headerlink" title="实际效果"></a>实际效果</h3><img src="http://7xqzfr.com1.z0.glb.clouddn.com/2016-02-28%2020_04_03.gif?imageView/2/w/300/q/90" alt=""></li>
-</ol>
-<p>代码Demo<a href="https://github.com/oushiyq/iOSdemos/tree/master/cardMatch2" target="_blank" rel="external">在这</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/24/纸牌游戏/" data-id="cin072jky0000jsr5290x7wl3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/25/插入排序/" data-id="cin0axnir0007omr5a1kxd3yt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -709,7 +705,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -719,6 +715,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/04/14/protocol和delegate/">Protocol和Delegate</a>
+          </li>
         
           <li>
             <a href="/2016/04/14/iOS中的MVC设计模式/">iOS中的MVC设计模式</a>
@@ -734,10 +734,6 @@
         
           <li>
             <a href="/2016/03/16/深入理解KVO/">简单使用KVO</a>
-          </li>
-        
-          <li>
-            <a href="/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/">ARC模式下的OC对象与Core Fundation的桥接</a>
           </li>
         
       </ul>

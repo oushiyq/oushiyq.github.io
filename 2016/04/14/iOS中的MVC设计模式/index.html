@@ -7,30 +7,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="写在前面MVC（Model-View-Controller）,作为iOS开发的一个主流设计模式，很多初学者第一次接触设计模式也是从MVC开始的。虽然我一直在用这种模式，但是对于他的理解还一直处于一个很模糊的状态，于是又回去看了看斯坦福的iOS教程。同时，也Google了一些别人的blog，慢慢开始对MVC越来越清晰。
 MVC设计模式
-如上图所示
-
-Model与View永远不能直接通信；
-Contr">
+Model:封装了应用程序的数据，并定义了处理逻辑；View:应">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS中的MVC设计模式">
 <meta property="og:url" content="http://yoursite.com/2016/04/14/iOS中的MVC设计模式/index.html">
 <meta property="og:site_name" content="Daniel Young's blog">
 <meta property="og:description" content="写在前面MVC（Model-View-Controller）,作为iOS开发的一个主流设计模式，很多初学者第一次接触设计模式也是从MVC开始的。虽然我一直在用这种模式，但是对于他的理解还一直处于一个很模糊的状态，于是又回去看了看斯坦福的iOS教程。同时，也Google了一些别人的blog，慢慢开始对MVC越来越清晰。
 MVC设计模式
-如上图所示
-
-Model与View永远不能直接通信；
-Contr">
+Model:封装了应用程序的数据，并定义了处理逻辑；View:应">
 <meta property="og:image" content="http://7xqzfr.com1.z0.glb.clouddn.com/97B060C0-E1B8-46B0-95B7-2740392E9ABE.png">
-<meta property="og:updated_time" content="2016-04-14T11:21:44.000Z">
+<meta property="og:updated_time" content="2016-04-14T11:31:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS中的MVC设计模式">
 <meta name="twitter:description" content="写在前面MVC（Model-View-Controller）,作为iOS开发的一个主流设计模式，很多初学者第一次接触设计模式也是从MVC开始的。虽然我一直在用这种模式，但是对于他的理解还一直处于一个很模糊的状态，于是又回去看了看斯坦福的iOS教程。同时，也Google了一些别人的blog，慢慢开始对MVC越来越清晰。
 MVC设计模式
-如上图所示
-
-Model与View永远不能直接通信；
-Contr">
+Model:封装了应用程序的数据，并定义了处理逻辑；View:应">
   
     <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
   
@@ -100,7 +91,7 @@ Contr">
       
         <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>MVC（Model-View-Controller）,作为iOS开发的一个主流设计模式，很多初学者第一次接触设计模式也是从MVC开始的。虽然我一直在用这种模式，但是对于他的理解还一直处于一个很模糊的状态，于是又回去看了看斯坦福的iOS教程。同时，也Google了一些别人的blog，慢慢开始对MVC越来越清晰。</p>
 <h2 id="MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="MVC设计模式"></a>MVC设计模式</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/97B060C0-E1B8-46B0-95B7-2740392E9ABE.png" alt="MVC"></p>
-<p>如上图所示</p>
+<p>Model:封装了应用程序的数据，并定义了处理逻辑；<br>View:应用程序中，用户看到的对象；<br>Controller:视图与模型之间通信的媒介。<br>如上图所示，他们的之间的通信方式如下：</p>
 <ol>
 <li>Model与View永远不能直接通信；</li>
 <li>Controller和Model之间的通信需借助Notification和KVO模式；</li>
@@ -124,7 +115,7 @@ Contr">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/14/iOS中的MVC设计模式/" data-id="cin072jmt000djsr5f82qxofh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/14/iOS中的MVC设计模式/" data-id="cin0axnja000eomr59qyoqgmp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -132,6 +123,15 @@ Contr">
   
     
 <nav id="article-nav">
+  
+    <a href="/2016/04/14/protocol和delegate/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Protocol和Delegate
+        
+      </div>
+    </a>
   
   
     <a href="/2016/04/03/字符串翻转/" id="article-nav-older" class="article-nav-link-wrap">
@@ -158,7 +158,7 @@ Contr">
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -168,6 +168,10 @@ Contr">
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/04/14/protocol和delegate/">Protocol和Delegate</a>
+          </li>
         
           <li>
             <a href="/2016/04/14/iOS中的MVC设计模式/">iOS中的MVC设计模式</a>
@@ -183,10 +187,6 @@ Contr">
         
           <li>
             <a href="/2016/03/16/深入理解KVO/">简单使用KVO</a>
-          </li>
-        
-          <li>
-            <a href="/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/">ARC模式下的OC对象与Core Fundation的桥接</a>
           </li>
         
       </ul>
