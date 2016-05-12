@@ -245,7 +245,7 @@
 </tr>
 </tbody>
 </table>
-<p>NSGlobalBlock，我们只要实现一个没有对周围变量没有引用的Block，就会显示为是它。而如果其中加入了对定义环境变量的引用，就是NSStackBlock。那么NSMallocBlock又是哪来的呢？malloc一词其实大家都熟悉，就是在堆上分配动态内存时。没错，如果你对一个NSStackBlock对象使用了Block_copy()或者发送了copy消息，就会得到NSMallocBlock。这一段中的几项结论可从代码实验得出。<br>因此，也就得到了下面对block的使用注意点。<br>对于Global的Block，我们无需多处理，不需retain和copy，因为即使你这样做了，似乎也不会有什么两样。对于Stack的Block，如果不做任何操作，就会向上面所说，随栈帧自生自灭。而如果想让它获得比stack frame更久，那就调用Block_copy()，让它搬家到堆内存上。而对于已经在堆上的block，也不要指望通过copy进行“真正的copy”，因为其引用到的变量仍然会是同一份，在这个意义上看，这里的copy和retain的作用已经非常类似。</p>
+<p>我们可以自己在定义全局变量的地方定义一个_NSConcreteGlobalBlock类型的block对象。另外，我们实现一个不使用应截获的自动变量的block时，也会显示为是它。如果有对自动变量的引用，那么就会显示_NSConcreteStackBlock，他会随着变量作用域的结束而废弃。_NSConcreteMallocBlock就如同malloc表示的一样，在对_NSConcreteStackBlock类型的block进行Block_copy()或者发送了copy时就会得到。<br>因此，在我们对block的使用中，我们应该注意_NSConcreteStackBlock类型的block如果在变量作用域结束后还要存在，那么我们需要对其copy操作。</p>
 <p>参考资料：</p>
 <ol>
 <li>《Objective-C高级编程 iOS与OS X多线程和内存管理》Kazuki Sakamoto，Tomohiko Furumoto </li>
