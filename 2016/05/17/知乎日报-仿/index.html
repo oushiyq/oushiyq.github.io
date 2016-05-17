@@ -14,7 +14,9 @@
 <meta property="og:site_name" content="Daniel Young's blog">
 <meta property="og:description" content="写在前面陆陆续续写了两个星期，自己的第一个Demo APP的基本框架已经搭好了。非常幸运的是目前仿知乎日报的APP在github上已经有很多了，而且写得很好的也有不少。另外非常感谢izzyleung提供的API，让我们可以有做知乎日报的前提。
 数据层因为底层的数据API都是知乎（Zhihu.Inc）提供的，我只能读取数据给业务层加工，所以数据层并不在我的设计范围之内。不过，后期可能会使用fmdb实">
-<meta property="og:updated_time" content="2016-05-17T02:39:40.000Z">
+<meta property="og:image" content="http://7xqzfr.com1.z0.glb.clouddn.com/Simulator%20Screen%20Shot%202016%E5%B9%B45%E6%9C%8817%E6%97%A5%20%E4%B8%8B%E5%8D%883.03.48.png">
+<meta property="og:image" content="http://7xqzfr.com1.z0.glb.clouddn.com/Simulator%20Screen%20Shot%202016%E5%B9%B45%E6%9C%8817%E6%97%A5%20%E4%B8%8B%E5%8D%883.03.45.png">
+<meta property="og:updated_time" content="2016-05-17T10:48:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知乎日报(仿)">
 <meta name="twitter:description" content="写在前面陆陆续续写了两个星期，自己的第一个Demo APP的基本框架已经搭好了。非常幸运的是目前仿知乎日报的APP在github上已经有很多了，而且写得很好的也有不少。另外非常感谢izzyleung提供的API，让我们可以有做知乎日报的前提。
@@ -210,15 +212,21 @@
       
         <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>陆陆续续写了两个星期，自己的第一个Demo APP的基本框架已经搭好了。非常幸运的是目前仿知乎日报的APP在github上已经有很多了，而且写得很好的也有不少。另外非常感谢izzyleung提供的API，让我们可以有做知乎日报的前提。</p>
 <h2 id="u6570_u636E_u5C42"><a href="#u6570_u636E_u5C42" class="headerlink" title="数据层"></a>数据层</h2><p>因为底层的数据API都是知乎（Zhihu.Inc）提供的，我只能读取数据给业务层加工，所以数据层并不在我的设计范围之内。不过，后期可能会使用fmdb实现一些本地登录、收藏的功能，但仅限于本地操作。</p>
-<h2 id="u4E1A_u52A1_u5C42"><a href="#u4E1A_u52A1_u5C42" class="headerlink" title="业务层"></a>业务层</h2><p>业务层是一个数据加工场，处理核心的业务逻辑，从API提取的数据经过业务层的加工提供给表示层。</p>
+<h2 id="u4E1A_u52A1_u5C42"><a href="#u4E1A_u52A1_u5C42" class="headerlink" title="业务层"></a>业务层</h2><p>业务层是一个数据加工场，处理核心的业务逻辑，从API提取的数据经过业务层的加工提供给表示层。<br>主要的类有：</p>
+<ol>
+<li>YQHttpTool：用于封装基于AFNetWorking的GET方法；</li>
+<li>YQThemesTool：取得知乎日报API返回的theme信息；</li>
+<li>YQStoriesTool：取得知乎日报API返回的新闻信息，包括新闻标题、新闻图片、内容ID</li>
+<li>YQSessionTool：以返回的date对新闻进行不同的session分组。</li>
+</ol>
 <h2 id="u8868_u793A_u5C42"><a href="#u8868_u793A_u5C42" class="headerlink" title="表示层"></a>表示层</h2><p>所有的功能页面等都属于这一类，整个APP可以分成4个功能页面：</p>
 <ol>
-<li>leftDrawerView：左抽屉视图，主要包含主题日报，点击跳转进入相应的themeView；</li>
-<li>mainView：主视图，知乎日报首页，提供每天的『今日热闻』，点击跳转到相应的detailView；</li>
+<li>leftDrawerView：左抽屉视图，主要包含主题日报，点击跳转进入相应的themeView；<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/Simulator%20Screen%20Shot%202016%E5%B9%B45%E6%9C%8817%E6%97%A5%20%E4%B8%8B%E5%8D%883.03.48.png" alt="左抽屉视图"></li>
+<li>mainView：主视图，知乎日报首页，提供每天的『今日热闻』，点击跳转到相应的detailView；<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/Simulator%20Screen%20Shot%202016%E5%B9%B45%E6%9C%8817%E6%97%A5%20%E4%B8%8B%E5%8D%883.03.45.png" alt="主视图"></li>
 <li>themeView：主题日报，包含每个主题的推荐内容，点击跳转到相应的detailView；</li>
 <li>detailView：新闻视图，根据storyID来获取新闻内容。</li>
 </ol>
-<h2 id="u6548_u679C_u6F14_u793A"><a href="#u6548_u679C_u6F14_u793A" class="headerlink" title="效果演示"></a>效果演示</h2><p>代码<a href="https://github.com/izzyleung/ZhihuDailyPurify/wiki/%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5-API-%E5%88%86%E6%9E%90" target="_blank" rel="external">在这</a></p>
+<p>代码<a href="https://github.com/oushiyq/YQZhihuDaily" target="_blank" rel="external">在这</a></p>
 <p>参考资料：</p>
 <ol>
 <li>《iOS编程》Christian Keur，Aaron Hillegass，Joe Conway </li>
