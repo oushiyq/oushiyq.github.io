@@ -173,6 +173,68 @@
 
       <div class="body-wrap">
   
+    <article id="post-ARC模式下的OC对象与Core-Fundation的桥接" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/" class="article-date">
+  	<time datetime="2016-03-11T10:36:26.000Z" itemprop="datePublished">2016-03-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/ARC模式下的OC对象与Core-Fundation的桥接/">ARC模式下的OC对象与Core Fundation的桥接</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u4EC0_u4E48_u662FToll_Free_Bridge"><a href="#u4EC0_u4E48_u662FToll_Free_Bridge" class="headerlink" title="什么是Toll_Free Bridge"></a>什么是Toll_Free Bridge</h3><p>通常来说为了代码在底层级上的正确，在iOS开发中对基于C的API的调用所传入的参数一般都是CF对象，而Objective-C的API调用都是传入NSObject对象。因此在采用toll_free bridge来调用C语言API的时候就需要进行转换。但是在使用ARC编译的时候，因为内存管理的原因，编译器需要知道对这些桥接对象要实行什么样的操作。如果一个NSURL对象替代了CFURLRef，那么在作用区域外，应该由谁来决定内存释放和对象销毁呢？为了解决这个问题，引入了<strong>bridge,bridge_transfer和</strong>bridge_retained三个关键字。关于选取哪个关键字做转换，需要由实际的代码行为来决定。</p>
+<h3 id="Bridge_u5173_u952E_u5B57"><a href="#Bridge_u5173_u952E_u5B57" class="headerlink" title="Bridge关键字"></a>Bridge关键字</h3><ul>
+<li><p>__bridge：用来完成CF和OC对象的转换，不涉及对象所有权的改变</p>
+</li>
+<li><p>__bridge_transfer：用来完成CF到OC对象的转换，给予ARC拥有对象，无需手动释放</p>
+</li>
+<li><p>__bridge_retained：用来完成OC对象到CF的转换，解除ARC对于对象的拥有，需手动释放</p>
+</li>
+</ul>
+<p>参考资料：<br><a href="http://gracelancy.com/blog/2014/04/21/toll-free-bridging/" target="_blank" rel="external">Toll-Free Bridging</a> Lancy<br><a href="https://onevcat.com/2012/06/arc-hand-by-hand/" target="_blank" rel="external">手把手教你ARC——iOS/Mac开发ARC入门和使用</a> OneV’s Den</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-我所理解的RunLoop" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -886,66 +948,6 @@ views：传入含有变量绑定的字典，该字典会把作为变量名的字
 <li>Erica Sadun &amp; Rich Wardwell 《iOS核心开发手册》</li>
 </ul>
 
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-内存管理-objc中的new和alloc-init" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/19/内存管理-objc中的new和alloc-init/" class="article-date">
-  	<time datetime="2016-01-19T06:27:38.000Z" itemprop="datePublished">2016-01-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/19/内存管理-objc中的new和alloc-init/">内存管理-objc中的new和alloc/init</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="u5185_u5B58_u7BA1_u7406_u539F_u5219"><a href="#u5185_u5B58_u7BA1_u7406_u539F_u5219" class="headerlink" title="内存管理原则"></a>内存管理原则</h1><pre><code>1. 谁创建谁释放。当你通过alloc、new或者copy来创建一个对象时，那么在你不使用该对象时，你必须调用release或者autorelease来释放该对象占有的内存；
-2. 谁retain谁release。当你调用了retain，无论该对象是如何生成的，你都必须调用release来释放；
-3. 除alloc、new或者copy创建的对象都被声明了autorelease。
-</code></pre><h1 id="new_u548Calloc/init"><a href="#new_u548Calloc/init" class="headerlink" title="new和alloc/init"></a>new和alloc/init</h1><ul>
-<li>在实际的项目中，我们经常可以看到[[className alloc]init]和[className new]他们都表示生成一个对象，但是他们的区别在哪里了?为什么我们现在一般都使用[[className alloc]init]很少使用[className new]？下面给出他俩的源代码：</li>
-</ul>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//[[className alloc]init]源代码</span></span><br><span class="line">+ alloc&#123;</span><br><span class="line">	<span class="keyword">return</span> (*_zoneAlloc)((Class)<span class="keyword">self</span>, <span class="number">0</span>, malloc_default_zone());</span><br><span class="line">&#125;</span><br><span class="line">- init &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//[className new]源代码</span></span><br><span class="line">+ new&#123;</span><br><span class="line">	<span class="keyword">id</span> newObject = (*_alloc)((Class)<span class="keyword">self</span>, <span class="number">0</span>);</span><br><span class="line">	Class metaClass = <span class="keyword">self</span>-&gt;isa;</span><br><span class="line">	<span class="keyword">if</span> (class_getVersion(metaClass) &gt; <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">return</span> [newObject init]</span><br><span class="line">	<span class="keyword">else</span> </span><br><span class="line">		<span class="keyword">return</span> newObject;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>通过上面的代码，我们可以看出[[className alloc]init]和[className new]基本是相同的，只是alloc分配内存的时候使用了zone。而这个zone可以把对象分配到一块相邻的内存区域中，提高了程序的读取速度。另外在使用[[className alloc]init]时，还可以通过initXXX来实现其他参数。</p>
-<h2 id="u603B_u800C_u8A00_u4E4B_uFF0C_u4ED6_u4FE9_u5728_u529F_u80FD_u4E0A_u51E0_u4E4E_u662F_u4E00_u81F4_u7684_uFF0C_u5E76_u4E14alloc/init_u5BF9_u4E8Enew_u5728_u5904_u7406_u901F_u5EA6_u548C_u4E2A_u6027_u5316_u8FDB_u884C_u4E86_u4F18_u5316_u3002_u56E0_u6B64_uFF0C_u540C_u6837_u662F_u521D_u59CB_u5316_u5BF9_u8C61_uFF0C_u4E3A_u4EC0_u4E48_u4E0D_u7528alloc/init_u5462_uFF1F"><a href="#u603B_u800C_u8A00_u4E4B_uFF0C_u4ED6_u4FE9_u5728_u529F_u80FD_u4E0A_u51E0_u4E4E_u662F_u4E00_u81F4_u7684_uFF0C_u5E76_u4E14alloc/init_u5BF9_u4E8Enew_u5728_u5904_u7406_u901F_u5EA6_u548C_u4E2A_u6027_u5316_u8FDB_u884C_u4E86_u4F18_u5316_u3002_u56E0_u6B64_uFF0C_u540C_u6837_u662F_u521D_u59CB_u5316_u5BF9_u8C61_uFF0C_u4E3A_u4EC0_u4E48_u4E0D_u7528alloc/init_u5462_uFF1F" class="headerlink" title="总而言之，他俩在功能上几乎是一致的，并且alloc/init对于new在处理速度和个性化进行了优化。因此，同样是初始化对象，为什么不用alloc/init呢？"></a>总而言之，他俩在功能上几乎是一致的，并且alloc/init对于new在处理速度和个性化进行了优化。因此，同样是初始化对象，为什么不用alloc/init呢？</h2>
       
     </div>
     
