@@ -173,6 +173,85 @@
 
       <div class="body-wrap">
   
+    <article id="post-浅尝Auto-Layout" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/21/浅尝Auto-Layout/" class="article-date">
+  	<time datetime="2016-01-21T07:01:49.000Z" itemprop="datePublished">2016-01-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/21/浅尝Auto-Layout/">浅尝Auto Layout</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-__u4EC0_u4E48_u662F_u7EA6_u675F"><a href="#1-__u4EC0_u4E48_u662F_u7EA6_u675F" class="headerlink" title="1. 什么是约束"></a>1. 什么是约束</h1><pre><code>约束是指一系列描述iOS程序视图布局的规则。他们限定了视图之间的关系，也限定了视图的布局形式。约束向开发者提供了一套布局语言，
+使得可以向视图里添加约束，并以此来描述各视图的空间关系。
+</code></pre><h1 id="2-__u7EA6_u675F_u7CFB_u7EDF"><a href="#2-__u7EA6_u675F_u7CFB_u7EDF" class="headerlink" title="2. 约束系统"></a>2. 约束系统</h1><p>约束所用的词汇非常有限，就是一些和集合特征相关的属性及关系。属性是约束系统中的『名词』，用以描述视图对齐矩形里的位置。关系是系统里『动词』用以在属性之间进行比较。</p>
+<pre><code>属性：
+left、right、top和bottom--视图对齐矩形的左右上下边界
+leading和trailing--视图对齐矩形的前后边沿
+width和height--视图对齐矩形的宽和高
+centerX和centerY--视图对齐矩形中心点在X和Y轴的坐标
+baseline--对齐矩形的基线
+
+关系：
+Less-than inequality(小于或等于)--NSLayoutRelationLessThanOrEqual
+Equality(等于)--NSLayoutRelationEqual
+Greater-than inequality(大于或等于)--NSLayoutRelationGreaterThanOrEqual
+</code></pre><p>对于所有的所有的约束系统，其本质可以归结为下列的等式或不等式：”y R x*m+b”</p>
+<h2 id="2-1__u7EA6_u675F_u89C4_u5219-_u57FA_u672C_u58F0_u660E"><a href="#2-1__u7EA6_u675F_u89C4_u5219-_u57FA_u672C_u58F0_u660E" class="headerlink" title="2.1 约束规则-基本声明"></a>2.1 约束规则-基本声明</h2><p>NSLayoutConstraint类的constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:方法可以一次创建一条约束规则，这种方法可以创建严格的”view1.attribute R view2.attribute  * multiplier + constant”关系式，可以参考下列代码<br>    <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span><span class="variable">.view</span> addConstraint:[<span class="built_in">NSLayoutConstraint</span> constraintWithItem:<span class="keyword">self</span><span class="variable">.view</span></span><br><span class="line">                                                        attribute:<span class="built_in">NSLayoutAttributeBottom</span></span><br><span class="line">                                                        relatedBy:<span class="built_in">NSLayoutRelationEqual</span></span><br><span class="line">                                                           toItem:pageController</span><br><span class="line">                                                        attribute:<span class="built_in">NSLayoutAttributeBottom</span></span><br><span class="line">                                                       multiplier:<span class="number">1.0</span>f</span><br><span class="line">                                                         constant:<span class="number">0</span>]];</span><br></pre></td></tr></table></figure></p>
+<p>这段代码会把self.view添加到pageController视图中，并将他俩的底部对齐，用关系式可表示为：<br>“self.view’s NSLayoutAttributeBottom = pageController’s NSLayoutAttributeBottom *1+0”</p>
+<h2 id="2-2__u7EA6_u675F_u89C4_u5219-_u53EF_u89C6_u5316_u5B57_u7B26_u4E32_u58F0_u660E"><a href="#2-2__u7EA6_u675F_u89C4_u5219-_u53EF_u89C6_u5316_u5B57_u7B26_u4E32_u58F0_u660E" class="headerlink" title="2.2 约束规则-可视化字符串声明"></a>2.2 约束规则-可视化字符串声明</h2><p>NSLayoutConstraint类除了上面的方法外，还可以根据字符串来创建约束规则，这种字符串基于文本的视觉格式来表示其内容，如下列代码所示<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span><span class="variable">.view</span> addConstraints:[<span class="built_in">NSLayoutConstraint</span> constraintsWithVisualFormat:<span class="string">@"H:[view1]-30-[view2]"</span></span><br><span class="line">                                                                      options:<span class="number">0</span></span><br><span class="line">                                                                      metrics:<span class="literal">nil</span></span><br><span class="line">                                                                        views:<span class="built_in">NSDictionaryOfVariableBindings</span>(view1, view2)]]</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码表示确保view1和view2在横轴的间隔为30。</p>
+<pre><code>constraintsWithVisualFormat：用来表述视图在横轴（H）和纵轴（V）方向上与其他视图的关系，其间隔用&quot;-X-&quot;来表示中间间隔X像素，&quot;|-X-|&quot;的&quot;|&quot;表示屏幕的左右边界。
+options:表示对齐方向。
+metrics：开发者可以用字典（NSDictionary）来提供约束规则。
+views：传入含有变量绑定的字典，该字典会把作为变量名的字符串和变量所代表的视图关联起来。
+</code></pre><h2 id="2-3__u7BA1_u7406_u7EA6_u675F_u89C4_u5219"><a href="#2-3__u7BA1_u7406_u7EA6_u675F_u89C4_u5219" class="headerlink" title="2.3 管理约束规则"></a>2.3 管理约束规则</h2><p>无论约束规则是如何创建出来的，他们都属于NSLayoutConstraint类。开发者可以通过removeContraint：和addContraint:来移除和添加约束规则。管理约束规则的时候，如果要以编程的方式为子视图施加约束规则，那么先要把子视图的translatesAutoresizingMaskIntoConstraints设为NO。</p>
+<h1 id="u53C2_u8003_u8D44_u6599"><a href="#u53C2_u8003_u8D44_u6599" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li>Erica Sadun &amp; Rich Wardwell 《iOS核心开发手册》</li>
+</ul>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-内存管理-objc中的new和alloc-init" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
