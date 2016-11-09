@@ -173,6 +173,73 @@
 
       <div class="body-wrap">
   
+    <article id="post-理解Runtime之消息转发" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/23/理解Runtime之消息转发/" class="article-date">
+  	<time datetime="2016-03-23T02:54:02.000Z" itemprop="datePublished">2016-03-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/23/理解Runtime之消息转发/">理解Runtime之消息转发</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="u6D88_u606F_u4F20_u9012_u673A_u5236"><a href="#u6D88_u606F_u4F20_u9012_u673A_u5236" class="headerlink" title="消息传递机制"></a>消息传递机制</h2><p>消息是由接受者、选择子和参数构成，给某对象『发送消息』也就相当于『调用方法』。发给某对象的全部消息都要由『动态消息派发系统』来处理，该系统会查出相应的方法，并执行代码。举个例子：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">id</span> returnValue = [someObject messageName:parameter];</span><br><span class="line"><span class="comment">//[someObject messageName:parameter]就是消息</span></span><br><span class="line"><span class="comment">//someObject为接受者</span></span><br><span class="line"><span class="comment">//messageName为选择子也可以说是方法</span></span><br><span class="line"><span class="comment">//parameter参数</span></span><br></pre></td></tr></table></figure></p>
+<p>在runtime，『动态消息派发系统』会依据接受者（即上述对象someObject）和选择子类型来调用适当的方法。为了完成此操作，该方法需要在接收者所属的类中搜寻其『方法列表』，如果能找到与『选择子』匹配的方法，就调至其实现的代码。若找不到，那就沿着继承体系往父类查找，等找到合适的方法之后再跳转。如果最终还找不到相匹配的方法，那就执行『消息转发』</p>
+<h2 id="u6D88_u606F_u8F6C_u53D1"><a href="#u6D88_u606F_u8F6C_u53D1" class="headerlink" title="消息转发"></a>消息转发</h2><ol>
+<li><p>首先调用其所属类的下列方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果resolveInstanceMethod类方法无法解决，那么调用备援接收者:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)forwardingTargetForSelector:(SEL)aSelector</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果forwardingTargetForSelector还是无法解决，那么就要进行完整的消息转发：<br>首先创建NSInvocation对象，把与尚未处理的那条消息有关的全部细节都封装于其内。包括selector、target以及参数。触发NSInvocation时，『动态消息派发系统』把消息派给target。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)forwardingInvocation:(<span class="built_in">NSInvocation</span>)invocation</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>用流程图表示如下：<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/QQ20150427-1.png" alt=""><br>Receiver在每一步中均有机会处理消息。步骤越往后，处理消息的代价就越大；最好能在第一步就处理完，这样的话，runtime系统就可以将此方法缓存起来，进而提高效率。若想在第三步里把消息转发给备援的receiver，那还不如把转发操作提前到第二步。因为第三步只是修改了调用目标，这项改动放在第二步会更为简单，不然的话，还得创建并处理完整的NSInvocation。</p>
+<p>参考资料：<br>《Effective Objective-C 2.0》</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-深入理解KVO" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -885,68 +952,6 @@
 <li>参考资料 《iOS编程（第4版）》 Christian Keur， Aaron Hillegass &amp; Joe Conway</li>
 </ul>
 
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-本地通知-for-iOS8-later" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/28/本地通知-for-iOS8-later/" class="article-date">
-  	<time datetime="2016-01-28T10:11:26.000Z" itemprop="datePublished">2016-01-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/28/本地通知-for-iOS8-later/">本地通知 for iOS8 &amp; later</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="u7B80_u5355_u8BB0_u4E00_u7B14"><a href="#u7B80_u5355_u8BB0_u4E00_u7B14" class="headerlink" title="简单记一笔"></a>简单记一笔</h2><p>今天在写一个简单代码，用到了本地通知，代码如下</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)addReminder:(<span class="keyword">id</span>)sender&#123;</span><br><span class="line">    <span class="built_in">NSDate</span> *reminderDate = [datePicker date];</span><br><span class="line">    <span class="built_in">UILocalNotification</span> *notice = [[<span class="built_in">UILocalNotification</span> alloc]init];</span><br><span class="line">    notice<span class="variable">.alertBody</span> = <span class="string">@"Hypnotize me"</span>;</span><br><span class="line">    notice<span class="variable">.fireDate</span> = reminderDate;</span><br><span class="line">    </span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] scheduleLocalNotification:notice];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码没错，不过控制台出现了这样一行错误：</p>
-<blockquote>
-<p>Attempting to schedule a local notification ，with an alert but haven’t received permission from the user to display alerts，with a sound but haven’t received permission from the user to play sounds</p>
-</blockquote>
-<ul>
-<li>原因在于iOS8以后，系统需要在appdelegate中进行注册，才能实现本地通知。于是需要在appdelegate.m中加入下列代码：<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions &#123;</span><br><span class="line">    <span class="comment">// Override point for customization after application launch.</span></span><br><span class="line">    [application registerUserNotificationSettings:[<span class="built_in">UIUserNotificationSettings</span> settingsForTypes:<span class="built_in">UIUserNotificationTypeAlert</span>|<span class="built_in">UIUserNotificationTypeBadge</span>|<span class="built_in">UIUserNotificationTypeSound</span> categories:<span class="literal">nil</span>]];<span class="comment">//注册本地推送</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="P-S_uFF1A_u81EA_u5B66_u7684_u8FC7_u7A0B_u8FD8_u662F_u6BD4_u8F83_u7D2F_u4EBA_uFF0C_u5F88_u591A_u4E66_u4E0A_u6216_u8005blog_u4E0A_u7684_u65B9_u6CD5_u90FD_u662F_u6BD4_u8F83_u8001_u7684_uFF0C_u800C_u82F9_u679C_u516C_u53F8_u53C8_u4E00_u76F4_u5728_u66F4_u65B0_u65B0_u7684_u5185_u5BB9_uFF0C_u5F88_u591A_u8FC7_u65F6_u7684_u4E1C_u897F_u5728_u65B0_u7248_u672C_u7684_u7CFB_u7EDF_u4E2D_u5DF2_u7ECF_u6452_u5F03_u4E86_u3002"><a href="#P-S_uFF1A_u81EA_u5B66_u7684_u8FC7_u7A0B_u8FD8_u662F_u6BD4_u8F83_u7D2F_u4EBA_uFF0C_u5F88_u591A_u4E66_u4E0A_u6216_u8005blog_u4E0A_u7684_u65B9_u6CD5_u90FD_u662F_u6BD4_u8F83_u8001_u7684_uFF0C_u800C_u82F9_u679C_u516C_u53F8_u53C8_u4E00_u76F4_u5728_u66F4_u65B0_u65B0_u7684_u5185_u5BB9_uFF0C_u5F88_u591A_u8FC7_u65F6_u7684_u4E1C_u897F_u5728_u65B0_u7248_u672C_u7684_u7CFB_u7EDF_u4E2D_u5DF2_u7ECF_u6452_u5F03_u4E86_u3002" class="headerlink" title="P.S：自学的过程还是比较累人，很多书上或者blog上的方法都是比较老的，而苹果公司又一直在更新新的内容，很多过时的东西在新版本的系统中已经摒弃了。"></a>P.S：自学的过程还是比较累人，很多书上或者blog上的方法都是比较老的，而苹果公司又一直在更新新的内容，很多过时的东西在新版本的系统中已经摒弃了。</h3>
       
     </div>
     
