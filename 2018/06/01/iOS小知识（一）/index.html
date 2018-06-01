@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>iOS小知识（一） | Daniel Young&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="iOS tips
+创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。
+在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中
+iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x
+UIScrollView带有一个 contentIns">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS小知识（一）">
+<meta property="og:url" content="http://yoursite.com/2018/06/01/iOS小知识（一）/index.html">
+<meta property="og:site_name" content="Daniel Young's blog">
+<meta property="og:description" content="iOS tips
+创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。
+在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中
+iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x
+UIScrollView带有一个 contentIns">
+<meta property="og:updated_time" content="2018-06-01T04:49:27.556Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS小知识（一）">
+<meta name="twitter:description" content="iOS tips
+创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。
+在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中
+iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x
+UIScrollView带有一个 contentIns">
+  
+    <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqzfr.com1.z0.glb.clouddn.com/221_FfjKG6931FeJ3e2GkzbG_square.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Daniel Young</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>標籤</li>
+						
+						
+						<li>關於</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="/#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="/#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="/#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">逗逼一枚…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Daniel Young</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqzfr.com1.z0.glb.clouddn.com/221_FfjKG6931FeJ3e2GkzbG_square.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Daniel Young</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="/#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="/#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="/#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-iOS小知识（一）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/06/01/iOS小知识（一）/" class="article-date">
+  	<time datetime="2018-06-01T04:43:22.000Z" itemprop="datePublished">2018-06-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS小知识（一）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="iOS_tips"><a href="#iOS_tips" class="headerlink" title="iOS tips"></a>iOS tips</h3><ol>
+<li>创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。</li>
+<li>在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中</li>
+<li>iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x</li>
+<li>UIScrollView带有一个 contentInsetAdjustmentBehavior属性，特别是在webView中进行iPhone X 适配的时候，要将其设置为UIScrollViewContentInsetAdjustmentNever</li>
+<li>iOS7之后，UIScrollView增加了keyboardDismissMode属性，可以设置在scrollView滑动的时候，将键盘关闭。</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">UIScrollViewKeyboardDismissMode</span>) &#123;</span><br><span class="line">    <span class="built_in">UIScrollViewKeyboardDismissModeNone</span>,</span><br><span class="line">    <span class="built_in">UIScrollViewKeyboardDismissModeOnDrag</span>,      <span class="comment">// dismisses the keyboard when a drag begins</span></span><br><span class="line">    <span class="built_in">UIScrollViewKeyboardDismissModeInteractive</span>, <span class="comment">// the keyboard follows the dragging touch off screen, and may be pulled upward again to cancel the dismiss</span></span><br><span class="line">&#125; <span class="built_in">NS_ENUM_AVAILABLE_IOS</span>(<span class="number">7</span>_0);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>UIWebView可以跟据链接的来源对其操作。</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, UIWebViewNavigationType) &#123;&#10;&#10;    UIWebViewNavigationTypeLinkClicked, &#9;//&#28857;&#20987;&#38142;&#25509;&#10;&#10;    UIWebViewNavigationTypeFormSubmitted,&#9;//&#25552;&#20132;&#34920;&#21333;&#10;&#10;    UIWebViewNavigationTypeBackForward,&#9;&#9;//&#28857;&#20987;&#21069;&#36827;/&#36820;&#22238;&#10;&#10;    UIWebViewNavigationTypeReload,&#9;&#9;&#9;//&#28857;&#20987;&#37325;&#26032;&#21152;&#36733;&#10;&#10;    UIWebViewNavigationTypeFormResubmitted,&#9;//&#37325;&#22797;&#25552;&#20132;&#34920;&#21333;&#10;&#10;    UIWebViewNavigationTypeOther&#9;&#9;&#9;//&#20854;&#23427;&#34892;&#20026;&#10;&#10;&#125; __TVOS_PROHIBITED;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>Runloop 对象是利用字典来进行存储， Key(thread) – Value(loop)</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 全局的Dictionary，key 是 pthread_t， value 是 CFRunLoopRef</span></span><br><span class="line"><span class="keyword">static</span> <span class="built_in">CFMutableDictionaryRef</span> loopsDic;</span><br><span class="line"><span class="comment">/// 访问 loopsDic 时的锁</span></span><br><span class="line"><span class="keyword">static</span> <span class="built_in">CFSpinLock_t</span> loopsLock;</span><br><span class="line">  </span><br><span class="line"><span class="comment">/// 获取一个 pthread 对应的 RunLoop。</span></span><br><span class="line"><span class="built_in">CFRunLoopRef</span> _<span class="built_in">CFRunLoopGet</span>(pthread_t thread) &#123;</span><br><span class="line">    OSSpinLockLock(&amp;loopsLock);</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">if</span> (!loopsDic) &#123;</span><br><span class="line">        <span class="comment">// 第一次进入时，初始化全局Dic，并先为主线程创建一个 RunLoop。</span></span><br><span class="line">        loopsDic = <span class="built_in">CFDictionaryCreateMutable</span>();</span><br><span class="line">        <span class="built_in">CFRunLoopRef</span> mainLoop = _<span class="built_in">CFRunLoopCreate</span>();</span><br><span class="line">        <span class="built_in">CFDictionarySetValue</span>(loopsDic, pthread_main_thread_np(), mainLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">/// 直接从 Dictionary 里获取。</span></span><br><span class="line">    <span class="built_in">CFRunLoopRef</span> loop = <span class="built_in">CFDictionaryGetValue</span>(loopsDic, thread));</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">if</span> (!loop) &#123;</span><br><span class="line">        <span class="comment">/// 取不到时，创建一个</span></span><br><span class="line">        loop = _<span class="built_in">CFRunLoopCreate</span>();</span><br><span class="line">        <span class="built_in">CFDictionarySetValue</span>(loopsDic, thread, loop);</span><br><span class="line">        <span class="comment">/// 注册一个回调，当线程销毁时，顺便也销毁其对应的 RunLoop。</span></span><br><span class="line">        _<span class="built_in">CFSetTSD</span>(..., thread, loop, __<span class="built_in">CFFinalizeRunLoop</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    OSSpinLockUnLock(&amp;loopsLock);</span><br><span class="line">    <span class="keyword">return</span> loop;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">CFRunLoopRef</span> <span class="built_in">CFRunLoopGetMain</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> _<span class="built_in">CFRunLoopGet</span>(pthread_main_thread_np());</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">CFRunLoopRef</span> <span class="built_in">CFRunLoopGetCurrent</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> _<span class="built_in">CFRunLoopGet</span>(pthread_self());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>NSNotificationCenter是一个同步的单例模式，而这个通知中心的对象会一直存在于一个应用的生命周期。勿滥用通知，每次<code>post</code>一个通知时，通知中心都会去遍历一下它的分发表，然后将通知转发给相应的观察者，这样导致性能降低。</li>
+<li>addObserverForName 会生成一个匿名对象，需要remove。</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (id&#60;NSObject&#62;)addObserverForName:(NSString *)name&#10;                            object:(id)obj&#10;                             queue:(NSOperationQueue *)queue&#10;                        usingBlock:(void (^)(NSNotification *note))block&#10;&#10;//The return value is retained by the system, and should be held onto by the caller in order to remove the observer with removeObverser: later, to stop observation.</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/29/hexo-github-搭建博客/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">hexo + github 搭建博客</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS小知识（一）" data-title="iOS小知识（一）" data-url="http://yoursite.com/2018/06/01/iOS小知识（一）/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 Daniel Young
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

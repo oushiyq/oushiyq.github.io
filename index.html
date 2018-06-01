@@ -67,10 +67,10 @@
 					<div class="tips-arrow"></div>
 					<ul class="tips-inner">
 						<li>菜单</li>
-						<li>Tags</li>
+						<li>標籤</li>
 						
 						
-						<li>Über</li>
+						<li>關於</li>
 						
 					</ul>
 				</div>
@@ -173,10 +173,83 @@
 
       <div class="body-wrap">
   
-    <article id="post-hex-github-搭建博客" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-iOS小知识（一）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/05/29/hex-github-搭建博客/" class="article-date">
+      <a href="/2018/06/01/iOS小知识（一）/" class="article-date">
+  	<time datetime="2018-06-01T04:43:22.000Z" itemprop="datePublished">2018-06-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/01/iOS小知识（一）/">iOS小知识（一）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="iOS_tips"><a href="#iOS_tips" class="headerlink" title="iOS tips"></a>iOS tips</h3><ol>
+<li>创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。</li>
+<li>在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中</li>
+<li>iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x</li>
+<li>UIScrollView带有一个 contentInsetAdjustmentBehavior属性，特别是在webView中进行iPhone X 适配的时候，要将其设置为UIScrollViewContentInsetAdjustmentNever</li>
+<li>iOS7之后，UIScrollView增加了keyboardDismissMode属性，可以设置在scrollView滑动的时候，将键盘关闭。</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">UIScrollViewKeyboardDismissMode</span>) &#123;</span><br><span class="line">    <span class="built_in">UIScrollViewKeyboardDismissModeNone</span>,</span><br><span class="line">    <span class="built_in">UIScrollViewKeyboardDismissModeOnDrag</span>,      <span class="comment">// dismisses the keyboard when a drag begins</span></span><br><span class="line">    <span class="built_in">UIScrollViewKeyboardDismissModeInteractive</span>, <span class="comment">// the keyboard follows the dragging touch off screen, and may be pulled upward again to cancel the dismiss</span></span><br><span class="line">&#125; <span class="built_in">NS_ENUM_AVAILABLE_IOS</span>(<span class="number">7</span>_0);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>UIWebView可以跟据链接的来源对其操作。</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, UIWebViewNavigationType) &#123;&#10;&#10;    UIWebViewNavigationTypeLinkClicked, &#9;//&#28857;&#20987;&#38142;&#25509;&#10;&#10;    UIWebViewNavigationTypeFormSubmitted,&#9;//&#25552;&#20132;&#34920;&#21333;&#10;&#10;    UIWebViewNavigationTypeBackForward,&#9;&#9;//&#28857;&#20987;&#21069;&#36827;/&#36820;&#22238;&#10;&#10;    UIWebViewNavigationTypeReload,&#9;&#9;&#9;//&#28857;&#20987;&#37325;&#26032;&#21152;&#36733;&#10;&#10;    UIWebViewNavigationTypeFormResubmitted,&#9;//&#37325;&#22797;&#25552;&#20132;&#34920;&#21333;&#10;&#10;    UIWebViewNavigationTypeOther&#9;&#9;&#9;//&#20854;&#23427;&#34892;&#20026;&#10;&#10;&#125; __TVOS_PROHIBITED;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>Runloop 对象是利用字典来进行存储， Key(thread) – Value(loop)</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 全局的Dictionary，key 是 pthread_t， value 是 CFRunLoopRef</span></span><br><span class="line"><span class="keyword">static</span> <span class="built_in">CFMutableDictionaryRef</span> loopsDic;</span><br><span class="line"><span class="comment">/// 访问 loopsDic 时的锁</span></span><br><span class="line"><span class="keyword">static</span> <span class="built_in">CFSpinLock_t</span> loopsLock;</span><br><span class="line">  </span><br><span class="line"><span class="comment">/// 获取一个 pthread 对应的 RunLoop。</span></span><br><span class="line"><span class="built_in">CFRunLoopRef</span> _<span class="built_in">CFRunLoopGet</span>(pthread_t thread) &#123;</span><br><span class="line">    OSSpinLockLock(&amp;loopsLock);</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">if</span> (!loopsDic) &#123;</span><br><span class="line">        <span class="comment">// 第一次进入时，初始化全局Dic，并先为主线程创建一个 RunLoop。</span></span><br><span class="line">        loopsDic = <span class="built_in">CFDictionaryCreateMutable</span>();</span><br><span class="line">        <span class="built_in">CFRunLoopRef</span> mainLoop = _<span class="built_in">CFRunLoopCreate</span>();</span><br><span class="line">        <span class="built_in">CFDictionarySetValue</span>(loopsDic, pthread_main_thread_np(), mainLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">/// 直接从 Dictionary 里获取。</span></span><br><span class="line">    <span class="built_in">CFRunLoopRef</span> loop = <span class="built_in">CFDictionaryGetValue</span>(loopsDic, thread));</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">if</span> (!loop) &#123;</span><br><span class="line">        <span class="comment">/// 取不到时，创建一个</span></span><br><span class="line">        loop = _<span class="built_in">CFRunLoopCreate</span>();</span><br><span class="line">        <span class="built_in">CFDictionarySetValue</span>(loopsDic, thread, loop);</span><br><span class="line">        <span class="comment">/// 注册一个回调，当线程销毁时，顺便也销毁其对应的 RunLoop。</span></span><br><span class="line">        _<span class="built_in">CFSetTSD</span>(..., thread, loop, __<span class="built_in">CFFinalizeRunLoop</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    OSSpinLockUnLock(&amp;loopsLock);</span><br><span class="line">    <span class="keyword">return</span> loop;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">CFRunLoopRef</span> <span class="built_in">CFRunLoopGetMain</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> _<span class="built_in">CFRunLoopGet</span>(pthread_main_thread_np());</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">CFRunLoopRef</span> <span class="built_in">CFRunLoopGetCurrent</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> _<span class="built_in">CFRunLoopGet</span>(pthread_self());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>NSNotificationCenter是一个同步的单例模式，而这个通知中心的对象会一直存在于一个应用的生命周期。勿滥用通知，每次<code>post</code>一个通知时，通知中心都会去遍历一下它的分发表，然后将通知转发给相应的观察者，这样导致性能降低。</li>
+<li>addObserverForName 会生成一个匿名对象，需要remove。</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (id&#60;NSObject&#62;)addObserverForName:(NSString *)name&#10;                            object:(id)obj&#10;                             queue:(NSOperationQueue *)queue&#10;                        usingBlock:(void (^)(NSNotification *note))block&#10;&#10;//The return value is retained by the system, and should be held onto by the caller in order to remove the observer with removeObverser: later, to stop observation.</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-hexo-github-搭建博客" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/05/29/hexo-github-搭建博客/" class="article-date">
   	<time datetime="2018-05-29T11:10:47.000Z" itemprop="datePublished">2018-05-29</time>
 </a>
     </div>
@@ -190,7 +263,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/29/hex-github-搭建博客/">hexo + github 搭建博客</a>
+      <a class="article-title" href="/2018/05/29/hexo-github-搭建博客/">hexo + github 搭建博客</a>
     </h1>
   
 
@@ -229,58 +302,6 @@
 </ol>
 <p>这样，48小时之内，输入我们的域名，就能看到blog上线咯</p>
 
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-深入理解Runtime" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/12/06/深入理解Runtime/" class="article-date">
-  	<time datetime="2016-12-06T01:04:38.000Z" itemprop="datePublished">2016-12-06</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/06/深入理解Runtime/">深入理解Runtime</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
       
     </div>
     
