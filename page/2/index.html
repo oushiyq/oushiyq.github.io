@@ -173,6 +173,64 @@
 
       <div class="body-wrap">
   
+    <article id="post-protocol和delegate" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/14/protocol和delegate/" class="article-date">
+  	<time datetime="2016-04-14T11:31:56.000Z" itemprop="datePublished">2016-04-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/14/protocol和delegate/">Protocol和Delegate</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>说来惭愧，直到昨天，我还对protocol和delegate之间的区别有所疑惑。总认为他们俩之间有些相似之处，然而他们俩者完全是不同的东西！</p>
+<h2 id="u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981protocol"><a href="#u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981protocol" class="headerlink" title="为什么我们需要protocol"></a>为什么我们需要protocol</h2><p>在Objective-C中，继承是单一继承，即不支持如C++的多继承方式。然而，我们有时候又强烈的需要多继承的方法，这就是protocol的作用了。我们可以把某个类应该实现的一系列方法定义在protocol里面，其他的类采用该protocol，那么就相对于他同时继承了父类和protocol中定义的一系列方法。</p>
+<h2 id="protocol"><a href="#protocol" class="headerlink" title="protocol"></a>protocol</h2><p>protocol是一系列方法的声明列表，只要某个类采用了这个protocol，那么这个类便拥有了协议中的所有方法声明。但是协议只是负责声明对象需要的方法，而这些个实现方法与protocol无关。其语法如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">myProtocol</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line">    <span class="comment">//方法声明1</span></span><br><span class="line">    <span class="comment">//方法声明2</span></span><br><span class="line">    <span class="comment">//方法声明3</span></span><br><span class="line">    ……</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p>要拥有协议中声明的方法，就必须遵守protocol，如果某个类遵守的协议有多个，则用逗号进行分隔。其语法如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> 类名 : 父类&lt;<span class="title">protocol_1</span>，<span class="title">protocol_2</span>, ……&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h2><p>delegate是一种设计模式，这种模式用于应用程序的一个对象delegate另外一个对象和其他对象交互。总而言之，delegate只是一种设计模式而已，是大家约定俗成的一种做法。在OC中，通常使用协议来实现代理，即把协议当成用户和代理中间的『中转站』，在协议中定义一些和代理沟通的方法。也就是因为这个原因，初学者会经常把Protocol和Delegate弄混淆。<br>这里举个例子吧：<br>假如有个A类，他把需要的事交给B类处理，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">classA</span> : <span class="title">NSObject</span></span>&#123;</span><br><span class="line">	classB *B；</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p>只需要在A类中声明一个B类的ivar就行了，这就是delegate……他真的只是一个设计模式而已。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-iOS中的MVC设计模式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -874,68 +932,6 @@
 </tbody>
 </table>
 <p>参考资料:<br>1.《大话数据结构》 程杰<br>2.《数据结构（c语言版）》 严蔚敏 吴伟民</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-纸牌游戏" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/02/24/纸牌游戏/" class="article-date">
-  	<time datetime="2016-02-24T12:20:42.000Z" itemprop="datePublished">2016-02-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/02/24/纸牌游戏/">纸牌游戏</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近被同学推荐看了一下Stanford的iOS开放教程，于是自己动手做了一下前3讲提到的Machismo游戏。</p>
-<h3 id="UI_u8BBE_u8BA1"><a href="#UI_u8BBE_u8BA1" class="headerlink" title="UI设计"></a>UI设计</h3><p>在一张桌布上摆放12个UIButton作为纸牌，点击时翻面。</p>
-<p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/Simulator%20Screen%20Shot%202016%E5%B9%B42%E6%9C%8828%E6%97%A5%20%E4%B8%8B%E5%8D%887.57.51.png?imageView/2/w/300/q/90" alt=""></p>
-<h3 id="u6E38_u620F_u89C4_u5219"><a href="#u6E38_u620F_u89C4_u5219" class="headerlink" title="游戏规则"></a>游戏规则</h3><p>点击一张纸牌A，翻面。再点击一张纸牌B，翻面后，存在以下几种情况：</p>
-<ol>
-<li>A与B的点数相同，两张纸牌同时被锁定，score+4;</li>
-<li>A与B的花色相同，两张纸牌同时被锁定，score+2;</li>
-<li>A与B的点数和花色都不同，A翻面,score-1.<h3 id="u5B9E_u9645_u6548_u679C"><a href="#u5B9E_u9645_u6548_u679C" class="headerlink" title="实际效果"></a>实际效果</h3><img src="http://7xqzfr.com1.z0.glb.clouddn.com/2016-02-28%2020_04_03.gif?imageView/2/w/300/q/90" alt=""></li>
-</ol>
-<p>代码Demo<a href="https://github.com/oushiyq/iOSdemos/tree/master/cardMatch2" target="_blank" rel="external">在这</a></p>
 
       
     </div>
