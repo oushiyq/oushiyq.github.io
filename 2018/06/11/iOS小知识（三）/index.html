@@ -16,7 +16,7 @@ __bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa�
 <meta property="og:description" content="一、iOS响应链​    pointInside:  withEvent:方法是对于目标view的bounds来说的，因此在hitTest: withEvent:方法中需要先用convertPoint: toView: 方法将point坐标转换到目标view上。
 二、free brige
 __bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa转换到Core，需要人工CFRet">
-<meta property="og:updated_time" content="2018-06-11T04:29:13.950Z">
+<meta property="og:updated_time" content="2018-06-11T04:32:18.336Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS小知识（三）">
 <meta name="twitter:description" content="一、iOS响应链​    pointInside:  withEvent:方法是对于目标view的bounds来说的，因此在hitTest: withEvent:方法中需要先用convertPoint: toView: 方法将point坐标转换到目标view上。
@@ -231,6 +231,7 @@ __bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa�
 <p>heightForRow方法会先调用三次，然后每调用一次cellForRow的时候再调用一次对应的heightForRow。</p>
 <p><strong>iOS 11 ：</strong></p>
 <p> 先row = 0调用一次 cellForRow，然后一次heightForRow.然后再是row =1 ,依次类推。</p>
+<h4 id="u4E94_u3001_u5728Xib_u4E2D_uFF0C_u62D6_u51FA_u6765_u7684_u63A7_u4EF6_u4E3Aweak"><a href="#u4E94_u3001_u5728Xib_u4E2D_uFF0C_u62D6_u51FA_u6765_u7684_u63A7_u4EF6_u4E3Aweak" class="headerlink" title="五、在Xib中，拖出来的控件为weak"></a>五、在Xib中，拖出来的控件为weak</h4><p>​    IBOutlet的属性一般可以设为weak是因为它已经被IBOutlet.superView引用了，除非IBOutlet.superView被释放，否则IBOutlet的属性也不会被释放。另外IBOutlet属性的生命周期和IBOutlet.superView应该是一致的，所以IBOutlet属性一般设为weak。</p>
 
       
     </div>
