@@ -4,24 +4,21 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>iOS小知识（三） | Daniel Young&#39;s blog</title>
+  <title>iOS小知识（四） | Daniel Young&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、iOS响应链​    pointInside:  withEvent:方法是对于目标view的bounds来说的，因此在hitTest: withEvent:方法中需要先用convertPoint: toView: 方法将point坐标转换到目标view上。
-二、free brige
-__bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa转换到Core，需要人工CFRet">
+  <meta name="description" content="contentOffset 表示UIScrollView滚动的位置。（其实就是内容视图左上角与scrollView显示视图左上角的间距值）
+contentsize：内容显示的尺寸，包括tableheadview。 cell， tableFootView，而且tableview添加子视图的顶点是contentsize的左上角，但如果子视图的起点为-50，则contentsize自动会向上扩展50.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS小知识（三）">
-<meta property="og:url" content="http://yoursite.com/2018/06/11/iOS小知识（三）/index.html">
+<meta property="og:title" content="iOS小知识（四）">
+<meta property="og:url" content="http://yoursite.com/2018/06/19/iOS小知识（四）/index.html">
 <meta property="og:site_name" content="Daniel Young's blog">
-<meta property="og:description" content="一、iOS响应链​    pointInside:  withEvent:方法是对于目标view的bounds来说的，因此在hitTest: withEvent:方法中需要先用convertPoint: toView: 方法将point坐标转换到目标view上。
-二、free brige
-__bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa转换到Core，需要人工CFRet">
-<meta property="og:updated_time" content="2018-06-11T04:32:18.336Z">
+<meta property="og:description" content="contentOffset 表示UIScrollView滚动的位置。（其实就是内容视图左上角与scrollView显示视图左上角的间距值）
+contentsize：内容显示的尺寸，包括tableheadview。 cell， tableFootView，而且tableview添加子视图的顶点是contentsize的左上角，但如果子视图的起点为-50，则contentsize自动会向上扩展50.">
+<meta property="og:updated_time" content="2018-06-19T08:03:15.918Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS小知识（三）">
-<meta name="twitter:description" content="一、iOS响应链​    pointInside:  withEvent:方法是对于目标view的bounds来说的，因此在hitTest: withEvent:方法中需要先用convertPoint: toView: 方法将point坐标转换到目标view上。
-二、free brige
-__bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa转换到Core，需要人工CFRet">
+<meta name="twitter:title" content="iOS小知识（四）">
+<meta name="twitter:description" content="contentOffset 表示UIScrollView滚动的位置。（其实就是内容视图左上角与scrollView显示视图左上角的间距值）
+contentsize：内容显示的尺寸，包括tableheadview。 cell， tableFootView，而且tableview添加子视图的顶点是contentsize的左上角，但如果子视图的起点为-50，则contentsize自动会向上扩展50.">
   
     <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
   
@@ -178,11 +175,11 @@ __bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa�
 	</div>
 </nav>
 
-      <div class="body-wrap"><article id="post-iOS小知识（三）" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-iOS小知识（四）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/06/11/iOS小知识（三）/" class="article-date">
-  	<time datetime="2018-06-11T04:16:54.000Z" itemprop="datePublished">2018-06-11</time>
+      <a href="/2018/06/19/iOS小知识（四）/" class="article-date">
+  	<time datetime="2018-06-19T08:02:57.000Z" itemprop="datePublished">2018-06-19</time>
 </a>
     </div>
   
@@ -195,7 +192,7 @@ __bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa�
         
   
     <h1 class="article-title" itemprop="name">
-      iOS小知识（三）
+      iOS小知识（四）
     </h1>
   
 
@@ -211,27 +208,32 @@ __bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa�
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="u4E00_u3001iOS_u54CD_u5E94_u94FE"><a href="#u4E00_u3001iOS_u54CD_u5E94_u94FE" class="headerlink" title="一、iOS响应链"></a>一、iOS响应链</h4><p>​    <code>pointInside:  withEvent:</code>方法是对于目标view的bounds来说的，因此在<code>hitTest: withEvent:</code>方法中需要先用<code>convertPoint: toView:</code> 方法将point坐标转换到目标view上。</p>
-<h4 id="u4E8C_u3001free_brige"><a href="#u4E8C_u3001free_brige" class="headerlink" title="二、free brige"></a>二、free brige</h4><ol>
-<li><p><code>__bridge</code>，什么也不做，仅仅是转换。此种情况下：<br>(1). 从Cocoa转换到Core，需要人工CFRetain，否则，Cocoa指针释放后， 传出去的指针则无效。</p>
-<p>(2). 从Core转换到Cocoa，需要人工CFRelease，否则，Cocoa指针释放后，对象引用计数仍为1，不会被销毁。</p>
+        <ol>
+<li><p>contentOffset 表示UIScrollView滚动的位置。（其实就是内容视图左上角与scrollView显示视图左上角的间距值）</p>
+<p>contentsize：内容显示的尺寸，包括tableheadview。 cell， tableFootView，而且tableview添加子视图的顶点是contentsize的左上角，但如果子视图的起点为-50，则contentsize自动会向上扩展50.</p>
+<p>contentInset：附着内容尺寸，在contentsize的四周</p>
+<p>contentOffset.y：已滚动的y值，contentsize顶部到目前屏幕的顶部</p>
 </li>
-<li><p><code>__bridge_retained</code>，转换后自动调用CFRetain，即帮助自动解决上述(1)的情形。</p>
+<li><p>OSSpinLock 自旋锁，性能最高的锁。原理很简单，就是一直 do while 忙等。它的缺点是当等待时会消耗大量 CPU 资源，所以它不适用于较长时间的任务。对于内存缓存的存取来说，它非常合适。</p>
+<p>dispatch_semaphore 是信号量，但当信号总量设为 1 时也可以当作锁来。在没有等待情况出现时，它的性能比 pthread_mutex 还要高，但一旦有等待情况出现时，性能就会下降许多。相对于 OSSpinLock 来说，它的优势在于等待时不会消耗 CPU 资源。对磁盘缓存来说，它比较合适</p>
 </li>
-<li><p><code>__bridge_transfer</code>，转换后自动调用CFRelease，即帮助自动解决上述(2)的情形。</p>
+<li><p><code>removeFromSuperview</code>就是一个视图节点删除的操作，执行这个方法，就等于在树形结构中找到该节点，从树型数据结构中删除该节点及其子节点，而并非只是删除该节点自己。同时，另一个操作就是把该对象从响应者链中移除。removeFromSuperview，子视图只remove一次</p>
+</li>
+<li><p>new 等于 alloc init ，除了alloc 会分配一块相邻的zone来提升程序处理速度。并且，new 实质上隐形的调用了init，alloc init 可以调用更多的初始化函数。因此，在iOS开发中，人们更加习惯于alloc init。</p>
+</li>
+<li><p><code>addsubview:</code>，子视图只添加一次。多个superView对同一subView执行<code>addSubview:</code>操作，以最后一次为准</p>
+</li>
+<li><p>block被成员变量引用后，会被copy一份_NSConcreteMallocBlock类型的block。因此，在weakSelf已经释放的情况下，block还能存在。</p>
+</li>
+<li><p>图片缩放不止可以用手势，也可以用ScrollView</p>
+</li>
+<li><p>在OC中，不允许直接修改OC对象的结构体属性的成员</p>
+</li>
+<li><p>Multiple locks on web thread not allowed! Please file a bug. Crashing now… 是因为在子线程中请求了网络</p>
+</li>
+<li><p>NSBlockOperation只有其内部是并发执行的，其本身还是同步执行</p>
 </li>
 </ol>
-<h4 id="u4E09_u3001__u56FE_u7247_u62C9_u4F38"><a href="#u4E09_u3001__u56FE_u7247_u62C9_u4F38" class="headerlink" title="三、 图片拉伸"></a>三、 图片拉伸</h4><p>​    <code>stretchableImageWithLeftCapWidth：topCapHeight:</code>方法可以创建一个内容可拉伸，而边角不拉伸的图片。需要两个参数，第一个是左边不拉伸区域的宽度，第二个参数是上面不拉伸的高度。</p>
-<p><code>注意：可拉伸的范围都是距离leftCapWidth后的1竖排像素，和距离topCapHeight后的1横排像素。</code></p>
-<h4 id="u56DB_u3001_tableView_3A_heightForRowAtIndexPath_3A_u548CtableView_3A_cellForRowAtIndexPath_u8C03_u7528_u987A_u5E8F_u7684_u53D8_u8FC1"><a href="#u56DB_u3001_tableView_3A_heightForRowAtIndexPath_3A_u548CtableView_3A_cellForRowAtIndexPath_u8C03_u7528_u987A_u5E8F_u7684_u53D8_u8FC1" class="headerlink" title="四、 tableView: heightForRowAtIndexPath:和tableView: cellForRowAtIndexPath调用顺序的变迁"></a>四、 <code>tableView: heightForRowAtIndexPath:</code>和<code>tableView: cellForRowAtIndexPath</code>调用顺序的变迁</h4><p><strong>iOS  7及之前: </strong></p>
-<p> 先依次调一遍heightForRow方法再依次调一遍cellForRow方法，在调cellForRow方法的时候并不会再调一次对应的heightForRow方法。如果我们实现了<code>tableView: estimatedHeightForRowAtIndexPath:</code>给了系统估计高度，那么上述两个方法的执行顺序就会颠倒。并且给定估计高度对于TableView的性能方面也提示不少。</p>
-<p><strong>iOS 8  ：</strong></p>
-<p>先依次调heightForRow（如果行数超过屏幕依次调用两次，如果行数很少，没有超过屏幕，只依次调用一次），之后每调一次cellForRow的时候又调一次对应的heightForRow方法。</p>
-<p><strong>iOS 9和iOS 10:</strong></p>
-<p>heightForRow方法会先调用三次，然后每调用一次cellForRow的时候再调用一次对应的heightForRow。</p>
-<p><strong>iOS 11 ：</strong></p>
-<p> 先row = 0调用一次 cellForRow，然后一次heightForRow.然后再是row =1 ,依次类推。</p>
-<h4 id="u4E94_u3001_u5728Xib_u4E2D_uFF0C_u62D6_u51FA_u6765_u7684_u63A7_u4EF6_u4E3Aweak"><a href="#u4E94_u3001_u5728Xib_u4E2D_uFF0C_u62D6_u51FA_u6765_u7684_u63A7_u4EF6_u4E3Aweak" class="headerlink" title="五、在Xib中，拖出来的控件为weak"></a>五、在Xib中，拖出来的控件为weak</h4><p>​    IBOutlet的属性一般可以设为weak是因为它已经被IBOutlet.superView引用了，除非IBOutlet.superView被释放，否则IBOutlet的属性也不会被释放。另外IBOutlet属性的生命周期和IBOutlet.superView应该是一致的，所以IBOutlet属性一般设为weak。</p>
 
       
     </div>
@@ -241,18 +243,9 @@ __bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa�
     
 <nav id="article-nav">
   
-    <a href="/2018/06/19/iOS小知识（四）/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          iOS小知识（四）
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/06/iOS小知识（二）/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">iOS小知识（二）</div>
+    <a href="/2018/06/11/iOS小知识（三）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS小知识（三）</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -287,7 +280,7 @@ __bridge，什么也不做，仅仅是转换。此种情况下：(1). 从Cocoa�
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS小知识（三）" data-title="iOS小知识（三）" data-url="http://yoursite.com/2018/06/11/iOS小知识（三）/"></div>
+	<div class="ds-thread" data-thread-key="iOS小知识（四）" data-title="iOS小知识（四）" data-url="http://yoursite.com/2018/06/19/iOS小知识（四）/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
