@@ -4,25 +4,25 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>iOS小知识（五） | Daniel Young&#39;s blog</title>
+  <title>iOS小知识（六） | Daniel Young&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、 protocol 和 delegate​    protocol 自己定义，自己实现。遵从该protocol 的ivar，拥有protocol声明的能力。
-​    delegate 自己定义，他人实现。自己无法实现某方法时，他人帮你实现。
-二、strong-weak dance在block中一开始就执行__strong typeof（weakSelf）strongSelf  =  weak">
+  <meta name="description" content="1、UINavigationBar 和 UINavigationItem
+UINavigationBar 对于一个navigationController来说是唯一存在的，用来显示UINavigationItem的buttons和views。
+每个push进navigationController的viewController都拥有UINavigationItem。UINavigationItem">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS小知识（五）">
-<meta property="og:url" content="http://yoursite.com/2018/06/28/iOS小知识（五）/index.html">
+<meta property="og:title" content="iOS小知识（六）">
+<meta property="og:url" content="http://yoursite.com/2018/07/06/iOS小知识（六）/index.html">
 <meta property="og:site_name" content="Daniel Young's blog">
-<meta property="og:description" content="一、 protocol 和 delegate​    protocol 自己定义，自己实现。遵从该protocol 的ivar，拥有protocol声明的能力。
-​    delegate 自己定义，他人实现。自己无法实现某方法时，他人帮你实现。
-二、strong-weak dance在block中一开始就执行__strong typeof（weakSelf）strongSelf  =  weak">
-<meta property="og:image" content="https://docs.swift.org/swift-book/_images/initializerDelegation02_2x.png">
-<meta property="og:updated_time" content="2018-06-28T15:43:32.769Z">
+<meta property="og:description" content="1、UINavigationBar 和 UINavigationItem
+UINavigationBar 对于一个navigationController来说是唯一存在的，用来显示UINavigationItem的buttons和views。
+每个push进navigationController的viewController都拥有UINavigationItem。UINavigationItem">
+<meta property="og:image" content="http://7xqzfr.com1.z0.glb.clouddn.com/12000758-16e4ef9d1fcc4afaa35e4d03dfb3f0aa.png">
+<meta property="og:updated_time" content="2018-07-06T04:57:00.186Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS小知识（五）">
-<meta name="twitter:description" content="一、 protocol 和 delegate​    protocol 自己定义，自己实现。遵从该protocol 的ivar，拥有protocol声明的能力。
-​    delegate 自己定义，他人实现。自己无法实现某方法时，他人帮你实现。
-二、strong-weak dance在block中一开始就执行__strong typeof（weakSelf）strongSelf  =  weak">
+<meta name="twitter:title" content="iOS小知识（六）">
+<meta name="twitter:description" content="1、UINavigationBar 和 UINavigationItem
+UINavigationBar 对于一个navigationController来说是唯一存在的，用来显示UINavigationItem的buttons和views。
+每个push进navigationController的viewController都拥有UINavigationItem。UINavigationItem">
   
     <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
   
@@ -179,11 +179,11 @@
 	</div>
 </nav>
 
-      <div class="body-wrap"><article id="post-iOS小知识（五）" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-iOS小知识（六）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/06/28/iOS小知识（五）/" class="article-date">
-  	<time datetime="2018-06-28T15:38:48.000Z" itemprop="datePublished">2018-06-28</time>
+      <a href="/2018/07/06/iOS小知识（六）/" class="article-date">
+  	<time datetime="2018-07-06T04:23:51.000Z" itemprop="datePublished">2018-07-06</time>
 </a>
     </div>
   
@@ -196,7 +196,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      iOS小知识（五）
+      iOS小知识（六）
     </h1>
   
 
@@ -212,35 +212,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="u4E00_u3001_protocol__u548C_delegate"><a href="#u4E00_u3001_protocol__u548C_delegate" class="headerlink" title="一、 protocol 和 delegate"></a>一、 protocol 和 delegate</h4><p>​    protocol 自己定义，自己实现。遵从该protocol 的ivar，拥有protocol声明的能力。</p>
-<p>​    delegate 自己定义，他人实现。自己无法实现某方法时，他人帮你实现。</p>
-<h4 id="u4E8C_u3001strong-weak_dance"><a href="#u4E8C_u3001strong-weak_dance" class="headerlink" title="二、strong-weak dance"></a>二、strong-weak dance</h4><p>在block中一开始就执行<code>__strong typeof（weakSelf）strongSelf  =  weakSelf</code>，是为了在block代码执行期间，其他线程 release了weakSelf，不释放weakSelf所指向的对象，只是引用计数-1。但是在block执行之前，weakSelf可能已经释放了，因此，在block中应该先判断strongSelf 是否为nil。避免引起crash。</p>
-<h4 id="u4E09_u3001_Designated_Initializers__u548C_Convenience_Initializers"><a href="#u4E09_u3001_Designated_Initializers__u548C_Convenience_Initializers" class="headerlink" title="三、 Designated Initializers 和 Convenience Initializers"></a>三、 Designated Initializers 和 Convenience Initializers</h4><p>Designated Initializers 可以调super，一般一个类只有一个（且至少有一个），用来完成继承链</p>
-<p>Convenience Initializers 不调super，调 self，一个类可以没有</p>
-<ul>
-<li><p><strong>Rule 1</strong></p>
-<p>designated initializer 必须调用其父类的designated initializer</p>
-</li>
-<li><p><strong>Rule 2</strong></p>
-<p>convenience initializer 必须调用本类的initializer方法</p>
-</li>
-<li><p><strong>Rule 3</strong></p>
-<p>convenience initializer 最后必须调用designated initializer</p>
-</li>
-</ul>
-<p><img src="https://docs.swift.org/swift-book/_images/initializerDelegation02_2x.png" alt=""></p>
-<h4 id="u56DB_u3001NSProxy__u548C_NSObject__u65B9_u6CD5_u8C03_u7528"><a href="#u56DB_u3001NSProxy__u548C_NSObject__u65B9_u6CD5_u8C03_u7528" class="headerlink" title="四、NSProxy 和 NSObject 方法调用"></a>四、NSProxy 和 NSObject 方法调用</h4><p>​    <strong>NSObejct</strong> </p>
-<p>​    1）在本类 method list 中查找selector 。找不到时，沿着继承链查找selector，直到找到为止。若找不到，进入消息派发流程。</p>
-<p>​    2）进入消息派发时，本类会调用 <code>+(BOOL)resolveInstanceMethod:(SEL)sel</code>，其中sel 为selector。在这一步，本类可以使用<code>class_addMethod（）</code> 来动态添加方法处理这个selector，并返回YES表示selector被成功处理。 </p>
-<p>​    3）在<code>resolveInstanceMethod:</code> 方法返回NO的情况下，本类会调用</p>
-<p><code>- (id)forwardingTargetForSelector:(SEL)sel</code> ，其中sel 为selector。在这一步，本类可以返回一个能够处理该selector的备援对象，表示该备援对象可以处理selector。</p>
-<p>​    4）在<code>forwardingTargetForSelector:</code> 方法返回nil的情况下，本类会调用<code>- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel</code> ，用sel来生成一个NSMethodSignature 对象（携带了selector的参数类型、返回值类型和长度等信息）。在<code>methodSignatureForSelector:</code>的返回值不为nil的情况下，本类调用 <code>- (void)forwardInvocation:(NSInvocation *)invocation</code>，在该方法中，我们可以修改invocation的target，改变selector的receiver。</p>
-<p>​    <strong>NSProxy</strong></p>
-<p>​    NSProxy对象会直接回调 <code>-methodSignatureForSelector:</code>/<code>-forwardInvocation:</code></p>
-<h4 id="u4E94_u3001UIButton_edgeInset"><a href="#u4E94_u3001UIButton_edgeInset" class="headerlink" title="五、UIButton edgeInset"></a>五、UIButton edgeInset</h4><p><code>contentEdgeInsets:</code> 表示content相对于button矩形的inset/outset，其insets (top, left, bottom, right) 正值将使button矩形的size变大，负值将缩小size。button可以通过这个insets来决定自身的大小。</p>
-<p><code>titleEdgeInsets:</code>  表示titleLabel相对于原frame的inset/outset，其insets (top, left, bottom, right) 正值将使titleLabel左移/下移，负值将使titleLabel右移/上移。其中的top/bottom 和 left/right 应互为相反数。需要注意的是：insets是在titleLable.text 进行sizetToFits 之后才设置的，因此，正值的inset可能会使text被截断。</p>
-<p><code>imageEdgeInsets:</code>  表示imageView相对于原frame的inset/outset，其insets (top, left, bottom, right) 正值将使titleLabel左移/下移，负值将使titleLabel右移/上移。其中的top/bottom 和 left/right 应互为相反数。</p>
-<p>`</p>
+        <p>1、UINavigationBar 和 UINavigationItem</p>
+<p>UINavigationBar 对于一个navigationController来说是唯一存在的，用来显示UINavigationItem的buttons和views。</p>
+<p>每个push进navigationController的viewController都拥有UINavigationItem。UINavigationItem 用于管理UINavigationBar的buttons和views</p>
+<p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/12000758-16e4ef9d1fcc4afaa35e4d03dfb3f0aa.png" alt="UINavigationController 层级关系"></p>
+<p>2、 在一个VC中，VC.navigationViewController 不能连续push两个VC，若需要连续push，需要操纵navigationViewController 的viewControllers数组。可以参考下列代码</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray *controllers = [self.navigationController.viewControllers mutableCopy];[controllers addObject:secondVc];&#10;[controllers addObject:thirdVC];&#10;[self.navigationController setViewControllers:controllers animated:YES];&#10;/*&#10;&#9;&#36825;&#22359;&#20195;&#30721;&#20250;&#22312;self(firstVC)&#20013;&#30452;&#25509;push&#21040;thirdVC&#12290;&#24403;&#29992;&#25143;&#28857;&#20987;back&#25353;&#38062;&#26102;&#65292;&#20250;&#36864;&#22238;secondVC&#10;*/</span><br></pre></td></tr></table></figure>
+<p>3、 RAC的@weakify和@strongify。</p>
+<p>​    将@weakify @strongify 宏展开，可以得到以下代码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@weakify(self) = __weak __typeof_ (self) self_weak = (self);&#10;@strongify(self) = __strong __typeof__(self) self = self_weak_;</span><br></pre></td></tr></table></figure>
+<p>​    由于@strongify(self) 重新定义的strongSelf 是self，因此在block中使用ivar时，需注意指明self，否则会导致循环引用。</p>
+<p>4、 使用CALayer显示图片时，需注意layer的contents 属性不支持UIImage，需将 UIImage转为CGImage。</p>
+<p>5、 transform 会改变frame 的大小，对bounds无影响</p>
 
       
     </div>
@@ -250,18 +233,9 @@
     
 <nav id="article-nav">
   
-    <a href="/2018/07/06/iOS小知识（六）/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          iOS小知识（六）
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/19/iOS小知识（四）/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">iOS小知识（四）</div>
+    <a href="/2018/06/28/iOS小知识（五）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS小知识（五）</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -296,7 +270,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS小知识（五）" data-title="iOS小知识（五）" data-url="http://yoursite.com/2018/06/28/iOS小知识（五）/"></div>
+	<div class="ds-thread" data-thread-key="iOS小知识（六）" data-title="iOS小知识（六）" data-url="http://yoursite.com/2018/07/06/iOS小知识（六）/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

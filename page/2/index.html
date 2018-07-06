@@ -173,6 +173,101 @@
 
       <div class="body-wrap">
   
+    <article id="post-GCD基础" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/19/GCD基础/" class="article-date">
+  	<time datetime="2016-05-19T06:54:55.000Z" itemprop="datePublished">2016-05-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/19/GCD基础/">GCD基础</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="GCD_u7B80_u4ECB"><a href="#GCD_u7B80_u4ECB" class="headerlink" title="GCD简介"></a>GCD简介</h2><p>线程管理在应用程序中一直是个难点，当我们自己实现线程的同时，还要注意避免死锁、数据竞争……等等一系列的坑。并且我们实现的线程管理也并不一定是高效的，因为通常线程管理用的代码要在系统级实现。<br>而基于XNU实现的GCD刚好满足了我们对线程管理的功能和性能需求，并提供了一系列线程安全的API让我们可以在自己的程序中调用。也就是说，GCD用我们难以置信的简洁API实现了极为复杂繁琐的多线程编程。</p>
+<h2 id="Dispatch_Queue"><a href="#Dispatch_Queue" class="headerlink" title="Dispatch Queue"></a>Dispatch Queue</h2><p>Dispatch Queue如同其名称所示，表示的是『执行处理的等待对列』。作为iOS开发者我们可以通过dispatch_async函数等API，在block中写入我们想要执行的处理并将其追加到相应的queue中执行处理。<br>Dispatch Queue一共有两种：</p>
+<h3 id="1-_Serial_Dispatch_Queue_uFF1A_u4E32_u884C_u6D3E_u53D1_u961F_u5217_uFF0C_u4E00_u6B21_u53EA_u5904_u7406_u4E00_u4E2A_u4EFB_u52A1_uFF0C_u52A0_u5165_u4E32_u884C_u961F_u5217_u7684_u4EFB_u52A1_u9700_u7B49_u5F85_u524D_u9762_u7684_u4EFB_u52A1_u5904_u7406_u5B8C_u6210_u540E_uFF0C_u624D_u80FD_u6267_u884C_u3002"><a href="#1-_Serial_Dispatch_Queue_uFF1A_u4E32_u884C_u6D3E_u53D1_u961F_u5217_uFF0C_u4E00_u6B21_u53EA_u5904_u7406_u4E00_u4E2A_u4EFB_u52A1_uFF0C_u52A0_u5165_u4E32_u884C_u961F_u5217_u7684_u4EFB_u52A1_u9700_u7B49_u5F85_u524D_u9762_u7684_u4EFB_u52A1_u5904_u7406_u5B8C_u6210_u540E_uFF0C_u624D_u80FD_u6267_u884C_u3002" class="headerlink" title="1. Serial Dispatch Queue：串行派发队列，一次只处理一个任务，加入串行队列的任务需等待前面的任务处理完成后，才能执行。"></a>1. Serial Dispatch Queue：串行派发队列，一次只处理一个任务，加入串行队列的任务需等待前面的任务处理完成后，才能执行。</h3><p>如果需要创建一个Serial Dispatch Queue，有两种方法：</p>
+<ol>
+<li><p>使用dispatch_queue_create方法创建，代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_queue_create(<span class="string">"com.example.testSerialQueue"</span>, DISPATCH_QUEUE_SERIAL)；</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过dispatch_get_main_queue()获取，代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_get_main_queue();</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="2-_Concurrent_Dispatch_Queue_uFF1A_u5E76_u884C_u6D3E_u53D1_u961F_u5217_uFF0C_u4E00_u6B21_u53EF_u4EE5_u5904_u7406_u591A_u4E2A_u4EFB_u52A1_uFF0C_u52A0_u5165_u5E76_u884C_u961F_u5217_u7684_u4EFB_u52A1_u4E0D_u7528_u7B49_u5F85_u5F53_u524D_u5904_u7406_u7684_u4EFB_u52A1_u7ED3_u675F_u3002"><a href="#2-_Concurrent_Dispatch_Queue_uFF1A_u5E76_u884C_u6D3E_u53D1_u961F_u5217_uFF0C_u4E00_u6B21_u53EF_u4EE5_u5904_u7406_u591A_u4E2A_u4EFB_u52A1_uFF0C_u52A0_u5165_u5E76_u884C_u961F_u5217_u7684_u4EFB_u52A1_u4E0D_u7528_u7B49_u5F85_u5F53_u524D_u5904_u7406_u7684_u4EFB_u52A1_u7ED3_u675F_u3002" class="headerlink" title="2. Concurrent Dispatch Queue：并行派发队列，一次可以处理多个任务，加入并行队列的任务不用等待当前处理的任务结束。"></a>2. Concurrent Dispatch Queue：并行派发队列，一次可以处理多个任务，加入并行队列的任务不用等待当前处理的任务结束。</h3><ol>
+<li><p>使用dispatch_queue_create方法创建，代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_queue_create(<span class="string">"com.example.mySerialQueue"</span>, DISPATCH_QUEUE_CONCURRENT);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过dispatch_get_globe_queue()获取，代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//GLOBAL DISPATCH QUEUE(高优先级)</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//GLOBAL DISPATCH QUEUE(默认优先级)</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//GLOBAL DISPATCH QUEUE(低优先级)</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//GLOBAL DISPATCH QUEUE(后台优先级)</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="Dispatch_Group"><a href="#Dispatch_Group" class="headerlink" title="Dispatch Group"></a>Dispatch Group</h2><p>Dispatch Group 会在整个组的任务都完成时通知你。这些任务可以是同步的，也可以是异步的，即便在不同的队列也行。而且在整个组的任务都完成时，Dispatch Group 可以用同步的或者异步的方式通知你。因为要监控的任务在不同队列，那就用一个dispatch_group_t的实例来记下这些不同的任务。<br>代码如下：</p>
+<ol>
+<li><p>使用dispatch_group_notify</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</span><br><span class="line">    dispatch_group_t myGroup = dispatch_group_create();</span><br><span class="line">    dispatch_group_async(myGroup, testSerialQueue, ^&#123;<span class="built_in">NSLog</span>(<span class="string">@"block1"</span>);&#125;);</span><br><span class="line">    dispatch_group_async(myGroup, testSerialQueue, ^&#123;<span class="built_in">NSLog</span>(<span class="string">@"block2"</span>);&#125;);</span><br><span class="line">    dispatch_group_async(myGroup, testSerialQueue, ^&#123;<span class="built_in">NSLog</span>(<span class="string">@"block3"</span>);&#125;);</span><br><span class="line">    dispatch_group_notify(myGroup, dispatch_get_main_queue(), ^&#123;<span class="built_in">NSLog</span>(<span class="string">@"done"</span>);&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*输出*/</span>    </span><br><span class="line">block2</span><br><span class="line">block1</span><br><span class="line">block3</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用dispatch_group_wait    </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="built_in">dispatch_queue_t</span> testSerialQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</span><br><span class="line">    dispatch_group_t myGroup = dispatch_group_create();</span><br><span class="line">    dispatch_group_async(myGroup, testSerialQueue, ^&#123;<span class="built_in">NSLog</span>(<span class="string">@"block1"</span>);&#125;);</span><br><span class="line">    dispatch_group_async(myGroup, testSerialQueue, ^&#123;<span class="built_in">NSLog</span>(<span class="string">@"block2"</span>);&#125;);</span><br><span class="line">    dispatch_group_async(myGroup, testSerialQueue, ^&#123;<span class="built_in">NSLog</span>(<span class="string">@"block3"</span>);&#125;);</span><br><span class="line">    dispatch_group_wait(myGroup, DISPATCH_TIME_FOREVER);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"end"</span>);</span><br><span class="line"><span class="comment">/*输出*/</span>    </span><br><span class="line">block2</span><br><span class="line">block1</span><br><span class="line">block3</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="dispatch_sync_u4E0Edispatch_async"><a href="#dispatch_sync_u4E0Edispatch_async" class="headerlink" title="dispatch_sync与dispatch_async"></a>dispatch_sync与dispatch_async</h2><p>在GCD中，dispatch_sync和dispatch_async是两个函数，前者用于派发同步任务，后者用于派发异步任务，二者使用格式如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同步任务</span></span><br><span class="line"><span class="built_in">dispatch_sync</span>(someQueue1, ^&#123;</span><br><span class="line">    <span class="comment">// do something 1</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// do something 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步任务</span></span><br><span class="line"><span class="built_in">dispatch_async</span>(someQueue2, ^&#123;</span><br><span class="line">    <span class="comment">// do something 3</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// do something 4</span></span><br></pre></td></tr></table></figure></p>
+<p>对于同步任务，something2一定是在something1完成之后运行；对于异步任务，当运行到dispatch_async（）时，dispatch_async（）会在另一个线程里运行，然后立即执行something 4。待dispatch_async（）执行something3。完成之后，回来原来的线程。<br>因此顺序为1，2，4，3。从这里我们可以看出dispatch_sync与dispatch_async的区别。</p>
+<h3 id="u4F7F_u7528dispatch_sync_u7684_u6CE8_u610F_u70B9"><a href="#u4F7F_u7528dispatch_sync_u7684_u6CE8_u610F_u70B9" class="headerlink" title="使用dispatch_sync的注意点"></a>使用dispatch_sync的注意点</h3><p>在dispatch_sync嵌套使用时要注意：不能在一个嵌套中使用同一个serial dispatch queue，因为会发生死锁。可以看下面的代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> myQueue =</span><br><span class="line">    dispatch_queue_create(<span class="string">"com.testSerialQueue"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">dispatch_sync</span>(myQueue, ^&#123;<span class="comment">// block1 begin</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"block1"</span>);</span><br><span class="line">        <span class="built_in">dispatch_sync</span>(myQueue, ^&#123;<span class="comment">// block2 begin</span></span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@"block2"</span>);</span><br><span class="line">        &#125;);<span class="comment">// block2 end</span></span><br><span class="line">    &#125;);<span class="comment">// block1 end</span></span><br><span class="line">    <span class="comment">//输出：block1</span></span><br></pre></td></tr></table></figure></p>
+<p>在上面的代码中，只有block1被打印出来，而block2始终无法打印，这就是死锁。那么死锁产生的原因是什么呢？<br>因为所有的dispatch queue都是线程安全的，所以在上面代码中的每个block中会加锁，当进入block1时，GCD给block1加锁，直到block1 end时，锁才能解开。而进入block2时，锁还加在block1中。于是block2始终在等待block1 end，而block1又在等待block2 end。两者相互等待对方结束，自己才能结束，这样就进入了死锁。</p>
+<h3 id="u4E3A_u4EC0_u4E48_u9700_u8981dispatch_sync"><a href="#u4E3A_u4EC0_u4E48_u9700_u8981dispatch_sync" class="headerlink" title="为什么需要dispatch_sync"></a>为什么需要dispatch_sync</h3><p>一开始接触GCD的时候，我一直不明白为什么要有dispatch_sync。因为dispatch_sync不像dispatch_async一样能够借着异步能够带来用户体验上的提升，把一些需要下载的任务丢到从线程，当下载完毕之后再调入主线程。<br>在下面一节，用GCD保护property时，getter方法就是用的dispatch_sync。因为我们不会希望当值还没有赋给实例变量时，就已经return了。</p>
+<h2 id="u4F7F_u7528Serial_Dispatch_Queue_u548Cdispatch_barrier_async_u4FDD_u62A4property"><a href="#u4F7F_u7528Serial_Dispatch_Queue_u548Cdispatch_barrier_async_u4FDD_u62A4property" class="headerlink" title="使用Serial Dispatch Queue和dispatch_barrier_async保护property"></a>使用Serial Dispatch Queue和dispatch_barrier_async保护property</h2><p>setter和getter方法是在程序中经常需要用到的方法，是否可以使用GCD来加快他们的执行速度呢？答案肯定是有的，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">dispatch_queue_t</span> concurrentQueue;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">@synthesize</span> name = _name;</span><br><span class="line">	</span><br><span class="line">_concurrentQueue = dispatch_queue_create(<span class="string">"com.zhangbuhuai.test"</span>, <span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line"><span class="comment">// getter方法</span></span><br><span class="line">- (<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    __block <span class="built_in">NSString</span> *localName;</span><br><span class="line">    <span class="built_in">dispatch_sync</span>(_concurrentQueue, ^&#123;</span><br><span class="line">        localName = _name;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> localName;</span><br><span class="line">&#125;</span><br><span class="line">	</span><br><span class="line"><span class="comment">// setter方法</span></span><br><span class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    dispatch_barrier_async(_concurrentQueue, ^&#123;</span><br><span class="line">        _name = name;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为setter方法不需要返回，所以可以采用异步的方式来执行。而barrier只能保证『写操作』不被同一个队列中的其他任务干扰，但无法保证不被其他队列中的任务干扰。因此getter方法需要用同步的方法来保证和setter在同一队列中。</p>
+<h2 id="u4F7F_u7528dispatch_once_u6765_u6267_u884C_u53EA_u9700_u8FD0_u884C_u4E00_u6B21_u7684_u7EBF_u7A0B_u5B89_u5168_u4EE3_u7801"><a href="#u4F7F_u7528dispatch_once_u6765_u6267_u884C_u53EA_u9700_u8FD0_u884C_u4E00_u6B21_u7684_u7EBF_u7A0B_u5B89_u5168_u4EE3_u7801" class="headerlink" title="使用dispatch_once来执行只需运行一次的线程安全代码"></a>使用dispatch_once来执行只需运行一次的线程安全代码</h2><p>单例模式（singleton）对任何语言的开发者而言都不陌生，常见的实现方式为：在类编写名为sharedInstance的方法，该方法只会返回全类共用的单例实例，而不会在每次调用时都创建新的实例。<br>考虑线程安全和性能的情况下，单例模式可以这样写：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">id</span>)sharedInstance &#123;</span><br><span class="line">    <span class="keyword">static</span> TestClass *sharedInstance;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;	</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        sharedInstance = [[<span class="keyword">self</span> alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> sharedInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之所以选择GCD来实现单列模式，是因为使用disptch_once可以简化代码并且彻底保证线程安全，开发者根本无须担心加锁或同步。所有问题都由GCD在底层处理。由于每次调用时都必须使用完全相同的token，所以token要声明成static。把该变量定义在static作用域中，可以保证编译器在每次执行sharedInstance方法时都会复用这个变量，而不会创建新变量。<br>此外，dispatch_once更高效。它没有使用重量级的同步机制，若是那样做的话，每次运行代码前都要获取锁，相反，此函数采用“原子访问”（atomic access）来查询标记，以判断其所对应的代码原来是否已经执行过。</p>
+<ol>
+<li>《Objective-C高级编程》Kazuki Sakamoto，Tomohiko Furumoto </li>
+<li>《Effective Objective-C 2.0》 Matt Galloway</li>
+<li><a href="http://www.cocoachina.com/industry/20140428/8248.html" target="_blank" rel="external">GCD深入理解(一)</a></li>
+<li><a href="http://www.cocoachina.com/industry/20140515/8433.html" target="_blank" rel="external">GCD深入理解(二)</a></li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-知乎日报-仿" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -817,91 +912,6 @@
 </li>
 </ul>
 <p>参考资料：<br><a href="http://gracelancy.com/blog/2014/04/21/toll-free-bridging/" target="_blank" rel="external">Toll-Free Bridging</a> Lancy<br><a href="https://onevcat.com/2012/06/arc-hand-by-hand/" target="_blank" rel="external">手把手教你ARC——iOS/Mac开发ARC入门和使用</a> OneV’s Den</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-我所理解的RunLoop" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/03/11/我所理解的RunLoop/" class="article-date">
-  	<time datetime="2016-03-11T06:35:07.000Z" itemprop="datePublished">2016-03-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/我所理解的RunLoop/">我所理解的RunLoop</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="u8D77_u56E0"><a href="#u8D77_u56E0" class="headerlink" title="起因"></a>起因</h3><p>一直都知道RunLoop是个非常重要的点，可是自己在实际开发中一直都没有遇到。而且对其一直都抱着高山仰止的态度，感觉RunLoop对于我来说是一个特别难理解的东西。但是，就在昨天接到了腾讯的电面，一开始就问我『是否知道什么是RunLoop』，还好RunLoop的概念我还是很熟，回答了上来；接下来，HR又问『RunLoop和多线程的关系』，直接蒙圈了。于是，自己疼定思疼，狠狠的把之前找到的关于RunLoop资料拿出来重新一点一点的看了下去，总算是有点理解了RunLoop吧。</p>
-<h2 id="1-__u4EC0_u4E48_u662FRunLoop"><a href="#1-__u4EC0_u4E48_u662FRunLoop" class="headerlink" title="1. 什么是RunLoop"></a>1. 什么是RunLoop</h2><p>在通常情况下，一次线程只能处理一个任务，当任务完成，线程也就结束了，这样的线程如图1.1所示。但是，这样的线程并不是我们总需要的，我们需要有线程可以一直等待我们的操作，相当于一个do-while语句。当我们需要结束进程时，线程才结束，这样的线程如图1.2所示。<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/1.1.png?imageView/2/w/800/q/90" alt="图1.1"> <img src="http://7xqzfr.com1.z0.glb.clouddn.com/1.2.png?imageView/2/w/800/q/90" alt="图1.2"><br>图1.2所示的模型被称为Event Loop，也就是iOS系统中的RunLoop。RunLoop在没有任务处理的时候sleep，而有任务进来是被唤醒。<br>在iOS系统中，提供了两个这样的对象：NSRunLoop 和 CFRunLoopRef。<br>CFRunLoopRef 是在 CoreFoundation 框架内的，它提供了纯 C 函数的 API，所有这些 API 都是线程安全的。<br>NSRunLoop 是基于 CFRunLoopRef 的封装，提供了面向对象的 API，但是这些 API 不是线程安全的。</p>
-<h2 id="2-__u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981RunLoop"><a href="#2-__u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981RunLoop" class="headerlink" title="2. 为什么我们需要RunLoop"></a>2. 为什么我们需要RunLoop</h2><ul>
-<li>使程序一直运行并接受用户输入</li>
-<li>决定程序在何时应该处理哪些Event</li>
-<li>调用解耦</li>
-<li>节约CPU时间</li>
-</ul>
-<h2 id="3-_RunLoop_u4E0E_u7EBF_u7A0B_u7684_u5173_u7CFB"><a href="#3-_RunLoop_u4E0E_u7EBF_u7A0B_u7684_u5173_u7CFB" class="headerlink" title="3. RunLoop与线程的关系"></a>3. RunLoop与线程的关系</h2><p>在iOS程序中，主线程自带一个RunLoop，如下列代码所示：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#import <span class="title">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#import <span class="title">"AppDelegate.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在Xcode创建一个project时，系统会自动生成的一个main函数，初始化UIApplicationMain后，便开启了RunLoop。而在其他线程中，则需要自己『获取』一个RunLoop。线程和RunLoop一一对应。这里为什么需要强调『获取』，而不是创建呢？因为苹果不允许直接创建RunLoop，它只提供了两个自动获取的函数：CFRunLoopGetMain() 和 CFRunLoopGetCurrent()。</p>
-<h2 id="4-_RunLoop_u7684_u6784_u6210_u5143_u7D20"><a href="#4-_RunLoop_u7684_u6784_u6210_u5143_u7D20" class="headerlink" title="4. RunLoop的构成元素"></a>4. RunLoop的构成元素</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/4.1.png?imageView/2/w/800/q/90" alt="图4.1"><br>如图所示，一个RunLoop可以包含多个Mode，而一个Mode可以包含多个Source/Timer/Observer。每次RunLoop只能调用一个Mode，如果需要切换Mode，那么得先退出Loop，再切换Mode重新进入Loop。</p>
-<h3 id="4-1_CFRunLoopMode"><a href="#4-1_CFRunLoopMode" class="headerlink" title="4.1 CFRunLoopMode"></a>4.1 CFRunLoopMode</h3><p>CFRunLoopMode 和 CFRunLoop 的结构大致如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> __<span class="built_in">CFRunLoopMode</span> &#123;</span><br><span class="line">    <span class="built_in">CFStringRef</span> _name;            <span class="comment">// Mode Name, 例如 @"kCFRunLoopDefaultMode"</span></span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _sources0;    <span class="comment">// Set</span></span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _sources1;    <span class="comment">// Set</span></span><br><span class="line">    <span class="built_in">CFMutableArrayRef</span> _observers; <span class="comment">// Array</span></span><br><span class="line">    <span class="built_in">CFMutableArrayRef</span> _timers;    <span class="comment">// Array</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">struct</span> __<span class="built_in">CFRunLoop</span> &#123;</span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _commonModes;     <span class="comment">// Set</span></span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _commonModeItems; <span class="comment">// Set&lt;Source/Observer/Timer&gt;</span></span><br><span class="line">    <span class="built_in">CFRunLoopModeRef</span> _currentMode;    <span class="comment">// Current Runloop Mode</span></span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _modes;           <span class="comment">// Set</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>这里有个概念叫 “CommonModes”：一个 Mode 可以将自己标记为”Common”属性（通过将其 ModeName 添加到 RunLoop 的 “commonModes” 中）。每当 RunLoop 的内容发生变化时，RunLoop 都会自动将 _commonModeItems 里的 Source/Observer/Timer 同步到具有 “Common” 标记的所有Mode里。</p>
-<p>应用场景举例：主线程的 RunLoop 里有两个预置的 Mode：kCFRunLoopDefaultMode 和 UITrackingRunLoopMode。这两个 Mode 都已经被标记为”Common”属性。DefaultMode 是 App 平时所处的状态，TrackingRunLoopMode 是追踪 ScrollView 滑动时的状态。当你创建一个 Timer 并加到 DefaultMode 时，Timer 会得到重复回调，但此时滑动一个TableView时，RunLoop 会将 mode 切换为 TrackingRunLoopMode，这时 Timer 就不会被回调，并且也不会影响到滑动操作。</p>
-<p>有时你需要一个 Timer，在两个 Mode 中都能得到回调，一种办法就是将这个 Timer 分别加入这两个 Mode。还有一种方式，就是将 Timer 加入到顶层的 RunLoop 的 “commonModeItems” 中。”commonModeItems” 被 RunLoop 自动更新到所有具有”Common”属性的 Mode 里去。</p>
-<h3 id="4-2_CFRunLoopSourceRef"><a href="#4-2_CFRunLoopSourceRef" class="headerlink" title="4.2 CFRunLoopSourceRef"></a>4.2 CFRunLoopSourceRef</h3><p>CFRunLoopSourceRef 是事件产生的地方。Source有两个版本：Source0 和 Source1。</p>
-<ul>
-<li>source0：处理如UIEvent，CFSocket这样的事件</li>
-<li>source1：Mach port驱动，CFMachport，CFMessagePort</li>
-</ul>
-<h3 id="4-3_CFRunLoopTimerRef"><a href="#4-3_CFRunLoopTimerRef" class="headerlink" title="4.3 CFRunLoopTimerRef"></a>4.3 CFRunLoopTimerRef</h3><p>CFRunLoopTimerRef 是基于时间的触发器，它和 NSTimer 是toll-free bridged 的，可以混用。其包含一个时间长度和一个回调（函数指针）。当其加入到 RunLoop 时，RunLoop会注册对应的时间点，当时间点到时，RunLoop会被唤醒以执行那个回调。<br>另外，需要注意的是，当GCD进行dispatch主线程时，他的Timer和RunLoop的Timer分别执行。</p>
-<h3 id="4-4_RunLoopObserver"><a href="#4-4_RunLoopObserver" class="headerlink" title="4.4 RunLoopObserver"></a>4.4 RunLoopObserver</h3><p>Cocoa框架中很多机制比如CAAnimation等都是由RunLoopObserver触发的。observer到当前状态的变化进行通知。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">CF_OPTIONS</span>(<span class="built_in">CFOptionFlags</span>, <span class="built_in">CFRunLoopActivity</span>) &#123;</span><br><span class="line">     k<span class="built_in">CFRunLoopEntry</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">0</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopBeforeTimers</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">1</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopBeforeSources</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">2</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopBeforeWaiting</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">5</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopAfterWaiting</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">6</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopExit</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">7</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopAllActivities</span> = <span class="number">0x0FFFFFFF</span>U</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h2 id="5-_RunLoop_u7684sleep_u548C_u5524_u9192"><a href="#5-_RunLoop_u7684sleep_u548C_u5524_u9192" class="headerlink" title="5. RunLoop的sleep和唤醒"></a>5. RunLoop的sleep和唤醒</h2><ul>
-<li>指定用于唤醒的mach_port端口；</li>
-<li>调用mach_msg()监听唤醒端口，在唤醒前，该线程sleep，停留在mach_msg_trap状态；</li>
-<li>由其他线程向内核发送mach_port端口的msg后，该线程被唤醒。</li>
-</ul>
-<p>RunLoop 的核心就是一个mach_msg()，RunLoop调用这个函数去接收消息，如果没有别人发送port消息过来，内核会将线程置于sleep状态。</p>
-<h2 id="6-_RunLoop_u7684_u6267_u884C_u987A_u5E8F"><a href="#6-_RunLoop_u7684_u6267_u884C_u987A_u5E8F" class="headerlink" title="6. RunLoop的执行顺序"></a>6. RunLoop的执行顺序</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/6.1.png?imageView/2/w/800/q/90" alt="图6.1"></p>
-<p>可以看到，实际上 RunLoop 就是这样一个函数，其内部是一个 do-while 循环。当你调用 CFRunLoopRun() 时，线程就会一直停留在这个循环里；直到超时或被手动停止，该函数才会返回。</p>
-<h2 id="7-__u603B_u7ED3"><a href="#7-__u603B_u7ED3" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>上面的文字大多都是综合参考资料中的两篇博客，加上了一点自己对于RunLoop的理解合成了这篇文章。</p>
-<p>参考资料：</p>
-<p>1.<a href="http://blog.ibireme.com/2015/05/18/runloop/" target="_blank" rel="external">深入理解RunLoop</a> ibireme<br>2.<a href="http://yun.baidu.com/share/home?uk=2885973690" target="_blank" rel="external">sunnyxx的视频runloop.mov</a> sunnyxx</p>
 
       
     </div>
