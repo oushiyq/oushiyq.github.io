@@ -17,7 +17,7 @@
 ​    delegate 自己定义，他人实现。自己无法实现某方法时，他人帮你实现。
 二、strong-weak dance在block中一开始就执行__strong typeof（weakSelf）strongSelf  =  weak">
 <meta property="og:image" content="https://docs.swift.org/swift-book/_images/initializerDelegation02_2x.png">
-<meta property="og:updated_time" content="2018-06-28T15:43:32.769Z">
+<meta property="og:updated_time" content="2018-07-12T02:49:26.971Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS小知识（五）">
 <meta name="twitter:description" content="一、 protocol 和 delegate​    protocol 自己定义，自己实现。遵从该protocol 的ivar，拥有protocol声明的能力。
@@ -238,7 +238,7 @@
 <p>​    <strong>NSProxy</strong></p>
 <p>​    NSProxy对象会直接回调 <code>-methodSignatureForSelector:</code>/<code>-forwardInvocation:</code></p>
 <h4 id="u4E94_u3001UIButton_edgeInset"><a href="#u4E94_u3001UIButton_edgeInset" class="headerlink" title="五、UIButton edgeInset"></a>五、UIButton edgeInset</h4><p><code>contentEdgeInsets:</code> 表示content相对于button矩形的inset/outset，其insets (top, left, bottom, right) 正值将使button矩形的size变大，负值将缩小size。button可以通过这个insets来决定自身的大小。</p>
-<p><code>titleEdgeInsets:</code>  表示titleLabel相对于原frame的inset/outset，其insets (top, left, bottom, right) 正值将使titleLabel左移/下移，负值将使titleLabel右移/上移。其中的top/bottom 和 left/right 应互为相反数。需要注意的是：insets是在titleLable.text 进行sizetToFits 之后才设置的，因此，正值的inset可能会使text被截断。</p>
+<p><code>titleEdgeInsets:</code>  表示titleLabel相对于原frame的inset/outset，其insets (top, left, bottom, right) 正值将使titleLabel右移/下移，负值将使titleLabel左移/上移。其中的top/bottom 和 left/right 应互为相反数。需要注意的是：insets是在titleLable.text 进行sizetToFits 之后才设置的，因此，正值的inset可能会使text被截断。</p>
 <p><code>imageEdgeInsets:</code>  表示imageView相对于原frame的inset/outset，其insets (top, left, bottom, right) 正值将使titleLabel左移/下移，负值将使titleLabel右移/上移。其中的top/bottom 和 left/right 应互为相反数。</p>
 <p>`</p>
 
