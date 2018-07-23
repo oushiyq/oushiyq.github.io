@@ -67,10 +67,10 @@
 					<div class="tips-arrow"></div>
 					<ul class="tips-inner">
 						<li>菜单</li>
-						<li>Tags</li>
+						<li>標籤</li>
 						
 						
-						<li>Über</li>
+						<li>關於</li>
 						
 					</ul>
 				</div>
@@ -172,6 +172,84 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-深入理解KVO" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/16/深入理解KVO/" class="article-date">
+  	<time datetime="2016-03-16T12:03:19.000Z" itemprop="datePublished">2016-03-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/16/深入理解KVO/">简单使用KVO</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-_KVC_u7684_u6982_u5FF5"><a href="#1-_KVC_u7684_u6982_u5FF5" class="headerlink" title="1. KVC的概念"></a>1. KVC的概念</h2><p>KVC（key-value coding）是指将表示对象包含的信息的字符串作为键值来使用，间接访问该信息的方式。</p>
+<h2 id="2-_KVO_u4E0ERuntime"><a href="#2-_KVO_u4E0ERuntime" class="headerlink" title="2. KVO与Runtime"></a>2. KVO与Runtime</h2><p>KVO（key-value observe）即某个对象的属性改变时通知其他对象的机制。KVO的实现也依赖于Objective-C的Runtime，官方文档《Key-Value Observing Programming Guide》中在《Key-Value Observing Implementation Details》部分简单提到它的实现：</p>
+<hr>
+<p>Automatic key-value observing is implemented using a technique called isa-swizzling.</p>
+<p>The isa pointer, as the name suggests, points to the object’s class which maintains a dispatch table. This dispatch table essentially contains pointers to the methods the class implements, among other data.</p>
+<p>When an observer is registered for an attribute of an object the isa pointer of the observed object is modified, pointing to an intermediate class rather than at the true class. As a result the value of the isa pointer does not necessarily reflect the actual class of the instance.</p>
+<p>You should never rely on the isa pointer to determine class membership. Instead, you should use the class method to determine the class of an object instance.</p>
+<hr>
+<p>大概的意思就是KVO的实现是通过isa-swizzling技术。这个技术表示，当观察者观察一个对象时，会产生一个新的类，这个类继承于被观察对象，并重写其setter方法，再将被观察对象的isa指针指向新的类。这样被观察对象就神奇的成为了新类的实例。这样看来，KVO的实现还是有点黑魔法的意思啊。</p>
+<h2 id="3-_KVO_u7684_u4F7F_u7528"><a href="#3-_KVO_u7684_u4F7F_u7528" class="headerlink" title="3. KVO的使用"></a>3. KVO的使用</h2><h3 id="3-1__u8BA2_u9605"><a href="#3-1__u8BA2_u9605" class="headerlink" title="3.1 订阅"></a>3.1 订阅</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)addObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">         forKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">            options:(<span class="built_in">NSKeyValueObservingOptions</span>)options</span><br><span class="line">            context:(<span class="keyword">void</span> *)context;</span><br></pre></td></tr></table></figure>
+<h3 id="3-2__u54CD_u5E94"><a href="#3-2__u54CD_u5E94" class="headerlink" title="3.2 响应"></a>3.2 响应</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)observeValueForKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">                      ofObject:(<span class="keyword">id</span>)object</span><br><span class="line">                        change:(<span class="built_in">NSDictionary</span> *)change</span><br><span class="line">                       context:(<span class="keyword">void</span> *)context;</span><br></pre></td></tr></table></figure>
+<h3 id="3-3__u79FB_u9664"><a href="#3-3__u79FB_u9664" class="headerlink" title="3.3 移除"></a>3.3 移除</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)removeObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">            forKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">               context:(<span class="keyword">void</span> *)context;</span><br><span class="line">               </span><br><span class="line">- (<span class="keyword">void</span>)removeObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">            forKeyPath:(<span class="built_in">NSString</span> *)keyPath;</span><br></pre></td></tr></table></figure>
+<h3 id="3-4__u793A_u4F8B_u7A0B_u5E8F"><a href="#3-4__u793A_u4F8B_u7A0B_u5E8F" class="headerlink" title="3.4 示例程序"></a>3.4 示例程序</h3><p>在下面的例子中，通过对UITextField.text值的观察，当其变化时，新值将在弹出窗口中被打印出来。效果如下：<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/2016-03-17%2009_36_54.gif" alt=""></p>
+<p>以下是源代码：<br>h文件<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">#import <span class="title">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> : <span class="title">UIViewController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">weak</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UITextField</span> *showText;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) IBOutletCollection(<span class="built_in">UIButton</span>) <span class="built_in">NSArray</span> *numberButton;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)clickNumberButton:(<span class="keyword">id</span>)sender;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p>m文件<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#import <span class="title">"ViewController.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [<span class="keyword">self</span> addObserver:<span class="keyword">self</span></span><br><span class="line">           forKeyPath:<span class="string">@"showText.text"</span></span><br><span class="line">              options:<span class="number">1</span></span><br><span class="line">              context:<span class="literal">NULL</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)clickNumberButton:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    <span class="built_in">NSUInteger</span> buttonIndex = [<span class="keyword">self</span><span class="variable">.numberButton</span> indexOfObject:sender];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSString</span> *content = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%lu"</span>,(<span class="keyword">unsigned</span> <span class="keyword">long</span>)buttonIndex ];</span><br><span class="line">    [content stringByAppendingFormat:<span class="string">@"%lu"</span>,(<span class="keyword">unsigned</span> <span class="keyword">long</span>)buttonIndex];</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.showText</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.showText</span><span class="variable">.text</span> stringByAppendingString:content];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)observeValueForKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">                      ofObject:(<span class="keyword">id</span>)object</span><br><span class="line">                        change:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *,<span class="keyword">id</span>&gt; *)change</span><br><span class="line">                       context:(<span class="keyword">void</span> *)context&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *currentString = [change valueForKey:<span class="string">@"new"</span>];</span><br><span class="line">    <span class="comment">//弹窗</span></span><br><span class="line">    <span class="built_in">UIAlertController</span> *alertController = [<span class="built_in">UIAlertController</span> alertControllerWithTitle:<span class="string">@"输入的数字为："</span></span><br><span class="line">                                                                             message:currentString</span><br><span class="line">                                                                      preferredStyle:<span class="built_in">UIAlertControllerStyleAlert</span>];</span><br><span class="line">    <span class="built_in">UIAlertAction</span> *cancelAction = [<span class="built_in">UIAlertAction</span> actionWithTitle:<span class="string">@"取消"</span></span><br><span class="line">                                                           style:<span class="built_in">UIAlertActionStyleCancel</span></span><br><span class="line">                                                         handler:<span class="literal">nil</span>];</span><br><span class="line">    <span class="built_in">UIAlertAction</span> *okAction = [<span class="built_in">UIAlertAction</span> actionWithTitle:<span class="string">@"好的"</span></span><br><span class="line">                                                       style:<span class="built_in">UIAlertActionStyleDefault</span></span><br><span class="line">                                                     handler:<span class="literal">nil</span>];</span><br><span class="line">    [alertController addAction:cancelAction];</span><br><span class="line">    [alertController addAction:okAction];</span><br><span class="line">    [<span class="keyword">self</span> presentViewController:alertController animated:<span class="literal">YES</span> completion:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="3-4__u6CE8_u610F_u4E8B_u9879"><a href="#3-4__u6CE8_u610F_u4E8B_u9879" class="headerlink" title="3.4 注意事项"></a>3.4 注意事项</h2><ol>
+<li>keypath的拼写。因为keypath为一字符串，所以很容易产生拼写错误导致无法监听。比如本来keypath = @”contents”，但有时未注意可能会拼写成keypath = @”content”，而编译器在编译时也无法发现错误。因此可以定义一个常量static const NSString *contens = @”contents”；</li>
+<li>多次使用removeObserver导致程序crash。在同一个文件中执行两次相同的removeObserver比较容易debug出来；但是跨文件执行两次相同的removeObserver就不是那么容易发现了。因此Apple推荐在dealloc中进行removeObserver；</li>
+</ol>
+<p>参考资料：</p>
+<ol>
+<li>Key-Value Observing Programming Guide</li>
+<li><a href="http://objccn.io/issue-7-3/" target="_blank" rel="external">KVC 和 KVO</a> 翻译：卢思豪 </li>
+<li><a href="http://khanlou.com/2013/12/kvo-considered-harmful/" target="_blank" rel="external">KVO Considered Harmful</a> KHANLOU</li>
+<li>《Objective-C编程全解》 荻原刚志</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-ARC模式下的OC对象与Core-Fundation的桥接" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -869,85 +947,6 @@
 </li>
 </ul>
 <h3 id="P-S_uFF1A_u81EA_u5B66_u7684_u8FC7_u7A0B_u8FD8_u662F_u6BD4_u8F83_u7D2F_u4EBA_uFF0C_u5F88_u591A_u4E66_u4E0A_u6216_u8005blog_u4E0A_u7684_u65B9_u6CD5_u90FD_u662F_u6BD4_u8F83_u8001_u7684_uFF0C_u800C_u82F9_u679C_u516C_u53F8_u53C8_u4E00_u76F4_u5728_u66F4_u65B0_u65B0_u7684_u5185_u5BB9_uFF0C_u5F88_u591A_u8FC7_u65F6_u7684_u4E1C_u897F_u5728_u65B0_u7248_u672C_u7684_u7CFB_u7EDF_u4E2D_u5DF2_u7ECF_u6452_u5F03_u4E86_u3002"><a href="#P-S_uFF1A_u81EA_u5B66_u7684_u8FC7_u7A0B_u8FD8_u662F_u6BD4_u8F83_u7D2F_u4EBA_uFF0C_u5F88_u591A_u4E66_u4E0A_u6216_u8005blog_u4E0A_u7684_u65B9_u6CD5_u90FD_u662F_u6BD4_u8F83_u8001_u7684_uFF0C_u800C_u82F9_u679C_u516C_u53F8_u53C8_u4E00_u76F4_u5728_u66F4_u65B0_u65B0_u7684_u5185_u5BB9_uFF0C_u5F88_u591A_u8FC7_u65F6_u7684_u4E1C_u897F_u5728_u65B0_u7248_u672C_u7684_u7CFB_u7EDF_u4E2D_u5DF2_u7ECF_u6452_u5F03_u4E86_u3002" class="headerlink" title="P.S：自学的过程还是比较累人，很多书上或者blog上的方法都是比较老的，而苹果公司又一直在更新新的内容，很多过时的东西在新版本的系统中已经摒弃了。"></a>P.S：自学的过程还是比较累人，很多书上或者blog上的方法都是比较老的，而苹果公司又一直在更新新的内容，很多过时的东西在新版本的系统中已经摒弃了。</h3>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-浅尝Auto-Layout" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/21/浅尝Auto-Layout/" class="article-date">
-  	<time datetime="2016-01-21T07:01:49.000Z" itemprop="datePublished">2016-01-21</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/21/浅尝Auto-Layout/">浅尝Auto Layout</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-__u4EC0_u4E48_u662F_u7EA6_u675F"><a href="#1-__u4EC0_u4E48_u662F_u7EA6_u675F" class="headerlink" title="1. 什么是约束"></a>1. 什么是约束</h1><pre><code>约束是指一系列描述iOS程序视图布局的规则。他们限定了视图之间的关系，也限定了视图的布局形式。约束向开发者提供了一套布局语言，
-使得可以向视图里添加约束，并以此来描述各视图的空间关系。
-</code></pre><h1 id="2-__u7EA6_u675F_u7CFB_u7EDF"><a href="#2-__u7EA6_u675F_u7CFB_u7EDF" class="headerlink" title="2. 约束系统"></a>2. 约束系统</h1><p>约束所用的词汇非常有限，就是一些和集合特征相关的属性及关系。属性是约束系统中的『名词』，用以描述视图对齐矩形里的位置。关系是系统里『动词』用以在属性之间进行比较。</p>
-<pre><code>属性：
-left、right、top和bottom--视图对齐矩形的左右上下边界
-leading和trailing--视图对齐矩形的前后边沿
-width和height--视图对齐矩形的宽和高
-centerX和centerY--视图对齐矩形中心点在X和Y轴的坐标
-baseline--对齐矩形的基线
-
-关系：
-Less-than inequality(小于或等于)--NSLayoutRelationLessThanOrEqual
-Equality(等于)--NSLayoutRelationEqual
-Greater-than inequality(大于或等于)--NSLayoutRelationGreaterThanOrEqual
-</code></pre><p>对于所有的所有的约束系统，其本质可以归结为下列的等式或不等式：”y R x*m+b”</p>
-<h2 id="2-1__u7EA6_u675F_u89C4_u5219-_u57FA_u672C_u58F0_u660E"><a href="#2-1__u7EA6_u675F_u89C4_u5219-_u57FA_u672C_u58F0_u660E" class="headerlink" title="2.1 约束规则-基本声明"></a>2.1 约束规则-基本声明</h2><p>NSLayoutConstraint类的constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:方法可以一次创建一条约束规则，这种方法可以创建严格的”view1.attribute R view2.attribute  * multiplier + constant”关系式，可以参考下列代码<br>    <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span><span class="variable">.view</span> addConstraint:[<span class="built_in">NSLayoutConstraint</span> constraintWithItem:<span class="keyword">self</span><span class="variable">.view</span></span><br><span class="line">                                                        attribute:<span class="built_in">NSLayoutAttributeBottom</span></span><br><span class="line">                                                        relatedBy:<span class="built_in">NSLayoutRelationEqual</span></span><br><span class="line">                                                           toItem:pageController</span><br><span class="line">                                                        attribute:<span class="built_in">NSLayoutAttributeBottom</span></span><br><span class="line">                                                       multiplier:<span class="number">1.0</span>f</span><br><span class="line">                                                         constant:<span class="number">0</span>]];</span><br></pre></td></tr></table></figure></p>
-<p>这段代码会把self.view添加到pageController视图中，并将他俩的底部对齐，用关系式可表示为：<br>“self.view’s NSLayoutAttributeBottom = pageController’s NSLayoutAttributeBottom *1+0”</p>
-<h2 id="2-2__u7EA6_u675F_u89C4_u5219-_u53EF_u89C6_u5316_u5B57_u7B26_u4E32_u58F0_u660E"><a href="#2-2__u7EA6_u675F_u89C4_u5219-_u53EF_u89C6_u5316_u5B57_u7B26_u4E32_u58F0_u660E" class="headerlink" title="2.2 约束规则-可视化字符串声明"></a>2.2 约束规则-可视化字符串声明</h2><p>NSLayoutConstraint类除了上面的方法外，还可以根据字符串来创建约束规则，这种字符串基于文本的视觉格式来表示其内容，如下列代码所示<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span><span class="variable">.view</span> addConstraints:[<span class="built_in">NSLayoutConstraint</span> constraintsWithVisualFormat:<span class="string">@"H:[view1]-30-[view2]"</span></span><br><span class="line">                                                                      options:<span class="number">0</span></span><br><span class="line">                                                                      metrics:<span class="literal">nil</span></span><br><span class="line">                                                                        views:<span class="built_in">NSDictionaryOfVariableBindings</span>(view1, view2)]]</span><br></pre></td></tr></table></figure></p>
-<p>上面的代码表示确保view1和view2在横轴的间隔为30。</p>
-<pre><code>constraintsWithVisualFormat：用来表述视图在横轴（H）和纵轴（V）方向上与其他视图的关系，其间隔用&quot;-X-&quot;来表示中间间隔X像素，&quot;|-X-|&quot;的&quot;|&quot;表示屏幕的左右边界。
-options:表示对齐方向。
-metrics：开发者可以用字典（NSDictionary）来提供约束规则。
-views：传入含有变量绑定的字典，该字典会把作为变量名的字符串和变量所代表的视图关联起来。
-</code></pre><h2 id="2-3__u7BA1_u7406_u7EA6_u675F_u89C4_u5219"><a href="#2-3__u7BA1_u7406_u7EA6_u675F_u89C4_u5219" class="headerlink" title="2.3 管理约束规则"></a>2.3 管理约束规则</h2><p>无论约束规则是如何创建出来的，他们都属于NSLayoutConstraint类。开发者可以通过removeContraint：和addContraint:来移除和添加约束规则。管理约束规则的时候，如果要以编程的方式为子视图施加约束规则，那么先要把子视图的translatesAutoresizingMaskIntoConstraints设为NO。</p>
-<h1 id="u53C2_u8003_u8D44_u6599"><a href="#u53C2_u8003_u8D44_u6599" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li>Erica Sadun &amp; Rich Wardwell 《iOS核心开发手册》</li>
-</ul>
-
       
     </div>
     

@@ -67,10 +67,10 @@
 					<div class="tips-arrow"></div>
 					<ul class="tips-inner">
 						<li>菜单</li>
-						<li>Tags</li>
+						<li>標籤</li>
 						
 						
-						<li>Über</li>
+						<li>關於</li>
 						
 					</ul>
 				</div>
@@ -172,6 +172,100 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-GPUImage实战" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/07/07/GPUImage实战/" class="article-date">
+  	<time datetime="2016-07-07T04:21:38.000Z" itemprop="datePublished">2016-07-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/07/GPUImage实战/">Core Image实战之一</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>最近在公司做项目要用到Core Image，而之前对于CoreImage和GPUImage都基本没有了解过。于是趁着项目的驱动，做了一个小Demo。</p>
+<h2 id="Core_Image_u7B80_u4ECB"><a href="#Core_Image_u7B80_u4ECB" class="headerlink" title="Core Image简介"></a>Core Image简介</h2><blockquote>
+<p>Core Image is an image processing and analysis technology designed to provide near real-time processing for still and video images. It operates on image data types from the Core Graphics, Core Video, and Image I/O frameworks, using either a GPU or CPU rendering path. Core Image hides the details of low-level graphics processing by providing an easy-to-use application programming interface (API). You don’t need to know the details of OpenGL or OpenGL ES to leverage the power of the GPU, nor do you need to know anything about Grand Central Dispatch (GCD) to get the benefit of multicore processing. Core Image handles the details for you.</p>
+</blockquote>
+<p>这是苹果官方文档对于Core Image的介绍，大致意思是：Core Image是一种为静态图像和video图像提供处理和分析的技术，它可以使用GPU/CPU的方式对图像进行处理。Core Image提供了简洁的API给用户，隐藏了图像处理中复杂的底层内容。你可以在不了解OpenGL、OpenGL ES甚至是GCD的基础上对其进行使用，他已经帮你对这些复杂的内容进行处理了。废话这么多，苹果就想告诉我们一件事：所有的底层细节他都帮你做好了，你只需要调用API就行了。</p>
+<h2 id="u6EE4_u955C_u4E0E_u6EE4_u955C_u94FE"><a href="#u6EE4_u955C_u4E0E_u6EE4_u955C_u94FE" class="headerlink" title="滤镜与滤镜链"></a>滤镜与滤镜链</h2><p>一个滤镜是一个对象，有很多输入和输出，并执行一些变换。例如，模糊滤镜可能需要输入图像和一个模糊半径来产生适当的模糊后的输出图像。<br>一个滤镜图表是一个链接在一起的滤镜网络 (无回路有向图)，使得一个滤镜的输出可以是另一个滤镜的输入。以这种方式，可以实现精心制作的效果。<br>Core Image的实现可以参考下面的图：<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-07-16%20%E4%B8%8B%E5%8D%885.18.40.png" alt=""><br>每个图片对象经过滤镜后作为下一个滤镜的输入（滤镜链），或者直接输出（单个滤镜）。</p>
+<h2 id="Core_Image_u2019s_API"><a href="#Core_Image_u2019s_API" class="headerlink" title="Core Image’s API"></a>Core Image’s API</h2><p>Core Image的API主要就是三类：CIImage表示输入的图片；CIFilter表示经过的滤镜；CIContext表示上下文，可以从其中取得图片的信息。</p>
+<ul>
+<li><p>CIImage<br>保存图像数据的类，可以通过UIImage，图像文件或者像素数据来创建，包括未处理的像素数据。一般我们输入的都是UIImage，可以使用：imageWithCGImage:类方法获取CIImage。</p>
+</li>
+<li><p>CIFilter<br>滤镜类，这个框架中对图片属性进行细节处理的类。它对所有的像素进行操作，用一些键-值设置来决定具体操作的程度。</p>
+</li>
+<li><p>CIContext<br>上下文类，如CoreGraphics以及CoreData中的上下文用于处理绘制渲染以及处理托管对象一样，CoreImage的上下文也是实现对图像处理的具体对象。<br>这里需要注意的是在Context创建的时候，我们需要给它设定为是基于GPU还是CPU。<br>基于GPU的话，处理速度更快，因为利用了GPU硬件的并行优势。但是GPU受限于硬件纹理尺寸，而且如果你的程序在后台继续处理和保存图片的话，那么需要使用CPU，因为当app切换到后台状态时GPU处理会被打断。</p>
+</li>
+</ul>
+<h3 id="u4F7F_u7528_u6B65_u594F"><a href="#u4F7F_u7528_u6B65_u594F" class="headerlink" title="使用步奏"></a>使用步奏</h3><ol>
+<li><p>创建图像上下文 CIContext</p>
+</li>
+<li><p>创建滤镜 CIFilter</p>
+</li>
+<li><p>创建过滤原图片 CIImage</p>
+</li>
+<li><p>调用 CIFilter 的 setValue:forKey:方法为滤镜指定源图片</p>
+</li>
+<li><p>设置滤镜参数【可选】</p>
+</li>
+<li><p>取得输出图片显示或保存</p>
+</li>
+</ol>
+<p>具体实现可以参考最下面的Demo。</p>
+<h2 id="GPUImage_u7B80_u4ECB"><a href="#GPUImage_u7B80_u4ECB" class="headerlink" title="GPUImage简介"></a>GPUImage简介</h2><blockquote>
+<p>The GPUImage framework is a BSD-licensed iOS library that lets you apply GPU-accelerated filters and other effects to images, live camera video, and movies. In comparison to Core Image (part of iOS 5.0), GPUImage allows you to write your own custom filters, supports deployment to iOS 4.0, and has a simpler interface. However, it currently lacks some of the more advanced features of Core Image, such as facial detection.</p>
+</blockquote>
+<p>这是Brad Larson的Github对GPUImage做出的介绍，大致就是GPUImage以BSD协议放出，能够在图像、实时摄像头影像和视频上使用GPU加速的滤镜和其他效果。但是他相比于Core Image还是有不足的地方，就是他不支持面部检测。<br>GPUImage的使用和Core Image非常类似，也是将前一个滤镜的输出作为下一个滤镜的输入来实现滤镜链。</p>
+<h2 id="GPUImage_u7684_u4F7F_u7528"><a href="#GPUImage_u7684_u4F7F_u7528" class="headerlink" title="GPUImage的使用"></a>GPUImage的使用</h2><p>Brad Larson在GPUImage的github上给出了使用方法，这里贴出来：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIImage</span> *inputImage = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@"Lambeau.jpg"</span>];</span><br><span class="line"></span><br><span class="line">GP<span class="built_in">UImagePicture</span> *stillImageSource = [[GP<span class="built_in">UImagePicture</span> alloc] initWithImage:inputImage];</span><br><span class="line">GP<span class="built_in">UImageSepiaFilter</span> *stillImageFilter = [[GP<span class="built_in">UImageSepiaFilter</span> alloc] init];</span><br><span class="line"></span><br><span class="line">[stillImageSource addTarget:stillImageFilter];</span><br><span class="line">[stillImageFilter useNextFrameForImageCapture];</span><br><span class="line">[stillImageSource processImage];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIImage</span> *currentFilteredVideoFrame = [stillImageFilter imageFromCurrentFramebuffer];</span><br></pre></td></tr></table></figure></p>
+<p>如果只经过一个滤镜直接输出的话，可以简化为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GP<span class="built_in">UImageSepiaFilter</span> *stillImageFilter2 = [[GP<span class="built_in">UImageSepiaFilter</span> alloc] init];</span><br><span class="line"><span class="built_in">UIImage</span> *quickFilteredImage = [stillImageFilter2 imageByFilteringImage:inputImage];</span><br></pre></td></tr></table></figure>
+<h2 id="u4E00_u4E2A_u7B80_u5355_u7684_u6EE4_u955CAPP"><a href="#u4E00_u4E2A_u7B80_u5355_u7684_u6EE4_u955CAPP" class="headerlink" title="一个简单的滤镜APP"></a>一个简单的滤镜APP</h2><p>前段时间用GPUImage做过一次，最近又用Core Image重构了一遍，两者的使用实际上差不了太多，下面是实际效果和代码。</p>
+<p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/coreimage.gif?imageView/2/w/300/q/90" alt=""></p>
+<p>代码Demo<a href="https://github.com/oushiyq/YQCoreImageDemo" target="_blank" rel="external">在这</a> </p>
+<p>参考资料</p>
+<p>1.<a href="https://objccn.io/issue-21-6/" target="_blank" rel="external">Core Image 介绍</a> ObjC中国<br>2.<a href="https://developer.apple.com/library/mac/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_intro/ci_intro.html" target="_blank" rel="external">About Core Image</a> Apple<br>3.<a href="https://github.com/BradLarson/GPUImage" target="_blank" rel="external">GPUImage</a> BradLarson </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-APP是如何启动的-理解UIApplication" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -850,84 +944,6 @@
 </ol>
 <p>用流程图表示如下：<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/QQ20150427-1.png" alt=""><br>Receiver在每一步中均有机会处理消息。步骤越往后，处理消息的代价就越大；最好能在第一步就处理完，这样的话，runtime系统就可以将此方法缓存起来，进而提高效率。若想在第三步里把消息转发给备援的receiver，那还不如把转发操作提前到第二步。因为第三步只是修改了调用目标，这项改动放在第二步会更为简单，不然的话，还得创建并处理完整的NSInvocation。</p>
 <p>参考资料：<br>《Effective Objective-C 2.0》</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-深入理解KVO" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/03/16/深入理解KVO/" class="article-date">
-  	<time datetime="2016-03-16T12:03:19.000Z" itemprop="datePublished">2016-03-16</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/16/深入理解KVO/">简单使用KVO</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-_KVC_u7684_u6982_u5FF5"><a href="#1-_KVC_u7684_u6982_u5FF5" class="headerlink" title="1. KVC的概念"></a>1. KVC的概念</h2><p>KVC（key-value coding）是指将表示对象包含的信息的字符串作为键值来使用，间接访问该信息的方式。</p>
-<h2 id="2-_KVO_u4E0ERuntime"><a href="#2-_KVO_u4E0ERuntime" class="headerlink" title="2. KVO与Runtime"></a>2. KVO与Runtime</h2><p>KVO（key-value observe）即某个对象的属性改变时通知其他对象的机制。KVO的实现也依赖于Objective-C的Runtime，官方文档《Key-Value Observing Programming Guide》中在《Key-Value Observing Implementation Details》部分简单提到它的实现：</p>
-<hr>
-<p>Automatic key-value observing is implemented using a technique called isa-swizzling.</p>
-<p>The isa pointer, as the name suggests, points to the object’s class which maintains a dispatch table. This dispatch table essentially contains pointers to the methods the class implements, among other data.</p>
-<p>When an observer is registered for an attribute of an object the isa pointer of the observed object is modified, pointing to an intermediate class rather than at the true class. As a result the value of the isa pointer does not necessarily reflect the actual class of the instance.</p>
-<p>You should never rely on the isa pointer to determine class membership. Instead, you should use the class method to determine the class of an object instance.</p>
-<hr>
-<p>大概的意思就是KVO的实现是通过isa-swizzling技术。这个技术表示，当观察者观察一个对象时，会产生一个新的类，这个类继承于被观察对象，并重写其setter方法，再将被观察对象的isa指针指向新的类。这样被观察对象就神奇的成为了新类的实例。这样看来，KVO的实现还是有点黑魔法的意思啊。</p>
-<h2 id="3-_KVO_u7684_u4F7F_u7528"><a href="#3-_KVO_u7684_u4F7F_u7528" class="headerlink" title="3. KVO的使用"></a>3. KVO的使用</h2><h3 id="3-1__u8BA2_u9605"><a href="#3-1__u8BA2_u9605" class="headerlink" title="3.1 订阅"></a>3.1 订阅</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)addObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">         forKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">            options:(<span class="built_in">NSKeyValueObservingOptions</span>)options</span><br><span class="line">            context:(<span class="keyword">void</span> *)context;</span><br></pre></td></tr></table></figure>
-<h3 id="3-2__u54CD_u5E94"><a href="#3-2__u54CD_u5E94" class="headerlink" title="3.2 响应"></a>3.2 响应</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)observeValueForKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">                      ofObject:(<span class="keyword">id</span>)object</span><br><span class="line">                        change:(<span class="built_in">NSDictionary</span> *)change</span><br><span class="line">                       context:(<span class="keyword">void</span> *)context;</span><br></pre></td></tr></table></figure>
-<h3 id="3-3__u79FB_u9664"><a href="#3-3__u79FB_u9664" class="headerlink" title="3.3 移除"></a>3.3 移除</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)removeObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">            forKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">               context:(<span class="keyword">void</span> *)context;</span><br><span class="line">               </span><br><span class="line">- (<span class="keyword">void</span>)removeObserver:(<span class="built_in">NSObject</span> *)observer</span><br><span class="line">            forKeyPath:(<span class="built_in">NSString</span> *)keyPath;</span><br></pre></td></tr></table></figure>
-<h3 id="3-4__u793A_u4F8B_u7A0B_u5E8F"><a href="#3-4__u793A_u4F8B_u7A0B_u5E8F" class="headerlink" title="3.4 示例程序"></a>3.4 示例程序</h3><p>在下面的例子中，通过对UITextField.text值的观察，当其变化时，新值将在弹出窗口中被打印出来。效果如下：<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/2016-03-17%2009_36_54.gif" alt=""></p>
-<p>以下是源代码：<br>h文件<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">#import <span class="title">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> : <span class="title">UIViewController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">weak</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UITextField</span> *showText;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) IBOutletCollection(<span class="built_in">UIButton</span>) <span class="built_in">NSArray</span> *numberButton;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)clickNumberButton:(<span class="keyword">id</span>)sender;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
-<p>m文件<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#import <span class="title">"ViewController.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [<span class="keyword">self</span> addObserver:<span class="keyword">self</span></span><br><span class="line">           forKeyPath:<span class="string">@"showText.text"</span></span><br><span class="line">              options:<span class="number">1</span></span><br><span class="line">              context:<span class="literal">NULL</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)clickNumberButton:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    <span class="built_in">NSUInteger</span> buttonIndex = [<span class="keyword">self</span><span class="variable">.numberButton</span> indexOfObject:sender];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSString</span> *content = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%lu"</span>,(<span class="keyword">unsigned</span> <span class="keyword">long</span>)buttonIndex ];</span><br><span class="line">    [content stringByAppendingFormat:<span class="string">@"%lu"</span>,(<span class="keyword">unsigned</span> <span class="keyword">long</span>)buttonIndex];</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.showText</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.showText</span><span class="variable">.text</span> stringByAppendingString:content];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)observeValueForKeyPath:(<span class="built_in">NSString</span> *)keyPath</span><br><span class="line">                      ofObject:(<span class="keyword">id</span>)object</span><br><span class="line">                        change:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *,<span class="keyword">id</span>&gt; *)change</span><br><span class="line">                       context:(<span class="keyword">void</span> *)context&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *currentString = [change valueForKey:<span class="string">@"new"</span>];</span><br><span class="line">    <span class="comment">//弹窗</span></span><br><span class="line">    <span class="built_in">UIAlertController</span> *alertController = [<span class="built_in">UIAlertController</span> alertControllerWithTitle:<span class="string">@"输入的数字为："</span></span><br><span class="line">                                                                             message:currentString</span><br><span class="line">                                                                      preferredStyle:<span class="built_in">UIAlertControllerStyleAlert</span>];</span><br><span class="line">    <span class="built_in">UIAlertAction</span> *cancelAction = [<span class="built_in">UIAlertAction</span> actionWithTitle:<span class="string">@"取消"</span></span><br><span class="line">                                                           style:<span class="built_in">UIAlertActionStyleCancel</span></span><br><span class="line">                                                         handler:<span class="literal">nil</span>];</span><br><span class="line">    <span class="built_in">UIAlertAction</span> *okAction = [<span class="built_in">UIAlertAction</span> actionWithTitle:<span class="string">@"好的"</span></span><br><span class="line">                                                       style:<span class="built_in">UIAlertActionStyleDefault</span></span><br><span class="line">                                                     handler:<span class="literal">nil</span>];</span><br><span class="line">    [alertController addAction:cancelAction];</span><br><span class="line">    [alertController addAction:okAction];</span><br><span class="line">    [<span class="keyword">self</span> presentViewController:alertController animated:<span class="literal">YES</span> completion:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="3-4__u6CE8_u610F_u4E8B_u9879"><a href="#3-4__u6CE8_u610F_u4E8B_u9879" class="headerlink" title="3.4 注意事项"></a>3.4 注意事项</h2><ol>
-<li>keypath的拼写。因为keypath为一字符串，所以很容易产生拼写错误导致无法监听。比如本来keypath = @”contents”，但有时未注意可能会拼写成keypath = @”content”，而编译器在编译时也无法发现错误。因此可以定义一个常量static const NSString *contens = @”contents”；</li>
-<li>多次使用removeObserver导致程序crash。在同一个文件中执行两次相同的removeObserver比较容易debug出来；但是跨文件执行两次相同的removeObserver就不是那么容易发现了。因此Apple推荐在dealloc中进行removeObserver；</li>
-</ol>
-<p>参考资料：</p>
-<ol>
-<li>Key-Value Observing Programming Guide</li>
-<li><a href="http://objccn.io/issue-7-3/" target="_blank" rel="external">KVC 和 KVO</a> 翻译：卢思豪 </li>
-<li><a href="http://khanlou.com/2013/12/kvo-considered-harmful/" target="_blank" rel="external">KVO Considered Harmful</a> KHANLOU</li>
-<li>《Objective-C编程全解》 荻原刚志</li>
-</ol>
 
       
     </div>
