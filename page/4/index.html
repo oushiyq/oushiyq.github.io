@@ -67,10 +67,10 @@
 					<div class="tips-arrow"></div>
 					<ul class="tips-inner">
 						<li>菜单</li>
-						<li>標籤</li>
+						<li>Tags</li>
 						
 						
-						<li>關於</li>
+						<li>Über</li>
 						
 					</ul>
 				</div>
@@ -172,6 +172,68 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-本地通知-for-iOS8-later" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/28/本地通知-for-iOS8-later/" class="article-date">
+  	<time datetime="2016-01-28T10:11:26.000Z" itemprop="datePublished">2016-01-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/28/本地通知-for-iOS8-later/">本地通知 for iOS8 &amp; later</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="u7B80_u5355_u8BB0_u4E00_u7B14"><a href="#u7B80_u5355_u8BB0_u4E00_u7B14" class="headerlink" title="简单记一笔"></a>简单记一笔</h2><p>今天在写一个简单代码，用到了本地通知，代码如下</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)addReminder:(<span class="keyword">id</span>)sender&#123;</span><br><span class="line">    <span class="built_in">NSDate</span> *reminderDate = [datePicker date];</span><br><span class="line">    <span class="built_in">UILocalNotification</span> *notice = [[<span class="built_in">UILocalNotification</span> alloc]init];</span><br><span class="line">    notice<span class="variable">.alertBody</span> = <span class="string">@"Hypnotize me"</span>;</span><br><span class="line">    notice<span class="variable">.fireDate</span> = reminderDate;</span><br><span class="line">    </span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] scheduleLocalNotification:notice];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码没错，不过控制台出现了这样一行错误：</p>
+<blockquote>
+<p>Attempting to schedule a local notification ，with an alert but haven’t received permission from the user to display alerts，with a sound but haven’t received permission from the user to play sounds</p>
+</blockquote>
+<ul>
+<li>原因在于iOS8以后，系统需要在appdelegate中进行注册，才能实现本地通知。于是需要在appdelegate.m中加入下列代码：<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions &#123;</span><br><span class="line">    <span class="comment">// Override point for customization after application launch.</span></span><br><span class="line">    [application registerUserNotificationSettings:[<span class="built_in">UIUserNotificationSettings</span> settingsForTypes:<span class="built_in">UIUserNotificationTypeAlert</span>|<span class="built_in">UIUserNotificationTypeBadge</span>|<span class="built_in">UIUserNotificationTypeSound</span> categories:<span class="literal">nil</span>]];<span class="comment">//注册本地推送</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="P-S_uFF1A_u81EA_u5B66_u7684_u8FC7_u7A0B_u8FD8_u662F_u6BD4_u8F83_u7D2F_u4EBA_uFF0C_u5F88_u591A_u4E66_u4E0A_u6216_u8005blog_u4E0A_u7684_u65B9_u6CD5_u90FD_u662F_u6BD4_u8F83_u8001_u7684_uFF0C_u800C_u82F9_u679C_u516C_u53F8_u53C8_u4E00_u76F4_u5728_u66F4_u65B0_u65B0_u7684_u5185_u5BB9_uFF0C_u5F88_u591A_u8FC7_u65F6_u7684_u4E1C_u897F_u5728_u65B0_u7248_u672C_u7684_u7CFB_u7EDF_u4E2D_u5DF2_u7ECF_u6452_u5F03_u4E86_u3002"><a href="#P-S_uFF1A_u81EA_u5B66_u7684_u8FC7_u7A0B_u8FD8_u662F_u6BD4_u8F83_u7D2F_u4EBA_uFF0C_u5F88_u591A_u4E66_u4E0A_u6216_u8005blog_u4E0A_u7684_u65B9_u6CD5_u90FD_u662F_u6BD4_u8F83_u8001_u7684_uFF0C_u800C_u82F9_u679C_u516C_u53F8_u53C8_u4E00_u76F4_u5728_u66F4_u65B0_u65B0_u7684_u5185_u5BB9_uFF0C_u5F88_u591A_u8FC7_u65F6_u7684_u4E1C_u897F_u5728_u65B0_u7248_u672C_u7684_u7CFB_u7EDF_u4E2D_u5DF2_u7ECF_u6452_u5F03_u4E86_u3002" class="headerlink" title="P.S：自学的过程还是比较累人，很多书上或者blog上的方法都是比较老的，而苹果公司又一直在更新新的内容，很多过时的东西在新版本的系统中已经摒弃了。"></a>P.S：自学的过程还是比较累人，很多书上或者blog上的方法都是比较老的，而苹果公司又一直在更新新的内容，很多过时的东西在新版本的系统中已经摒弃了。</h3>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-浅尝Auto-Layout" class="article article-type-post" itemscope itemprop="blogPost">
   
