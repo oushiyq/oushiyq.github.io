@@ -67,10 +67,10 @@
 					<div class="tips-arrow"></div>
 					<ul class="tips-inner">
 						<li>菜单</li>
-						<li>Tags</li>
+						<li>標籤</li>
 						
 						
-						<li>Über</li>
+						<li>關於</li>
 						
 					</ul>
 				</div>
@@ -172,6 +172,116 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-代码规范" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/07/25/代码规范/" class="article-date">
+  	<time datetime="2018-07-25T02:48:02.000Z" itemprop="datePublished">2018-07-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/25/代码规范/">代码规范</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-_Yoda_conditions"><a href="#1-_Yoda_conditions" class="headerlink" title="1. Yoda conditions"></a>1. Yoda conditions</h2><p> <strong>推荐：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (value == 6) &#123; ...</span><br></pre></td></tr></table></figure>
+<p> <strong>不推荐：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (6 == value) &#123; ...</span><br></pre></td></tr></table></figure>
+<h2 id="2-_nil_u548CBOOL_u68C0_u67E5"><a href="#2-_nil_u548CBOOL_u68C0_u67E5" class="headerlink" title="2. nil和BOOL检查"></a>2. nil和BOOL检查</h2><p><strong>推荐：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (someObject) &#123; ...&#10;if (![someObject boolValue]) &#123; ...&#10;if (!someObject) &#123; ...</span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (someObject == YES) &#123; ... // Wrong&#10;if (myRawValue == YES) &#123; ... // Never do this.&#10;if ([someObject boolValue] == NO) &#123; ...</span><br></pre></td></tr></table></figure>
+<h2 id="3-_Golden_Path"><a href="#3-_Golden_Path" class="headerlink" title="3. Golden Path"></a>3. Golden Path</h2><p> <strong>推荐:</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)someMethod &#123;&#10;  if (![someOther boolValue]) &#123;&#10;      return;&#10;  &#125;&#10;&#10;  //Do something important&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)someMethod &#123;&#10;  if ([someOther boolValue]) &#123;&#10;    //Do something important&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-__u590D_u6742_u8868_u8FBE_u5F0F"><a href="#4-__u590D_u6742_u8868_u8FBE_u5F0F" class="headerlink" title="4. 复杂表达式"></a>4. 复杂表达式</h2><p> <strong>推荐:</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BOOL isA = [str1 isEqualToString:@&#34;a&#34;];&#10;BOOL isB = [str2 isEqualToString:@&#34;b&#34;];&#10;BOOL isC = [str3 isEqualToString:@&#34;c&#34;];&#10;BOOL isStrEqual = isA &#38;&#38; isB &#38;&#38; isC;&#10;if (isStrEqual)&#123;&#10;    // Do something very cool&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ([str1 isEqualToString:@&#34;a&#34;] &#38;&#38; [str2 isEqualToString:@&#34;b&#34;] &#38;&#38; [str3 isEqualToString:@&#34;c&#34;];)&#123;&#10;    // Do something very cool&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-__u4E09_u5143_u8FD0_u7B97_u7B26"><a href="#5-__u4E09_u5143_u8FD0_u7B97_u7B26" class="headerlink" title="5. 三元运算符"></a>5. 三元运算符</h2><p><strong>推荐:</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">result1 = a &gt; b ? x : y;</span><br><span class="line">result2 = object ? : [<span class="keyword">self</span> createObject];</span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">result1 = a &gt; b ? x = c &gt; d ? c : d : y;</span><br><span class="line">result2 = object ? object : [<span class="keyword">self</span> createObject];</span><br></pre></td></tr></table></figure>
+<h2 id="6-_CGRect_u51FD_u6570"><a href="#6-_CGRect_u51FD_u6570" class="headerlink" title="6. CGRect函数"></a>6. CGRect函数</h2><p><strong>推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> x = <span class="built_in">CGRectGetMinX</span>(frame); </span><br><span class="line"><span class="built_in">CGFloat</span> y = <span class="built_in">CGRectGetMinY</span>(frame); </span><br><span class="line"><span class="built_in">CGFloat</span> width = <span class="built_in">CGRectGetWidth</span>(frame); </span><br><span class="line"><span class="built_in">CGFloat</span> height = <span class="built_in">CGRectGetHeight</span>(frame); </span><br><span class="line"><span class="built_in">CGRect</span> frame = <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, width, height);</span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> x = frame<span class="variable">.origin</span><span class="variable">.x</span>;  </span><br><span class="line"><span class="built_in">CGFloat</span> y = frame<span class="variable">.origin</span><span class="variable">.y</span>;  </span><br><span class="line"><span class="built_in">CGFloat</span> width = frame<span class="variable">.size</span><span class="variable">.width</span>;  </span><br><span class="line"><span class="built_in">CGFloat</span> height = frame<span class="variable">.size</span><span class="variable">.height</span>;  </span><br><span class="line"><span class="built_in">CGRect</span> frame = (<span class="built_in">CGRect</span>)&#123; <span class="variable">.origin</span> = <span class="built_in">CGPointZero</span>, <span class="variable">.size</span> = frame<span class="variable">.size</span> &#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="7-__u5B57_u9762_u503C"><a href="#7-__u5B57_u9762_u503C" class="headerlink" title="7. 字面值"></a>7. 字面值</h2><p><strong>推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *names = @[<span class="string">@"Brian"</span>, <span class="string">@"Matt"</span>, <span class="string">@"Chris"</span>, <span class="string">@"Alex"</span>, <span class="string">@"Steve"</span>, <span class="string">@"Paul"</span>];</span><br><span class="line"><span class="built_in">NSDictionary</span> *productManagers = @&#123;<span class="string">@"iPhone"</span> : <span class="string">@"Kate"</span>, <span class="string">@"iPad"</span> : <span class="string">@"Kamal"</span>, <span class="string">@"Mobile Web"</span> : <span class="string">@"Bill"</span>&#125;;</span><br><span class="line"><span class="built_in">NSNumber</span> *shouldUseLiterals = @YES;</span><br><span class="line"><span class="built_in">NSNumber</span> *buildingZIPCode = @<span class="number">10018</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *names = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@"Brian"</span>, <span class="string">@"Matt"</span>, <span class="string">@"Chris"</span>, <span class="string">@"Alex"</span>, <span class="string">@"Steve"</span>, <span class="string">@"Paul"</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSDictionary</span> *productManagers = [<span class="built_in">NSDictionary</span> dictionaryWithObjectsAndKeys: <span class="string">@"Kate"</span>, <span class="string">@"iPhone"</span>, <span class="string">@"Kamal"</span>, <span class="string">@"iPad"</span>, <span class="string">@"Bill"</span>, <span class="string">@"Mobile Web"</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSNumber</span> *shouldUseLiterals = [<span class="built_in">NSNumber</span> numberWithBool:<span class="literal">YES</span>];</span><br><span class="line"><span class="built_in">NSNumber</span> *buildingZIPCode = [<span class="built_in">NSNumber</span> numberWithInteger:<span class="number">10018</span>];</span><br></pre></td></tr></table></figure>
+<h2 id="8-__u5C5E_u6027"><a href="#8-__u5C5E_u6027" class="headerlink" title="8. 属性"></a>8. 属性</h2><p><strong>推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *text;</span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span>* text;</span><br><span class="line"><span class="built_in">NSString</span> * text;</span><br></pre></td></tr></table></figure>
+<h2 id="9-__u65B9_u6CD5_u540D"><a href="#9-__u65B9_u6CD5_u540D" class="headerlink" title="9. 方法名"></a>9. 方法名</h2><p><strong>推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">void</span>)classMethod;</span><br><span class="line">- (<span class="keyword">void</span>)instanceMethod</span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+(<span class="keyword">void</span>)classMethod;</span><br><span class="line">-(<span class="keyword">void</span>)instanceMethod</span><br></pre></td></tr></table></figure>
+<h2 id="10-__u70B9_u8BED_u6CD5"><a href="#10-__u70B9_u8BED_u6CD5" class="headerlink" title="10. 点语法"></a>10. 点语法</h2><p><strong>推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">view<span class="variable">.backgroundColor</span> = [<span class="built_in">UIColor</span> orangeColor];	<span class="comment">//属性</span></span><br><span class="line">[<span class="built_in">UIApplication</span> sharedApplication]<span class="variable">.delegate</span>;		<span class="comment">//方法</span></span><br></pre></td></tr></table></figure>
+<p><strong>不推荐：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[view setBackgroundColor:[<span class="built_in">UIColor</span> orangeColor]];</span><br><span class="line"><span class="built_in">UIApplication</span><span class="variable">.sharedApplication</span><span class="variable">.delegate</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="11-__u65B9_u6CD5_u540D_u524D_u7F00"><a href="#11-__u65B9_u6CD5_u540D_u524D_u7F00" class="headerlink" title="11. 方法名前缀"></a>11. 方法名前缀</h2><ul>
+<li>刷新视图的方法名要以<code>refresh</code>开头</li>
+<li>更新数据的方法名要以<code>update</code>开头</li>
+</ul>
+<h2 id="12-_Delegate_u548CDataSource"><a href="#12-_Delegate_u548CDataSource" class="headerlink" title="12. Delegate和DataSource"></a>12. Delegate和DataSource</h2><ul>
+<li>delegate:事件发生的时候，委托者需要通知代理者。(<strong>返回值为void</strong>)</li>
+<li>datasource: 委托者需要从数据源对象拉取数据。(<strong>返回值不为void</strong>)</li>
+</ul>
+<h2 id="13-__u6CE8_u91CA"><a href="#13-__u6CE8_u91CA" class="headerlink" title="13. 注释"></a>13. 注释</h2><ul>
+<li>单行注释用//</li>
+<li>多行注释用/<em> </em>/</li>
+</ul>
+<h2 id="14-__u5927_u62EC_u53F7"><a href="#14-__u5927_u62EC_u53F7" class="headerlink" title="14. 大括号"></a>14. 大括号</h2><ul>
+<li>控制语句使用Egyptian brackets</li>
+<li>方法实现使用Non-Egyptian brackets</li>
+</ul>
+<p><strong>reference：</strong></p>
+<p><a href="https://github.com/objc-zen/objc-zen-book" target="_blank" rel="external">objc zen book</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-iOS-Core-Animation-Advanced-Techniques阅读笔记（三）" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -1117,87 +1227,6 @@
 <li>勿滥用通知，每次<code>post</code>一个通知时，通知中心都会去遍历一下它的分发表，然后将通知转发给相应的观察者，这样导致性能降低。</li>
 <li>addObserverForName 会生成一个匿名对象，需要remove。</li>
 </ol>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-hexo-github-搭建博客" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/05/29/hexo-github-搭建博客/" class="article-date">
-  	<time datetime="2018-05-29T11:10:47.000Z" itemprop="datePublished">2018-05-29</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/29/hexo-github-搭建博客/">hexo + github 搭建博客</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>之前mac坏了，加上毕业的事情。一直没对blog进行更新，本来以为毕业之后就会有时间来做这事了，可是懒啊Orz……这段时间终于想起这事儿了，但是电脑换了之后，导致重新搭了一次blog，于是重新梳理了一下搭建的过程。</p>
-<h4 id="1-_u5B89_u88C5Node-js"><a href="#1-_u5B89_u88C5Node-js" class="headerlink" title="1.安装Node.js"></a>1.安装Node.js</h4><p>​    直接在<a href="https://nodejs.org/en/" target="_blank" rel="external">Node官网</a>下载最新安装包就行了</p>
-<h4 id="2-_u5B89_u88C5hexo"><a href="#2-_u5B89_u88C5hexo" class="headerlink" title="2.安装hexo"></a>2.安装hexo</h4><p>​    因为mac本身自带了git，直接在命令行中执行下列命令就好了</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g hexo	/<span class="regexp">/sudo:系统员指令，需输入电脑密码  -g:全局安装</span></span><br></pre></td></tr></table></figure>
-<h4 id="3-_u521D_u59CB_u5316"><a href="#3-_u521D_u59CB_u5316" class="headerlink" title="3.初始化"></a>3.初始化</h4><p>​    cd 到安装目录下，执行hexo初始化命令</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">init</span> blog	<span class="comment">//blog为创建的hexo安装文件夹</span></span><br></pre></td></tr></table></figure>
-<p>​    此时，在blog文件夹中会生成建站所需的全部文件。在blog目录下，安装hexo</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> hexo -<span class="keyword">g</span></span></span><br></pre></td></tr></table></figure>
-<p>​    这样，我们就搭建好了本地的blog。可以试试使用如下指令，生成本地blog。在浏览器中输入localhost:4000就可以看到我们的第一个blog了。</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">g</span></span><br><span class="line">hexo <span class="literal">s</span></span><br></pre></td></tr></table></figure>
-<h4 id="4-_u90E8_u7F72_u5230github"><a href="#4-_u90E8_u7F72_u5230github" class="headerlink" title="4.部署到github"></a>4.部署到github</h4><p>​    申请一个github账号，然后创建一个新的github仓库 userName.github.io</p>
-<p>​    然后在_config.yml进行配置，</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">deploy</span>:</span><br><span class="line">  <span class="attribute">type</span>: git</span><br><span class="line">  <span class="attribute">repository</span>: <span class="attribute">https</span>:<span class="comment">//github.com/userName/userName.github.io.git	//userName你的用户名</span></span><br><span class="line">  <span class="attribute">branch</span>: master</span><br></pre></td></tr></table></figure>
-<p>​    配置好之后，在命令行中执行</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">g</span> -<span class="literal">d</span></span><br></pre></td></tr></table></figure>
-<p>​    这样，就将你的blog部署到github上了。</p>
-<h4 id="5-_u57DF_u540D_u7ED1_u5B9A"><a href="#5-_u57DF_u540D_u7ED1_u5B9A" class="headerlink" title="5.域名绑定"></a>5.域名绑定</h4><p>​    一般推荐在<a href="https://link.jianshu.com/?t=https://www.godaddy.com" target="_blank" rel="external">goDaddy</a>上购买域名，因为不需要备案……但是图方便的话，可以在阿里万网上买，也比较便宜一点。</p>
-<ol>
-<li>在blog目录下的CNAME文件中，添加域名信息。然后hexo g -d，部署到github上</li>
-</ol>
-<ol>
-<li><p>注册DNSPod，添加域名。添加CNAME记录为 username.github.io，添加@记录为 username.github.io对应的IP地址</p>
-</li>
-<li><p>在goDaddy网站上，绑定DNSPod的解析</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f1g1ns1<span class="class">.dnspod</span><span class="class">.net</span>.</span><br><span class="line">f1g1ns2<span class="class">.dnspod</span><span class="class">.net</span>.</span><br></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ol>
-<p>这样，48小时之内，输入我们的域名，就能看到blog上线咯</p>
 
       
     </div>

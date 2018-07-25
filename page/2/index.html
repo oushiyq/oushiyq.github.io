@@ -67,10 +67,10 @@
 					<div class="tips-arrow"></div>
 					<ul class="tips-inner">
 						<li>菜单</li>
-						<li>Tags</li>
+						<li>標籤</li>
 						
 						
-						<li>Über</li>
+						<li>關於</li>
 						
 					</ul>
 				</div>
@@ -172,6 +172,87 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-hexo-github-搭建博客" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/05/29/hexo-github-搭建博客/" class="article-date">
+  	<time datetime="2018-05-29T11:10:47.000Z" itemprop="datePublished">2018-05-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/29/hexo-github-搭建博客/">hexo + github 搭建博客</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>之前mac坏了，加上毕业的事情。一直没对blog进行更新，本来以为毕业之后就会有时间来做这事了，可是懒啊Orz……这段时间终于想起这事儿了，但是电脑换了之后，导致重新搭了一次blog，于是重新梳理了一下搭建的过程。</p>
+<h4 id="1-_u5B89_u88C5Node-js"><a href="#1-_u5B89_u88C5Node-js" class="headerlink" title="1.安装Node.js"></a>1.安装Node.js</h4><p>​    直接在<a href="https://nodejs.org/en/" target="_blank" rel="external">Node官网</a>下载最新安装包就行了</p>
+<h4 id="2-_u5B89_u88C5hexo"><a href="#2-_u5B89_u88C5hexo" class="headerlink" title="2.安装hexo"></a>2.安装hexo</h4><p>​    因为mac本身自带了git，直接在命令行中执行下列命令就好了</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g hexo	/<span class="regexp">/sudo:系统员指令，需输入电脑密码  -g:全局安装</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-_u521D_u59CB_u5316"><a href="#3-_u521D_u59CB_u5316" class="headerlink" title="3.初始化"></a>3.初始化</h4><p>​    cd 到安装目录下，执行hexo初始化命令</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">init</span> blog	<span class="comment">//blog为创建的hexo安装文件夹</span></span><br></pre></td></tr></table></figure>
+<p>​    此时，在blog文件夹中会生成建站所需的全部文件。在blog目录下，安装hexo</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> hexo -<span class="keyword">g</span></span></span><br></pre></td></tr></table></figure>
+<p>​    这样，我们就搭建好了本地的blog。可以试试使用如下指令，生成本地blog。在浏览器中输入localhost:4000就可以看到我们的第一个blog了。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">g</span></span><br><span class="line">hexo <span class="literal">s</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-_u90E8_u7F72_u5230github"><a href="#4-_u90E8_u7F72_u5230github" class="headerlink" title="4.部署到github"></a>4.部署到github</h4><p>​    申请一个github账号，然后创建一个新的github仓库 userName.github.io</p>
+<p>​    然后在_config.yml进行配置，</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">deploy</span>:</span><br><span class="line">  <span class="attribute">type</span>: git</span><br><span class="line">  <span class="attribute">repository</span>: <span class="attribute">https</span>:<span class="comment">//github.com/userName/userName.github.io.git	//userName你的用户名</span></span><br><span class="line">  <span class="attribute">branch</span>: master</span><br></pre></td></tr></table></figure>
+<p>​    配置好之后，在命令行中执行</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">g</span> -<span class="literal">d</span></span><br></pre></td></tr></table></figure>
+<p>​    这样，就将你的blog部署到github上了。</p>
+<h4 id="5-_u57DF_u540D_u7ED1_u5B9A"><a href="#5-_u57DF_u540D_u7ED1_u5B9A" class="headerlink" title="5.域名绑定"></a>5.域名绑定</h4><p>​    一般推荐在<a href="https://link.jianshu.com/?t=https://www.godaddy.com" target="_blank" rel="external">goDaddy</a>上购买域名，因为不需要备案……但是图方便的话，可以在阿里万网上买，也比较便宜一点。</p>
+<ol>
+<li>在blog目录下的CNAME文件中，添加域名信息。然后hexo g -d，部署到github上</li>
+</ol>
+<ol>
+<li><p>注册DNSPod，添加域名。添加CNAME记录为 username.github.io，添加@记录为 username.github.io对应的IP地址</p>
+</li>
+<li><p>在goDaddy网站上，绑定DNSPod的解析</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f1g1ns1<span class="class">.dnspod</span><span class="class">.net</span>.</span><br><span class="line">f1g1ns2<span class="class">.dnspod</span><span class="class">.net</span>.</span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ol>
+<p>这样，48小时之内，输入我们的域名，就能看到blog上线咯</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-Core-Image实战之二" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -907,61 +988,6 @@
 <li>可测试。界面素来是比较难于测试的，而现在测试可以针对ViewModel来写。</li>
 </ol>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>参考资料:<br>1.《iOS开发进阶》 唐巧<br>2.《斯坦福大学公开课:iOS 7应用开发》 Paul Hegarty</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-字符串翻转" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/04/03/字符串翻转/" class="article-date">
-  	<time datetime="2016-04-03T01:47:34.000Z" itemprop="datePublished">2016-04-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/03/字符串翻转/">字符串翻转</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>昨天腾讯笔试，结果第一道编程题就gg了，还以为是笔试的编译器出问题了，一直不能输出……Orz<br>结果考完在自己的编译器也同样无法输出，然后就知道自己跪了。。。</p>
-<h3 id="u9898_u76EE"><a href="#u9898_u76EE" class="headerlink" title="题目"></a>题目</h3><p>很简单的题目，也是很简单的算法，输入一个字符串如：”I come from China.”,输出”China. from come I”。思路很简单，就是先整个翻转字符串”.anihC morf emoa I”，然后以空格为界，分别对每个子字符串翻转。<br>下面贴出代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#include<span class="title">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#include<span class="title">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> main ()&#123;</span><br><span class="line">    <span class="keyword">char</span> str[<span class="number">100</span>];</span><br><span class="line">    <span class="keyword">int</span> i,begin,end;</span><br><span class="line">    gets(str);</span><br><span class="line">    <span class="keyword">long</span> length = strlen(str)-<span class="number">1</span>;</span><br><span class="line">    <span class="comment">//整个翻转字符串</span></span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; length&gt;i; i++,length--) &#123;</span><br><span class="line">        <span class="keyword">char</span> tmp;</span><br><span class="line">        tmp = str[i];</span><br><span class="line">        str[i] = str[length];</span><br><span class="line">        str[length] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//翻转子字符串</span></span><br><span class="line">     <span class="keyword">while</span>(str[i]) &#123;</span><br><span class="line">         begin = i;</span><br><span class="line">         <span class="keyword">while</span> (str[i] != <span class="string">' '</span> &amp;&amp; str[i]) &#123;</span><br><span class="line">            i++;</span><br><span class="line">         &#125;</span><br><span class="line">         end = i-<span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">         <span class="keyword">while</span>(end &gt; begin) &#123;</span><br><span class="line">             <span class="keyword">char</span> tmp;</span><br><span class="line">             tmp = str[end];</span><br><span class="line">             str[end] = str[begin];</span><br><span class="line">             str[begin] = tmp;</span><br><span class="line">             end--;</span><br><span class="line">             begin++;</span><br><span class="line">        &#125;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    printf(<span class="string">"%s\n"</span>,str);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输入：I come frome China</span></span><br><span class="line"><span class="comment">//输出：China frome come I</span></span><br></pre></td></tr></table></figure></p>
-<p>记得当时好想是在while (str[i] != ‘ ‘ &amp;&amp; str[i])这个判断中忘记『&amp;&amp; str[i]』这个条件了，后来在Xcode中debug的时候才找出来的，没有『&amp;&amp; str[i]』将在字符串中一直查找，导致无法输出。</p>
 
       
     </div>
