@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Core-Animation/" style="font-size: 10px;">Core Animation</a>
+						<a href="/tags/Core-Animation/" style="font-size: 10px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a>
 					</div>
 				</section>
 				
@@ -172,6 +172,73 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-iOS小知识（七）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/08/09/iOS小知识（七）/" class="article-date">
+  	<time datetime="2018-08-09T09:59:25.000Z" itemprop="datePublished">2018-08-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/09/iOS小知识（七）/">iOS小知识（七）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="u4E00_u3001_u79BB_u5C4F_u6E32_u67D3"><a href="#u4E00_u3001_u79BB_u5C4F_u6E32_u67D3" class="headerlink" title="一、离屏渲染"></a>一、离屏渲染</h4><p>离屏渲染 包含两类 CPU离屏渲染和GPU离屏渲染</p>
+<p>一般意义上的“离屏渲染”是指GPU离屏渲染：在GPU中屏幕外context生成一个buffer（render buffer），用来渲染不能直接在屏幕上进行绘制的图层。当图层合并成为一个屏幕能直接绘制的图层后，render buffer 将合成后的图层交给 frame buffer 由屏幕内context进行绘制。因为涉及到GPU context 的切换，所以会导致屏幕绘制时间变长，从而引起丢帧，导致卡顿。</p>
+<p>CPU离屏渲染是由Core Graphics 框架造成的，并不是一般意义上的“离屏渲染”。当使用drawRect/CG 进行绘图时，实际上是使用CPU进行同步绘制。当绘制一些简单图形时，CPU占用的时间 &lt; GPU上下文转换的时间，在这种情况下，我们可以考虑CG的离屏渲染。</p>
+<p>shouldRasterize 会引发GPU离屏渲染，但是只要光栅化图层的子图层不改变，那么光栅化会被缓存并在每帧进行绘制。</p>
+<h4 id="u4E8C_u3001UITabBarController_u5224_u65AD_u662F_u5426_u8DF3_u8F6C"><a href="#u4E8C_u3001UITabBarController_u5224_u65AD_u662F_u5426_u8DF3_u8F6C" class="headerlink" title="二、UITabBarController判断是否跳转"></a>二、UITabBarController判断是否跳转</h4><p>可以使用<code>tabBarController: shouldSelectViewController:</code>方法，能跳转的tabBar返回YES，否则返回NO</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController&#10;&#123;  &#10;    if (tabBarController.tabBar.selectedItem.tag==3) &#10;    &#123;     &#10;        return NO;     &#10;    &#125;&#10;    else&#10;    &#123;         &#10;        return YES;    &#10;    &#125;    &#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="u4E09_u3001performSelector_3A_u548CNSInvocation"><a href="#u4E09_u3001performSelector_3A_u548CNSInvocation" class="headerlink" title="三、performSelector:和NSInvocation"></a>三、<code>performSelector:</code>和<code>NSInvocation</code></h4><p>直接调用对象有 performSelector 和 NSInvocation 两种方式。但是performSelector 最多支持一个参数，若需要多参数，需要使用 NSInvocation。其使用方法如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-(void)invocation&#10;&#123;&#10;    //&#26041;&#27861;&#31614;&#21517;&#10;    NSMethodSignature *signature = [[self class] instanceMethodSignatureForSelector:@selector(calWith:andB:)];&#10;    &#10;    if (signature) &#123;&#10;        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];&#10;        invocation.target = self;&#10;        invocation.selector = @selector(calWith:andB:);&#10;        &#10;        int a=10,b=20;&#10;        //&#33258;&#23450;&#20041;&#21442;&#25968;&#32034;&#24341;&#20174;2&#24320;&#22987;&#65288;atIndex&#65289;&#65292;0&#65292;1 &#34987;target&#12289;selector&#21344;&#29992;&#10;        [invocation setArgument:&#38;a atIndex:2];&#10;        [invocation setArgument:&#38;b atIndex:3];&#10;        &#10;        //&#25191;&#34892;&#10;        [invocation invoke];&#10;    &#125;&#10;    &#10;&#125;&#10; &#10;-(void)calWith:(int)a andB:(int) b&#10;&#123;&#10;    NSLog(@&#34;result:%zd&#34;,a + b);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="u56DB_u3001NSSet_u548CNSArray"><a href="#u56DB_u3001NSSet_u548CNSArray" class="headerlink" title="四、NSSet和NSArray"></a>四、NSSet和NSArray</h4><h5 id="NSSet"><a href="#NSSet" class="headerlink" title="NSSet"></a>NSSet</h5><p>自定义对象加入NSSet中，需要重写<code>isEqual:</code>和<code>hash</code>方法。同一对象add到set中，只能add一次。</p>
+<h5 id="NSArray"><a href="#NSArray" class="headerlink" title="NSArray"></a>NSArray</h5><p>同一对象add到array中，可以add多次。但是remove同一对象时，所有对象都被remove。</p>
+<p>对两个array求 交集、并集、差集，可以先将array转为set，然后使用set的 <code>intersectSet:</code> 、  <code>unionSet:</code> 、<code>minusSet:</code>方法。最后将set转回array</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-代码规范" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -828,6 +895,10 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
       
 
       
@@ -909,6 +980,10 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
       
 
       
@@ -987,6 +1062,10 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
       
 
       
@@ -1060,6 +1139,10 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
       
 
       
@@ -1168,72 +1251,10 @@
     <div class="article-info article-info-index">
       
       
-      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
 
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-iOS小知识（一）" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/06/01/iOS小知识（一）/" class="article-date">
-  	<time datetime="2018-06-01T04:43:22.000Z" itemprop="datePublished">2018-06-01</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/01/iOS小知识（一）/">iOS小知识（一）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。</li>
-<li>在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中</li>
-<li>iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x</li>
-<li>UIScrollView带有一个 contentInsetAdjustmentBehavior属性，特别是在webView中进行iPhone X 适配的时候，要将其设置为UIScrollViewContentInsetAdjustmentNever</li>
-<li><p>iOS7之后，UIScrollView增加了keyboardDismissMode属性，可以设置在scrollView滑动的时候，将键盘关闭。</p>
-</li>
-<li><p>UIWebView可以跟据链接的来源UIWebViewNavigationType对其操作。</p>
-</li>
-<li>Runloop 对象是利用字典来进行存储， Key(thread) – Value(loop)</li>
-<li>NSNotificationCenter是一个同步的单例模式，而这个通知中心的对象会一直存在于一个应用的生命周期。</li>
-<li>勿滥用通知，每次<code>post</code>一个通知时，通知中心都会去遍历一下它的分发表，然后将通知转发给相应的观察者，这样导致性能降低。</li>
-<li>addObserverForName 会生成一个匿名对象，需要remove。</li>
-</ol>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
       
 
       

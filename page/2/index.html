@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Core-Animation/" style="font-size: 10px;">Core Animation</a>
+						<a href="/tags/Core-Animation/" style="font-size: 10px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a>
 					</div>
 				</section>
 				
@@ -172,6 +172,76 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-iOS小知识（一）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/06/01/iOS小知识（一）/" class="article-date">
+  	<time datetime="2018-06-01T04:43:22.000Z" itemprop="datePublished">2018-06-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/01/iOS小知识（一）/">iOS小知识（一）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。</li>
+<li>在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中</li>
+<li>iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x</li>
+<li>UIScrollView带有一个 contentInsetAdjustmentBehavior属性，特别是在webView中进行iPhone X 适配的时候，要将其设置为UIScrollViewContentInsetAdjustmentNever</li>
+<li><p>iOS7之后，UIScrollView增加了keyboardDismissMode属性，可以设置在scrollView滑动的时候，将键盘关闭。</p>
+</li>
+<li><p>UIWebView可以跟据链接的来源UIWebViewNavigationType对其操作。</p>
+</li>
+<li>Runloop 对象是利用字典来进行存储， Key(thread) – Value(loop)</li>
+<li>NSNotificationCenter是一个同步的单例模式，而这个通知中心的对象会一直存在于一个应用的生命周期。</li>
+<li>勿滥用通知，每次<code>post</code>一个通知时，通知中心都会去遍历一下它的分发表，然后将通知转发给相应的观察者，这样导致性能降低。</li>
+<li>addObserverForName 会生成一个匿名对象，需要remove。</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-hexo-github-搭建博客" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -914,80 +984,6 @@
 <p>要拥有协议中声明的方法，就必须遵守protocol，如果某个类遵守的协议有多个，则用逗号进行分隔。其语法如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> 类名 : 父类&lt;<span class="title">protocol_1</span>，<span class="title">protocol_2</span>, ……&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h2><p>delegate是一种设计模式，这种模式用于应用程序的一个对象delegate另外一个对象和其他对象交互。总而言之，delegate只是一种设计模式而已，是大家约定俗成的一种做法。在OC中，通常使用协议来实现代理，即把协议当成用户和代理中间的『中转站』，在协议中定义一些和代理沟通的方法。也就是因为这个原因，初学者会经常把Protocol和Delegate弄混淆。<br>这里举个例子吧：<br>假如有个A类，他把需要的事交给B类处理，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">classA</span> : <span class="title">NSObject</span></span>&#123;</span><br><span class="line">	classB *B；</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
 <p>只需要在A类中声明一个B类的ivar就行了，这就是delegate……他真的只是一个设计模式而已。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-iOS中的MVC设计模式" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/04/14/iOS中的MVC设计模式/" class="article-date">
-  	<time datetime="2016-04-14T08:48:43.000Z" itemprop="datePublished">2016-04-14</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/14/iOS中的MVC设计模式/">iOS中的MVC设计模式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>MVC（Model-View-Controller）,作为iOS开发的一个主流设计模式，很多初学者第一次接触设计模式也是从MVC开始的。虽然我一直在用这种模式，但是对于他的理解还一直处于一个很模糊的状态，于是又回去看了看斯坦福的iOS教程。同时，也Google了一些别人的blog，慢慢开始对MVC越来越清晰。</p>
-<h2 id="MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="MVC设计模式"></a>MVC设计模式</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/97B060C0-E1B8-46B0-95B7-2740392E9ABE.png" alt="MVC"></p>
-<p>Model:封装了应用程序的数据，并定义了处理逻辑；<br>View:应用程序中，用户看到的对象；<br>Controller:视图与模型之间通信的媒介。<br>如上图所示，他们的之间的通信方式如下：</p>
-<ol>
-<li>Model与View永远不能直接通信；</li>
-<li>Controller和Model之间的通信需借助Notification和KVO模式；</li>
-<li>Controller和View之间的通信可以通过outlet直接操作view，即outlet直接对应View中的控件。View通过action-target机制向Controller报告事件的发生。另外，Controller作为View的delegate协助View处理数据，来达到View和Controller之间的同步。</li>
-</ol>
-<h2 id="MVC_u5B58_u5728_u7684_u95EE_u9898_u4EE5_u53CA_u6539_u8FDB"><a href="#MVC_u5B58_u5728_u7684_u95EE_u9898_u4EE5_u53CA_u6539_u8FDB" class="headerlink" title="MVC存在的问题以及改进"></a>MVC存在的问题以及改进</h2><p>不可否认MVC是一个非常优秀的设计模式，它能很直观的体现app中的各个组件的相关关系。但是由于Controller集中了大量代码，使得其Controller层过于臃肿。<br>而设计模式很多时候是为了 Don’t repeat yourself 原则来做的，该原则要求能够复用的代码要尽量复用，来保证重用。MVC的View和Model都符合该原则。但是Controller并不易于复用。那么在MVC中，我们应该把哪些代码放在Controller中呢？因为其难以复用，那么把一些不需要复用代码放入其中，如：</p>
-<ol>
-<li>初始化时，构造相应的View和Model；</li>
-<li>监听Model层的事件，将数据传给View层；</li>
-<li>监听View层的事件，将数据传给Model层。</li>
-</ol>
-<h2 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h2><p>MVVM（Model-View-ViewModel）在使用当中，通常还会利用双向绑定技术，使得Model变化时，ViewModel 会自动更新，而ViewModel变化时，View也会自动变化。所以，MVVM模式有些时候又被称作：model-view-binder模式。<br>MVVM模式和MVC模式一样，主要目的是分离视图（View）和模型（Model），有几大优点</p>
-<ol>
-<li>低耦合。视图（View）可以独立于Model变化和修改，一个ViewModel可以绑定到不同的”View”上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li>可重用性。你可以把一些视图逻辑放在一个ViewModel里面，让很多view重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注于业务逻辑和数据的开发（ViewModel），设计人员可以专注于页面设计。</li>
-<li>可测试。界面素来是比较难于测试的，而现在测试可以针对ViewModel来写。</li>
-</ol>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>参考资料:<br>1.《iOS开发进阶》 唐巧<br>2.《斯坦福大学公开课:iOS 7应用开发》 Paul Hegarty</p>
 
       
     </div>

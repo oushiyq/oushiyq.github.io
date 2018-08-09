@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Core-Animation/" style="font-size: 10px;">Core Animation</a>
+						<a href="/tags/Core-Animation/" style="font-size: 10px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a>
 					</div>
 				</section>
 				
@@ -172,6 +172,80 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-iOS中的MVC设计模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/14/iOS中的MVC设计模式/" class="article-date">
+  	<time datetime="2016-04-14T08:48:43.000Z" itemprop="datePublished">2016-04-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/14/iOS中的MVC设计模式/">iOS中的MVC设计模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>MVC（Model-View-Controller）,作为iOS开发的一个主流设计模式，很多初学者第一次接触设计模式也是从MVC开始的。虽然我一直在用这种模式，但是对于他的理解还一直处于一个很模糊的状态，于是又回去看了看斯坦福的iOS教程。同时，也Google了一些别人的blog，慢慢开始对MVC越来越清晰。</p>
+<h2 id="MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="MVC设计模式"></a>MVC设计模式</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/97B060C0-E1B8-46B0-95B7-2740392E9ABE.png" alt="MVC"></p>
+<p>Model:封装了应用程序的数据，并定义了处理逻辑；<br>View:应用程序中，用户看到的对象；<br>Controller:视图与模型之间通信的媒介。<br>如上图所示，他们的之间的通信方式如下：</p>
+<ol>
+<li>Model与View永远不能直接通信；</li>
+<li>Controller和Model之间的通信需借助Notification和KVO模式；</li>
+<li>Controller和View之间的通信可以通过outlet直接操作view，即outlet直接对应View中的控件。View通过action-target机制向Controller报告事件的发生。另外，Controller作为View的delegate协助View处理数据，来达到View和Controller之间的同步。</li>
+</ol>
+<h2 id="MVC_u5B58_u5728_u7684_u95EE_u9898_u4EE5_u53CA_u6539_u8FDB"><a href="#MVC_u5B58_u5728_u7684_u95EE_u9898_u4EE5_u53CA_u6539_u8FDB" class="headerlink" title="MVC存在的问题以及改进"></a>MVC存在的问题以及改进</h2><p>不可否认MVC是一个非常优秀的设计模式，它能很直观的体现app中的各个组件的相关关系。但是由于Controller集中了大量代码，使得其Controller层过于臃肿。<br>而设计模式很多时候是为了 Don’t repeat yourself 原则来做的，该原则要求能够复用的代码要尽量复用，来保证重用。MVC的View和Model都符合该原则。但是Controller并不易于复用。那么在MVC中，我们应该把哪些代码放在Controller中呢？因为其难以复用，那么把一些不需要复用代码放入其中，如：</p>
+<ol>
+<li>初始化时，构造相应的View和Model；</li>
+<li>监听Model层的事件，将数据传给View层；</li>
+<li>监听View层的事件，将数据传给Model层。</li>
+</ol>
+<h2 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h2><p>MVVM（Model-View-ViewModel）在使用当中，通常还会利用双向绑定技术，使得Model变化时，ViewModel 会自动更新，而ViewModel变化时，View也会自动变化。所以，MVVM模式有些时候又被称作：model-view-binder模式。<br>MVVM模式和MVC模式一样，主要目的是分离视图（View）和模型（Model），有几大优点</p>
+<ol>
+<li>低耦合。视图（View）可以独立于Model变化和修改，一个ViewModel可以绑定到不同的”View”上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li>可重用性。你可以把一些视图逻辑放在一个ViewModel里面，让很多view重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注于业务逻辑和数据的开发（ViewModel），设计人员可以专注于页面设计。</li>
+<li>可测试。界面素来是比较难于测试的，而现在测试可以针对ViewModel来写。</li>
+</ol>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>参考资料:<br>1.《iOS开发进阶》 唐巧<br>2.《斯坦福大学公开课:iOS 7应用开发》 Paul Hegarty</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-字符串翻转" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -862,76 +936,6 @@
 <li>A与B的点数和花色都不同，A翻面,score-1.<h3 id="u5B9E_u9645_u6548_u679C"><a href="#u5B9E_u9645_u6548_u679C" class="headerlink" title="实际效果"></a>实际效果</h3><img src="http://7xqzfr.com1.z0.glb.clouddn.com/2016-02-28%2020_04_03.gif?imageView/2/w/300/q/90" alt=""></li>
 </ol>
 <p>代码Demo<a href="https://github.com/oushiyq/iOSdemos/tree/master/cardMatch2" target="_blank" rel="external">在这</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-简易微信红包" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/02/17/简易微信红包/" class="article-date">
-  	<time datetime="2016-02-17T06:41:19.000Z" itemprop="datePublished">2016-02-17</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/02/17/简易微信红包/">简易微信红包</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h4><p>这几天过年一直在玩微信红包，抢来抢去也就几块钱，还随时得关注群里的红包动态。思来想起，还不如自己做个简易微信红包过过干瘾。好吧，说干就干！</p>
-<h2 id="UI_u8BBE_u8BA1"><a href="#UI_u8BBE_u8BA1" class="headerlink" title="UI设计"></a>UI设计</h2><p>简单设计了5个标签表示5个不同用户，5个UITextField用来显示抢到的红包，5个UIButton实现抢红包（虽然在这个demo中每人都有红包。。。）。功能实现需满足下列条件：</p>
-<ol>
-<li>拆红包顺序不固定</li>
-<li>拆完红包以后，拆红包按钮无法继续点击</li>
-</ol>
-<p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/Simulator%20Screen%20Shot%202016%E5%B9%B42%E6%9C%8822%E6%97%A5%20%E4%B8%8B%E5%8D%883.06.55.png?imageView/2/w/300/q/90" alt=""> </p>
-<h2 id="u62A2_u7EA2_u5305_u7B97_u6CD5"><a href="#u62A2_u7EA2_u5305_u7B97_u6CD5" class="headerlink" title="抢红包算法"></a>抢红包算法</h2><p>抢红包算法主要需满足下列几点</p>
-<ol>
-<li>保证每人都有红包可以拿到</li>
-<li>最小的红包为0.01</li>
-<li>每人的红包相加后为100</li>
-<li>金额随机分配</li>
-</ol>
-<p>代码实现如下所示：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"> - (<span class="built_in">NSArray</span>*)disMoney&#123;</span><br><span class="line">    <span class="keyword">float</span> tmpMoney[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">float</span> maxMoney = <span class="number">99.96</span>;<span class="comment">//第一个人最多只能抢到99.96元</span></span><br><span class="line">    <span class="keyword">float</span> sum = <span class="number">0</span> ;</span><br><span class="line">    <span class="built_in">NSMutableArray</span> *luckyMoney = [[<span class="built_in">NSMutableArray</span> alloc]init];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//红包分配</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">//当第一个人抢完后，从第二人开始最大红包减去前一个红包</span></span><br><span class="line">            maxMoney -= tmpMoney[i - <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i != <span class="number">4</span>) &#123;</span><br><span class="line">            tmpMoney[i] = arc4random() % <span class="number">100</span> / <span class="number">100.00</span> * maxMoney;<span class="comment">//生成0~maxMoney之间的随机数</span></span><br><span class="line">            <span class="keyword">int</span> a = (<span class="keyword">int</span>)(tmpMoney[i] * <span class="number">100</span> + <span class="number">0.5</span>);</span><br><span class="line">            tmpMoney[i] = a / <span class="number">100.0</span> + <span class="number">0.01</span>;<span class="comment">//四舍五入，取两位小数</span></span><br><span class="line">            <span class="built_in">NSString</span> *tmp = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%.2f"</span>,tmpMoney[i] ];</span><br><span class="line">            [luckyMoney addObject:tmp];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            tmpMoney[i] = <span class="number">100</span> - sum;</span><br><span class="line">            <span class="built_in">NSString</span> *tmp = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%.2f"</span>,tmpMoney[i] ];</span><br><span class="line">            [luckyMoney addObject:tmp];</span><br><span class="line">        &#125;</span><br><span class="line">        sum += tmpMoney[i];</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> luckyMoney;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="u6700_u7EC8_u6548_u679C"><a href="#u6700_u7EC8_u6548_u679C" class="headerlink" title="最终效果"></a>最终效果</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/2016-02-22%2015_17_27.gif?imageView/2/w/300/q/90" alt=""></p>
-<p>代码Demo<a href="https://github.com/oushiyq/luckyMoney" target="_blank" rel="external">在这</a></p>
 
       
     </div>
