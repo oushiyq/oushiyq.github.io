@@ -210,6 +210,8 @@
 <h4 id="u56DB_u3001NSSet_u548CNSArray"><a href="#u56DB_u3001NSSet_u548CNSArray" class="headerlink" title="四、NSSet和NSArray"></a>四、NSSet和NSArray</h4><h5 id="NSSet"><a href="#NSSet" class="headerlink" title="NSSet"></a>NSSet</h5><p>自定义对象加入NSSet中，需要重写<code>isEqual:</code>和<code>hash</code>方法。同一对象add到set中，只能add一次。</p>
 <h5 id="NSArray"><a href="#NSArray" class="headerlink" title="NSArray"></a>NSArray</h5><p>同一对象add到array中，可以add多次。但是remove同一对象时，所有对象都被remove。</p>
 <p>对两个array求 交集、并集、差集，可以先将array转为set，然后使用set的 <code>intersectSet:</code> 、  <code>unionSet:</code> 、<code>minusSet:</code>方法。最后将set转回array</p>
+<h4 id="u4E94_u3001_u81EA_u5B9A_u4E49cell"><a href="#u4E94_u3001_u81EA_u5B9A_u4E49cell" class="headerlink" title="五、自定义cell"></a>五、自定义cell</h4><p>当cell不可编辑时，<code>[self addSubview:view]</code> 和<code>[self.contentView addSubview:view]</code> 无区别</p>
+<p>当cell可编辑时，使用<code>[self.contentView addSubview:view]</code> ，<code>[self addSubview:view]</code> 会导致布局错乱</p>
 
       
     </div>
