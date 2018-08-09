@@ -11,7 +11,8 @@
  不推荐：
 1if (6 == value) &amp;#123; ...
 2. nil和BOOL检查推荐：
-1if (someObject) &amp;#123; ...&amp;#10;if (![someObject boolValue]) &amp;#123; ...&amp;#10;if (!someObject) &amp;#123">
+123if (someObject) &amp;#123; ...if (![someObject boolValue]) &amp;#123; ...if (!someObject) &amp;#123; ...
+不推">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码规范">
 <meta property="og:url" content="http://yoursite.com/2018/07/25/代码规范/index.html">
@@ -21,8 +22,9 @@
  不推荐：
 1if (6 == value) &amp;#123; ...
 2. nil和BOOL检查推荐：
-1if (someObject) &amp;#123; ...&amp;#10;if (![someObject boolValue]) &amp;#123; ...&amp;#10;if (!someObject) &amp;#123">
-<meta property="og:updated_time" content="2018-07-25T02:48:32.827Z">
+123if (someObject) &amp;#123; ...if (![someObject boolValue]) &amp;#123; ...if (!someObject) &amp;#123; ...
+不推">
+<meta property="og:updated_time" content="2018-08-09T11:22:11.439Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="代码规范">
 <meta name="twitter:description" content="1. Yoda conditions 推荐：
@@ -30,7 +32,8 @@
  不推荐：
 1if (6 == value) &amp;#123; ...
 2. nil和BOOL检查推荐：
-1if (someObject) &amp;#123; ...&amp;#10;if (![someObject boolValue]) &amp;#123; ...&amp;#10;if (!someObject) &amp;#123">
+123if (someObject) &amp;#123; ...if (![someObject boolValue]) &amp;#123; ...if (!someObject) &amp;#123; ...
+不推">
   
     <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
   
@@ -221,21 +224,21 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="1-_Yoda_conditions"><a href="#1-_Yoda_conditions" class="headerlink" title="1. Yoda conditions"></a>1. Yoda conditions</h2><p> <strong>推荐：</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (value == 6) &#123; ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (value == <span class="number">6</span>) &#123; ...</span><br></pre></td></tr></table></figure>
 <p> <strong>不推荐：</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (6 == value) &#123; ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="number">6</span> == value) &#123; ...</span><br></pre></td></tr></table></figure>
 <h2 id="2-_nil_u548CBOOL_u68C0_u67E5"><a href="#2-_nil_u548CBOOL_u68C0_u67E5" class="headerlink" title="2. nil和BOOL检查"></a>2. nil和BOOL检查</h2><p><strong>推荐：</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (someObject) &#123; ...&#10;if (![someObject boolValue]) &#123; ...&#10;if (!someObject) &#123; ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (someObject) &#123; ...</span><br><span class="line"><span class="keyword">if</span> (![someObject boolValue]) &#123; ...</span><br><span class="line"><span class="keyword">if</span> (!someObject) &#123; ...</span><br></pre></td></tr></table></figure>
 <p><strong>不推荐：</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (someObject == YES) &#123; ... // Wrong&#10;if (myRawValue == YES) &#123; ... // Never do this.&#10;if ([someObject boolValue] == NO) &#123; ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (someObject == <span class="literal">YES</span>) &#123; ... <span class="comment">// Wrong</span></span><br><span class="line"><span class="keyword">if</span> (myRawValue == <span class="literal">YES</span>) &#123; ... <span class="comment">// Never do this.</span></span><br><span class="line"><span class="keyword">if</span> ([someObject boolValue] == <span class="literal">NO</span>) &#123; ...</span><br></pre></td></tr></table></figure>
 <h2 id="3-_Golden_Path"><a href="#3-_Golden_Path" class="headerlink" title="3. Golden Path"></a>3. Golden Path</h2><p> <strong>推荐:</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)someMethod &#123;&#10;  if (![someOther boolValue]) &#123;&#10;      return;&#10;  &#125;&#10;&#10;  //Do something important&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)someMethod &#123;</span><br><span class="line">  <span class="keyword">if</span> (![someOther boolValue]) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//Do something important</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>不推荐：</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)someMethod &#123;&#10;  if ([someOther boolValue]) &#123;&#10;    //Do something important&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)someMethod &#123;</span><br><span class="line">  <span class="keyword">if</span> ([someOther boolValue]) &#123;</span><br><span class="line">    <span class="comment">//Do something important</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="4-__u590D_u6742_u8868_u8FBE_u5F0F"><a href="#4-__u590D_u6742_u8868_u8FBE_u5F0F" class="headerlink" title="4. 复杂表达式"></a>4. 复杂表达式</h2><p> <strong>推荐:</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BOOL isA = [str1 isEqualToString:@&#34;a&#34;];&#10;BOOL isB = [str2 isEqualToString:@&#34;b&#34;];&#10;BOOL isC = [str3 isEqualToString:@&#34;c&#34;];&#10;BOOL isStrEqual = isA &#38;&#38; isB &#38;&#38; isC;&#10;if (isStrEqual)&#123;&#10;    // Do something very cool&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">BOOL</span> isA = [str1 isEqualToString:<span class="string">@"a"</span>];</span><br><span class="line"><span class="built_in">BOOL</span> isB = [str2 isEqualToString:<span class="string">@"b"</span>];</span><br><span class="line"><span class="built_in">BOOL</span> isC = [str3 isEqualToString:<span class="string">@"c"</span>];</span><br><span class="line"><span class="built_in">BOOL</span> isStrEqual = isA &amp;&amp; isB &amp;&amp; isC;</span><br><span class="line"><span class="keyword">if</span> (isStrEqual)&#123;</span><br><span class="line">    <span class="comment">// Do something very cool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>不推荐：</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ([str1 isEqualToString:@&#34;a&#34;] &#38;&#38; [str2 isEqualToString:@&#34;b&#34;] &#38;&#38; [str3 isEqualToString:@&#34;c&#34;];)&#123;&#10;    // Do something very cool&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([str1 isEqualToString:<span class="string">@"a"</span>] &amp;&amp; [str2 isEqualToString:<span class="string">@"b"</span>] &amp;&amp; [str3 isEqualToString:<span class="string">@"c"</span>];)&#123;</span><br><span class="line">    <span class="comment">// Do something very cool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="5-__u4E09_u5143_u8FD0_u7B97_u7B26"><a href="#5-__u4E09_u5143_u8FD0_u7B97_u7B26" class="headerlink" title="5. 三元运算符"></a>5. 三元运算符</h2><p><strong>推荐:</strong></p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">result1 = a &gt; b ? x : y;</span><br><span class="line">result2 = object ? : [<span class="keyword">self</span> createObject];</span><br></pre></td></tr></table></figure>
 <p><strong>不推荐：</strong></p>
