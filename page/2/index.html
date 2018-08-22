@@ -173,6 +173,118 @@
 
       <div class="body-wrap">
   
+    <article id="post-iOS小知识（二）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/06/06/iOS小知识（二）/" class="article-date">
+  	<time datetime="2018-06-06T04:17:11.000Z" itemprop="datePublished">2018-06-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/06/iOS小知识（二）/">iOS小知识（二）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="u4E00_u3001Xcode_u96C6_u6210reveal"><a href="#u4E00_u3001Xcode_u96C6_u6210reveal" class="headerlink" title="一、Xcode集成reveal"></a>一、Xcode集成reveal</h4><ol>
+<li>首先打开Terminal，输入<code>vim ~/.lldbinit</code>创建一个名为.lldbinit的文件，然后将如下内容输入到该文件中：</li>
+</ol>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">command <span class="keyword">alias</span> reveal_load_sim expr (void*)dlopen(<span class="string">"/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib"</span>, <span class="number">0x2</span>);</span><br><span class="line">command <span class="keyword">alias</span> reveal_load_dev expr (void*)dlopen([(<span class="constant">NSString</span>*)[(<span class="constant">NSBundle</span>*)[<span class="constant">NSBundle</span> mainBundle]               <span class="symbol">pathForResource:</span>@<span class="string">"libReveal"</span> <span class="symbol">ofType:</span>@<span class="string">"dylib"</span>] <span class="symbol">cStringUsingEncoding:</span><span class="number">0</span>    x4], <span class="number">0x2</span>);</span><br><span class="line">command <span class="keyword">alias</span> reveal_start expr (void)[(<span class="constant">NSNotificationCenter</span>*)[<span class="constant">NSNotificationCenter</span> defaultCenter]           <span class="symbol">postNotificationName:</span>@<span class="string">"IBARevealRequestStart"</span> <span class="symbol">object:</span><span class="keyword">nil</span>];</span><br><span class="line">command <span class="keyword">alias</span> reveal_stop expr (void)[(<span class="constant">NSNotificationCenter</span>*)[<span class="constant">NSNotificationCenter</span> defaultCenter]            <span class="symbol">postNotificationName:</span>@<span class="string">"IBARevealRequestStop"</span> <span class="symbol">object:</span><span class="keyword">nil</span>];</span><br></pre></td></tr></table></figure>
+<p>​    该步骤其实是为lldb设置了4个别名，为了后续方便操作，这4个别名意义如下：</p>
+<p>​    <code>reveal_load_sim</code> 为模拟器加载<strong>reveal</strong>调试用的动态链接库</p>
+<p>​    <code>reveal_load_dev</code> 为真机加载<strong>reveal</strong>调试用的动态链接库</p>
+<p>​    <code>reveal_start</code> 启动<strong>reveal</strong>调试功能</p>
+<p>​    <code>reveal_stop</code> 结束<strong>reveal</strong>调试功能</p>
+<ol>
+<li><p>在AppDelegate类的<code>application:didFinishLaunchingWithOptions:</code>方法中，作如下3步操作：</p>
+<p>1) 点击该方法左边的行号区域，增加一个断点，之后右击该断点，选择“Edit Breakpoint”。</p>
+<p>2) 点击”Action”项边右的”Add Action”,然后输入“reveal_load_sim”</p>
+<p>3) 勾选上Options上的”Automatically continue after evaluating”选项。</p>
+</li>
+</ol>
+<h4 id="u4E8C_u3001Charles__u4F7F_u7528_u6559_u7A0B"><a href="#u4E8C_u3001Charles__u4F7F_u7528_u6559_u7A0B" class="headerlink" title="二、Charles 使用教程"></a>二、Charles 使用教程</h4><ol>
+<li><p>抓包Https</p>
+<p>1) 安装Charles 根证书</p>
+<p>​    路径： help -&gt; SSL Proxying -&gt; install Charles Root Certificate</p>
+<p>2) iOS Simulator 安装根证书</p>
+<p>​    路径： help -&gt; SSL Proxying -&gt; install Charles Root Certificate in iOS Simulators</p>
+<p>3) 设置SSL Host / Port</p>
+<p>​    路径： proxy -&gt; SSL Proxying setting -&gt;SSL Proxying</p>
+<p>Host/Port 设为*</p>
+<p>4) 重启charles</p>
+<ol>
+<li><h4 id="u5F31_u7F51_u6D4B_u8BD5"><a href="#u5F31_u7F51_u6D4B_u8BD5" class="headerlink" title="弱网测试"></a>弱网测试</h4></li>
+</ol>
+<p>1) 设置throttle settings</p>
+<p>2) 路径： proxy -&gt; throttle settings</p>
+<p>3) 根据所需网络环境 Throttle preset 选择弱网环境目标：2G或者3G</p>
+</li>
+</ol>
+<h4 id="u4E09_u3001_u771F_u673Acrash_u5206_u6790"><a href="#u4E09_u3001_u771F_u673Acrash_u5206_u6790" class="headerlink" title="三、真机crash分析"></a>三、真机crash分析</h4><ol>
+<li><p>准备好 .crash 文件及.crash 文件所对应的 .dSYM 文件，新建crash文件夹</p>
+</li>
+<li><p>找到symbolicatecrash路径</p>
+<p><code>find /Applications/Xcode.app -name symbolicatecrash -type f</code></p>
+<p>将symbolicatecrash文件复制到crash文件夹</p>
+</li>
+<li><p>配置developer_dir，cd到crash文件夹</p>
+<p><code>export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer</code></p>
+</li>
+<li><p>解析crash文件symbolicatecrash</p>
+<p><code>./symbolicatecrash /Users/用户名/Desktop/crash/文件名.crash /Users/用户名/Desktop/crash/xxxx（dSYM文件名字）.dSYM &gt; Control_symbol.txt</code></p>
+</li>
+</ol>
+<h4 id="u56DB_u3001Xcode__u65AD_u70B9_u8C03_u8BD5"><a href="#u56DB_u3001Xcode__u65AD_u70B9_u8C03_u8BD5" class="headerlink" title="四、Xcode 断点调试"></a>四、Xcode 断点调试</h4><ol>
+<li><p>Exception Breakpoint（异常断点）</p>
+<p>当遇到错误，Debug程序会自动定位到栈底信息，即跳到出错代码所在行</p>
+</li>
+<li><p>Symbolic BreakPoint（符号断点）</p>
+<p>根据symbol定位。如 -[XXViewController viewDidLoad]，当 XXViewController 调用 viewDidLoad 时，进行打断。</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-iOS小知识（一）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -927,64 +1039,6 @@
       
         <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>最近在做一个高仿的知乎日报APP，把其需要的一些第三方库的资料复制在下面，以便查阅。</p>
 <h2 id="MJExtension"><a href="#MJExtension" class="headerlink" title="MJExtension"></a><a href="https://github.com/CoderMJLee/MJExtension" target="_blank" rel="external">MJExtension</a></h2><h2 id="YYModel"><a href="#YYModel" class="headerlink" title="YYModel"></a><a href="https://github.com/ibireme/YYModel" target="_blank" rel="external">YYModel</a></h2><h2 id="MMDrawerController"><a href="#MMDrawerController" class="headerlink" title="MMDrawerController"></a><a href="https://github.com/mutualmobile/MMDrawerController" target="_blank" rel="external">MMDrawerController</a></h2><h2 id="SDWebImage"><a href="#SDWebImage" class="headerlink" title="SDWebImage"></a><a href="https://github.com/rs/SDWebImage" target="_blank" rel="external">SDWebImage</a></h2><h2 id="fmdb"><a href="#fmdb" class="headerlink" title="fmdb"></a><a href="https://github.com/ccgus/fmdb" target="_blank" rel="external">fmdb</a></h2><h2 id="MBProgressHUD"><a href="#MBProgressHUD" class="headerlink" title="MBProgressHUD"></a><a href="https://github.com/jdg/MBProgressHUD" target="_blank" rel="external">MBProgressHUD</a></h2>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-protocol和delegate" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/04/14/protocol和delegate/" class="article-date">
-  	<time datetime="2016-04-14T11:31:56.000Z" itemprop="datePublished">2016-04-14</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/14/protocol和delegate/">Protocol和Delegate</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>说来惭愧，直到昨天，我还对protocol和delegate之间的区别有所疑惑。总认为他们俩之间有些相似之处，然而他们俩者完全是不同的东西！</p>
-<h2 id="u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981protocol"><a href="#u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981protocol" class="headerlink" title="为什么我们需要protocol"></a>为什么我们需要protocol</h2><p>在Objective-C中，继承是单一继承，即不支持如C++的多继承方式。然而，我们有时候又强烈的需要多继承的方法，这就是protocol的作用了。我们可以把某个类应该实现的一系列方法定义在protocol里面，其他的类采用该protocol，那么就相对于他同时继承了父类和protocol中定义的一系列方法。</p>
-<h2 id="protocol"><a href="#protocol" class="headerlink" title="protocol"></a>protocol</h2><p>protocol是一系列方法的声明列表，只要某个类采用了这个protocol，那么这个类便拥有了协议中的所有方法声明。但是协议只是负责声明对象需要的方法，而这些个实现方法与protocol无关。其语法如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">myProtocol</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line">    <span class="comment">//方法声明1</span></span><br><span class="line">    <span class="comment">//方法声明2</span></span><br><span class="line">    <span class="comment">//方法声明3</span></span><br><span class="line">    ……</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
-<p>要拥有协议中声明的方法，就必须遵守protocol，如果某个类遵守的协议有多个，则用逗号进行分隔。其语法如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> 类名 : 父类&lt;<span class="title">protocol_1</span>，<span class="title">protocol_2</span>, ……&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h2><p>delegate是一种设计模式，这种模式用于应用程序的一个对象delegate另外一个对象和其他对象交互。总而言之，delegate只是一种设计模式而已，是大家约定俗成的一种做法。在OC中，通常使用协议来实现代理，即把协议当成用户和代理中间的『中转站』，在协议中定义一些和代理沟通的方法。也就是因为这个原因，初学者会经常把Protocol和Delegate弄混淆。<br>这里举个例子吧：<br>假如有个A类，他把需要的事交给B类处理，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">classA</span> : <span class="title">NSObject</span></span>&#123;</span><br><span class="line">	classB *B；</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
-<p>只需要在A类中声明一个B类的ivar就行了，这就是delegate……他真的只是一个设计模式而已。</p>
-
       
     </div>
     
