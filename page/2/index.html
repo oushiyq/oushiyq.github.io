@@ -173,6 +173,83 @@
 
       <div class="body-wrap">
   
+    <article id="post-iOS小知识（三）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/06/11/iOS小知识（三）/" class="article-date">
+  	<time datetime="2018-06-11T04:16:54.000Z" itemprop="datePublished">2018-06-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/11/iOS小知识（三）/">iOS小知识（三）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="u4E00_u3001iOS_u54CD_u5E94_u94FE"><a href="#u4E00_u3001iOS_u54CD_u5E94_u94FE" class="headerlink" title="一、iOS响应链"></a>一、iOS响应链</h4><p>​    <code>pointInside:  withEvent:</code>方法是对于目标view的bounds来说的，因此在<code>hitTest: withEvent:</code>方法中需要先用<code>convertPoint: toView:</code> 方法将point坐标转换到目标view上。</p>
+<h4 id="u4E8C_u3001free_brige"><a href="#u4E8C_u3001free_brige" class="headerlink" title="二、free brige"></a>二、free brige</h4><ol>
+<li><p><code>__bridge</code>，什么也不做，仅仅是转换。此种情况下：<br>(1). 从Cocoa转换到Core，需要人工CFRetain，否则，Cocoa指针释放后， 传出去的指针则无效。</p>
+<p>(2). 从Core转换到Cocoa，需要人工CFRelease，否则，Cocoa指针释放后，对象引用计数仍为1，不会被销毁。</p>
+</li>
+<li><p><code>__bridge_retained</code>，转换后自动调用CFRetain，即帮助自动解决上述(1)的情形。</p>
+</li>
+<li><p><code>__bridge_transfer</code>，转换后自动调用CFRelease，即帮助自动解决上述(2)的情形。</p>
+</li>
+</ol>
+<h4 id="u4E09_u3001__u56FE_u7247_u62C9_u4F38"><a href="#u4E09_u3001__u56FE_u7247_u62C9_u4F38" class="headerlink" title="三、 图片拉伸"></a>三、 图片拉伸</h4><p>​    <code>stretchableImageWithLeftCapWidth：topCapHeight:</code>方法可以创建一个内容可拉伸，而边角不拉伸的图片。需要两个参数，第一个是左边不拉伸区域的宽度，第二个参数是上面不拉伸的高度。</p>
+<p><code>注意：可拉伸的范围都是距离leftCapWidth后的1竖排像素，和距离topCapHeight后的1横排像素。</code></p>
+<h4 id="u56DB_u3001_tableView_3A_heightForRowAtIndexPath_3A_u548CtableView_3A_cellForRowAtIndexPath_u8C03_u7528_u987A_u5E8F_u7684_u53D8_u8FC1"><a href="#u56DB_u3001_tableView_3A_heightForRowAtIndexPath_3A_u548CtableView_3A_cellForRowAtIndexPath_u8C03_u7528_u987A_u5E8F_u7684_u53D8_u8FC1" class="headerlink" title="四、 tableView: heightForRowAtIndexPath:和tableView: cellForRowAtIndexPath调用顺序的变迁"></a>四、 <code>tableView: heightForRowAtIndexPath:</code>和<code>tableView: cellForRowAtIndexPath</code>调用顺序的变迁</h4><p><strong>iOS  7及之前: </strong></p>
+<p> 先依次调一遍heightForRow方法再依次调一遍cellForRow方法，在调cellForRow方法的时候并不会再调一次对应的heightForRow方法。如果我们实现了<code>tableView: estimatedHeightForRowAtIndexPath:</code>给了系统估计高度，那么上述两个方法的执行顺序就会颠倒。并且给定估计高度对于TableView的性能方面也提示不少。</p>
+<p><strong>iOS 8  ：</strong></p>
+<p>先依次调heightForRow（如果行数超过屏幕依次调用两次，如果行数很少，没有超过屏幕，只依次调用一次），之后每调一次cellForRow的时候又调一次对应的heightForRow方法。</p>
+<p><strong>iOS 9和iOS 10:</strong></p>
+<p>heightForRow方法会先调用三次，然后每调用一次cellForRow的时候再调用一次对应的heightForRow。</p>
+<p><strong>iOS 11 ：</strong></p>
+<p> 先row = 0调用一次 cellForRow，然后一次heightForRow.然后再是row =1 ,依次类推。</p>
+<h4 id="u4E94_u3001_u5728Xib_u4E2D_uFF0C_u62D6_u51FA_u6765_u7684_u63A7_u4EF6_u4E3Aweak"><a href="#u4E94_u3001_u5728Xib_u4E2D_uFF0C_u62D6_u51FA_u6765_u7684_u63A7_u4EF6_u4E3Aweak" class="headerlink" title="五、在Xib中，拖出来的控件为weak"></a>五、在Xib中，拖出来的控件为weak</h4><p>​    IBOutlet的属性一般可以设为weak是因为它已经被IBOutlet.superView引用了，除非IBOutlet.superView被释放，否则IBOutlet的属性也不会被释放。另外IBOutlet属性的生命周期和IBOutlet.superView应该是一致的，所以IBOutlet属性一般设为weak。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-iOS小知识（二）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -986,59 +1063,6 @@
 <li><a href="http://www.molotang.com/articles/1691.html" target="_blank" rel="external">深入理解Objective-C的Block</a></li>
 </ol>
 
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-最近需要用到的一些第三方库" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/05/03/最近需要用到的一些第三方库/" class="article-date">
-  	<time datetime="2016-05-03T01:38:10.000Z" itemprop="datePublished">2016-05-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/03/最近需要用到的一些第三方库/">最近需要用到的一些第三方库</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="u5199_u5728_u524D_u9762"><a href="#u5199_u5728_u524D_u9762" class="headerlink" title="写在前面"></a>写在前面</h3><p>最近在做一个高仿的知乎日报APP，把其需要的一些第三方库的资料复制在下面，以便查阅。</p>
-<h2 id="MJExtension"><a href="#MJExtension" class="headerlink" title="MJExtension"></a><a href="https://github.com/CoderMJLee/MJExtension" target="_blank" rel="external">MJExtension</a></h2><h2 id="YYModel"><a href="#YYModel" class="headerlink" title="YYModel"></a><a href="https://github.com/ibireme/YYModel" target="_blank" rel="external">YYModel</a></h2><h2 id="MMDrawerController"><a href="#MMDrawerController" class="headerlink" title="MMDrawerController"></a><a href="https://github.com/mutualmobile/MMDrawerController" target="_blank" rel="external">MMDrawerController</a></h2><h2 id="SDWebImage"><a href="#SDWebImage" class="headerlink" title="SDWebImage"></a><a href="https://github.com/rs/SDWebImage" target="_blank" rel="external">SDWebImage</a></h2><h2 id="fmdb"><a href="#fmdb" class="headerlink" title="fmdb"></a><a href="https://github.com/ccgus/fmdb" target="_blank" rel="external">fmdb</a></h2><h2 id="MBProgressHUD"><a href="#MBProgressHUD" class="headerlink" title="MBProgressHUD"></a><a href="https://github.com/jdg/MBProgressHUD" target="_blank" rel="external">MBProgressHUD</a></h2>
       
     </div>
     

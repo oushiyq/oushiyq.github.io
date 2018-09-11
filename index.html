@@ -173,6 +173,78 @@
 
       <div class="body-wrap">
   
+    <article id="post-iOS小知识（八）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/09/10/iOS小知识（八）/" class="article-date">
+  	<time datetime="2018-09-10T08:28:11.000Z" itemprop="datePublished">2018-09-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/10/iOS小知识（八）/">iOS小知识（八）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li><p>屏幕旋转</p>
+<p>需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIInterfaceOrientationMask</span>)application:(<span class="built_in">UIApplication</span> *)application supportedInterfaceOrientationsForWindow:(nullable <span class="built_in">UIWindow</span> *)window</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIDevice</span> currentDevice] wbt_isIPad])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIInterfaceOrientationMaskAll</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span>  <span class="built_in">UIInterfaceOrientationMaskAllButUpsideDown</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外，我们还需要将UIViewController的<code>supportedInterfaceOrientations</code>方法hook住，method swizzling成我们自己的<code>sp_supportedInterfaceOrientations</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSUInteger</span>)sp_supportedInterfaceOrientations</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> isKindOfClass:[<span class="built_in">UINavigationController</span> class]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [[(<span class="built_in">UINavigationController</span> *)<span class="keyword">self</span> topViewController] supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ([<span class="keyword">self</span> isKindOfClass:[<span class="built_in">UITabBarController</span> class]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [[(<span class="built_in">UITabBarController</span> *)<span class="keyword">self</span> selectedViewController] supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIDevice</span> currentDevice] wbt_is<span class="built_in">UIUserInterfaceIdiomPad</span>])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIInterfaceOrientationMaskAll</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="keyword">self</span> sp_supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>CMTime为了解决float 的不准确性.</p>
+</li>
+<li><p>父类在h文件中实现的protocol ，子类也能继承。</p>
+</li>
+<li><p>用户账号/密码这类的敏感信息可以存在系统的keychain中，用户删除APP也不会删除keychain中的密码。同一公司的APP可以用keychain group打通</p>
+</li>
+<li><p>AOP（面向切面编程）可以 基于protocol 也可以 基于runtime。AOP实际上是把某些方法的功能，抽出来，形成一个单独的方法（切面）</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-GET和POST的区别" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1141,83 +1213,6 @@
 <li><p>NSBlockOperation只有其内部是并发执行的，其本身还是同步执行</p>
 </li>
 </ol>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-iOS小知识（三）" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/06/11/iOS小知识（三）/" class="article-date">
-  	<time datetime="2018-06-11T04:16:54.000Z" itemprop="datePublished">2018-06-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/11/iOS小知识（三）/">iOS小知识（三）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="u4E00_u3001iOS_u54CD_u5E94_u94FE"><a href="#u4E00_u3001iOS_u54CD_u5E94_u94FE" class="headerlink" title="一、iOS响应链"></a>一、iOS响应链</h4><p>​    <code>pointInside:  withEvent:</code>方法是对于目标view的bounds来说的，因此在<code>hitTest: withEvent:</code>方法中需要先用<code>convertPoint: toView:</code> 方法将point坐标转换到目标view上。</p>
-<h4 id="u4E8C_u3001free_brige"><a href="#u4E8C_u3001free_brige" class="headerlink" title="二、free brige"></a>二、free brige</h4><ol>
-<li><p><code>__bridge</code>，什么也不做，仅仅是转换。此种情况下：<br>(1). 从Cocoa转换到Core，需要人工CFRetain，否则，Cocoa指针释放后， 传出去的指针则无效。</p>
-<p>(2). 从Core转换到Cocoa，需要人工CFRelease，否则，Cocoa指针释放后，对象引用计数仍为1，不会被销毁。</p>
-</li>
-<li><p><code>__bridge_retained</code>，转换后自动调用CFRetain，即帮助自动解决上述(1)的情形。</p>
-</li>
-<li><p><code>__bridge_transfer</code>，转换后自动调用CFRelease，即帮助自动解决上述(2)的情形。</p>
-</li>
-</ol>
-<h4 id="u4E09_u3001__u56FE_u7247_u62C9_u4F38"><a href="#u4E09_u3001__u56FE_u7247_u62C9_u4F38" class="headerlink" title="三、 图片拉伸"></a>三、 图片拉伸</h4><p>​    <code>stretchableImageWithLeftCapWidth：topCapHeight:</code>方法可以创建一个内容可拉伸，而边角不拉伸的图片。需要两个参数，第一个是左边不拉伸区域的宽度，第二个参数是上面不拉伸的高度。</p>
-<p><code>注意：可拉伸的范围都是距离leftCapWidth后的1竖排像素，和距离topCapHeight后的1横排像素。</code></p>
-<h4 id="u56DB_u3001_tableView_3A_heightForRowAtIndexPath_3A_u548CtableView_3A_cellForRowAtIndexPath_u8C03_u7528_u987A_u5E8F_u7684_u53D8_u8FC1"><a href="#u56DB_u3001_tableView_3A_heightForRowAtIndexPath_3A_u548CtableView_3A_cellForRowAtIndexPath_u8C03_u7528_u987A_u5E8F_u7684_u53D8_u8FC1" class="headerlink" title="四、 tableView: heightForRowAtIndexPath:和tableView: cellForRowAtIndexPath调用顺序的变迁"></a>四、 <code>tableView: heightForRowAtIndexPath:</code>和<code>tableView: cellForRowAtIndexPath</code>调用顺序的变迁</h4><p><strong>iOS  7及之前: </strong></p>
-<p> 先依次调一遍heightForRow方法再依次调一遍cellForRow方法，在调cellForRow方法的时候并不会再调一次对应的heightForRow方法。如果我们实现了<code>tableView: estimatedHeightForRowAtIndexPath:</code>给了系统估计高度，那么上述两个方法的执行顺序就会颠倒。并且给定估计高度对于TableView的性能方面也提示不少。</p>
-<p><strong>iOS 8  ：</strong></p>
-<p>先依次调heightForRow（如果行数超过屏幕依次调用两次，如果行数很少，没有超过屏幕，只依次调用一次），之后每调一次cellForRow的时候又调一次对应的heightForRow方法。</p>
-<p><strong>iOS 9和iOS 10:</strong></p>
-<p>heightForRow方法会先调用三次，然后每调用一次cellForRow的时候再调用一次对应的heightForRow。</p>
-<p><strong>iOS 11 ：</strong></p>
-<p> 先row = 0调用一次 cellForRow，然后一次heightForRow.然后再是row =1 ,依次类推。</p>
-<h4 id="u4E94_u3001_u5728Xib_u4E2D_uFF0C_u62D6_u51FA_u6765_u7684_u63A7_u4EF6_u4E3Aweak"><a href="#u4E94_u3001_u5728Xib_u4E2D_uFF0C_u62D6_u51FA_u6765_u7684_u63A7_u4EF6_u4E3Aweak" class="headerlink" title="五、在Xib中，拖出来的控件为weak"></a>五、在Xib中，拖出来的控件为weak</h4><p>​    IBOutlet的属性一般可以设为weak是因为它已经被IBOutlet.superView引用了，除非IBOutlet.superView被释放，否则IBOutlet的属性也不会被释放。另外IBOutlet属性的生命周期和IBOutlet.superView应该是一致的，所以IBOutlet属性一般设为weak。</p>
 
       
     </div>

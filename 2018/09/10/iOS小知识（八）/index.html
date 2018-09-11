@@ -4,24 +4,24 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>GET和POST的区别 | Daniel Young&#39;s blog</title>
+  <title>iOS小知识（八） | Daniel Young&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="GET：幂等，只读的操作，他除了返回结果之外，不会产生副作用。因此大部分get请求能被CDN缓存，从而大大减少web server的负担
-CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求引导到Cache上获得源服务器的数据，主要是通过接管DNS实现
-网站接入CDN后，构建了CDN网络，这个CDN网络一般是由一个DNS服务器和几台缓存服务器运行起来的。 接入CDN后，用户想要获取服务">
+  <meta name="description" content="屏幕旋转
+需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown
+123456789- (UIInt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="GET和POST的区别">
-<meta property="og:url" content="http://yoursite.com/2018/08/22/GET和POST的区别/index.html">
+<meta property="og:title" content="iOS小知识（八）">
+<meta property="og:url" content="http://yoursite.com/2018/09/10/iOS小知识（八）/index.html">
 <meta property="og:site_name" content="Daniel Young's blog">
-<meta property="og:description" content="GET：幂等，只读的操作，他除了返回结果之外，不会产生副作用。因此大部分get请求能被CDN缓存，从而大大减少web server的负担
-CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求引导到Cache上获得源服务器的数据，主要是通过接管DNS实现
-网站接入CDN后，构建了CDN网络，这个CDN网络一般是由一个DNS服务器和几台缓存服务器运行起来的。 接入CDN后，用户想要获取服务">
-<meta property="og:updated_time" content="2018-08-22T02:46:51.651Z">
+<meta property="og:description" content="屏幕旋转
+需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown
+123456789- (UIInt">
+<meta property="og:updated_time" content="2018-09-10T08:29:40.422Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GET和POST的区别">
-<meta name="twitter:description" content="GET：幂等，只读的操作，他除了返回结果之外，不会产生副作用。因此大部分get请求能被CDN缓存，从而大大减少web server的负担
-CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求引导到Cache上获得源服务器的数据，主要是通过接管DNS实现
-网站接入CDN后，构建了CDN网络，这个CDN网络一般是由一个DNS服务器和几台缓存服务器运行起来的。 接入CDN后，用户想要获取服务">
+<meta name="twitter:title" content="iOS小知识（八）">
+<meta name="twitter:description" content="屏幕旋转
+需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown
+123456789- (UIInt">
   
     <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
   
@@ -178,11 +178,11 @@ CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求
 	</div>
 </nav>
 
-      <div class="body-wrap"><article id="post-GET和POST的区别" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-iOS小知识（八）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/08/22/GET和POST的区别/" class="article-date">
-  	<time datetime="2018-08-22T02:45:09.000Z" itemprop="datePublished">2018-08-22</time>
+      <a href="/2018/09/10/iOS小知识（八）/" class="article-date">
+  	<time datetime="2018-09-10T08:28:11.000Z" itemprop="datePublished">2018-09-10</time>
 </a>
     </div>
   
@@ -195,7 +195,7 @@ CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求
         
   
     <h1 class="article-title" itemprop="name">
-      GET和POST的区别
+      iOS小知识（八）
     </h1>
   
 
@@ -203,6 +203,10 @@ CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求
       
       <div class="article-info article-info-post">
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
         
 
         <div class="clearfix"></div>
@@ -211,38 +215,22 @@ CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>GET</strong>：幂等，只读的操作，他除了返回结果之外，不会产生副作用。因此大部分get请求能被CDN缓存，从而大大减少web server的负担</p>
-<p>CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求引导到Cache上获得源服务器的数据，主要是通过接管DNS实现</p>
-<p>网站接入CDN后，构建了CDN网络，这个CDN网络一般是由一个DNS服务器和几台缓存服务器运行起来的。 接入CDN后，用户想要获取服务器内容，智能DNS负载均衡会将位于用户最近速度最快的节点返回给用户，用户以最短的时间获取到想要的内容，即提升了用户体验，又减少了对源服务器的资源占用</p>
-<p><strong>POST</strong>：非幂等，有副作用的操作。</p>
-<p><strong>REST</strong>: URL定位资源，用HTTP动词（GET,POST,DELETE,DETC）描述操作。</p>
-<p>HTTP/1.1协议中共定义了八种方法（也叫“动作”）来以不同方式操作指定的资源：</p>
-<ul>
-<li><p>GET</p>
-<p>向指定的资源发出“显示”请求。使用GET方法应该只用在读取数据，而不应当被用于产生“副作用”的操作中，例如在<a href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E9%A0%81%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F" target="_blank" rel="external">Web Application</a>中。其中一个原因是GET可能会被<a href="https://zh.wikipedia.org/wiki/%E7%BD%91%E7%BB%9C%E8%9C%98%E8%9B%9B" target="_blank" rel="external">网络蜘蛛</a>等随意访问。参见<a href="https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE#%E5%AE%89%E5%85%A8%E6%96%B9%E6%B3%95" target="_blank" rel="external">安全方法</a></p>
+        <ol>
+<li><p>屏幕旋转</p>
+<p>需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIInterfaceOrientationMask</span>)application:(<span class="built_in">UIApplication</span> *)application supportedInterfaceOrientationsForWindow:(nullable <span class="built_in">UIWindow</span> *)window</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIDevice</span> currentDevice] wbt_isIPad])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIInterfaceOrientationMaskAll</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span>  <span class="built_in">UIInterfaceOrientationMaskAllButUpsideDown</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外，我们还需要将UIViewController的<code>supportedInterfaceOrientations</code>方法hook住，method swizzling成我们自己的<code>sp_supportedInterfaceOrientations</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSUInteger</span>)sp_supportedInterfaceOrientations</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> isKindOfClass:[<span class="built_in">UINavigationController</span> class]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [[(<span class="built_in">UINavigationController</span> *)<span class="keyword">self</span> topViewController] supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ([<span class="keyword">self</span> isKindOfClass:[<span class="built_in">UITabBarController</span> class]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [[(<span class="built_in">UITabBarController</span> *)<span class="keyword">self</span> selectedViewController] supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIDevice</span> currentDevice] wbt_is<span class="built_in">UIUserInterfaceIdiomPad</span>])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIInterfaceOrientationMaskAll</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="keyword">self</span> sp_supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>HEAD</p>
-<p>与GET方法一样，都是向服务器发出指定资源的请求。只不过服务器将不传回资源的本文部分。它的好处在于，使用这个方法可以在不必传输全部内容的情况下，就可以获取其中“关于该资源的信息”（元信息或称元数据）。</p>
+<li><p>CMTime为了解决float 的不准确性.</p>
 </li>
-<li><p>POST</p>
-<p>向指定资源提交数据，请求服务器进行处理（例如提交表单或者上传文件）。数据被包含在请求本文中。这个请求可能会创建新的资源或修改现有资源，或二者皆有。</p>
+<li><p>父类在h文件中实现的protocol ，子类也能继承。</p>
 </li>
-<li><p>PUT</p>
-<p>向指定资源位置上传其最新内容。</p>
+<li><p>用户账号/密码这类的敏感信息可以存在系统的keychain中，用户删除APP也不会删除keychain中的密码。同一公司的APP可以用keychain group打通</p>
 </li>
-<li><p>DELETE</p>
-<p>请求服务器删除Request-URI所标识的资源。</p>
+<li><p>AOP（面向切面编程）可以 基于protocol 也可以 基于runtime。AOP实际上是把某些方法的功能，抽出来，形成一个单独的方法（切面）</p>
 </li>
-<li><p>TRACE</p>
-<p>回显服务器收到的请求，主要用于测试或诊断。</p>
-</li>
-<li><p>OPTIONS</p>
-<p>这个方法可使服务器传回该资源所支持的所有HTTP请求方法。用’*’来代替资源名称，向Web服务器发送OPTIONS请求，可以测试服务器功能是否正常运作。</p>
-</li>
-<li><p>CONNECT</p>
-<p>HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。通常用于SSL加密服务器的链接（经由非加密的HTTP代理服务器）。</p>
-</li>
-</ul>
+</ol>
 
       
     </div>
@@ -252,18 +240,9 @@ CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求
     
 <nav id="article-nav">
   
-    <a href="/2018/09/10/iOS小知识（八）/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          iOS小知识（八）
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/08/09/iOS小知识（七）/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">iOS小知识（七）</div>
+    <a href="/2018/08/22/GET和POST的区别/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">GET和POST的区别</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -298,7 +277,7 @@ CDN网络是在用户和服务器之间增加Cache层，如何将用户的请求
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="GET和POST的区别" data-title="GET和POST的区别" data-url="http://yoursite.com/2018/08/22/GET和POST的区别/"></div>
+	<div class="ds-thread" data-thread-key="iOS小知识（八）" data-title="iOS小知识（八）" data-url="http://yoursite.com/2018/09/10/iOS小知识（八）/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
