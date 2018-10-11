@@ -173,6 +173,100 @@
 
       <div class="body-wrap">
   
+    <article id="post-iOS小知识（九）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/10/11/iOS小知识（九）/" class="article-date">
+  	<time datetime="2018-10-11T03:15:15.000Z" itemprop="datePublished">2018-10-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/10/11/iOS小知识（九）/">iOS小知识（九）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u4E09_u65B9_u767B_u5F55"><a href="#u4E09_u65B9_u767B_u5F55" class="headerlink" title="三方登录"></a>三方登录</h3><ul>
+<li>注册第三方应用的AppID</li>
+<li>添加第三方SDK及其所需系统依赖库</li>
+<li>在Targets-&gt;Info-&gt;URL Types添加各自的URL Schemes</li>
+<li>在info.plist添加LSApplicationQueriesSchemes字段并添加白名单</li>
+<li>在AppDelegate中初始化，各自回调，实现代理</li>
+</ul>
+<p><strong>同一开发者账号下，QQ登录绑定同一ID，需要申请。微信登录不需要</strong></p>
+<h3 id="Home_Screen_Quick_Actions"><a href="#Home_Screen_Quick_Actions" class="headerlink" title="Home Screen Quick Actions"></a>Home Screen Quick Actions</h3><ol>
+<li>在appDelegate中创建我们需要的<code>UIApplicationShortcutItem</code>：</li>
+</ol>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (instancetype)initWithType:(<span class="built_in">NSString</span> *)type localizedTitle:(<span class="built_in">NSString</span> *)localizedTitle localizedSubtitle:(nullable <span class="built_in">NSString</span> *)localizedSubtitle icon:(nullable <span class="built_in">UIApplicationShortcutIcon</span> *)icon userInfo:(nullable <span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *, <span class="keyword">id</span> &lt;<span class="built_in">NSSecureCoding</span>&gt;&gt; *)userInfo <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br></pre></td></tr></table></figure>
+<p>其中type和title是必须要有的，type表示该shortcutItem的唯一标识符，title表示在屏幕上显示的标题。并将创建好的shortcutItem添加到<code>[UIApplication sharedApplication].shortcutItems</code></p>
+<ol>
+<li>在appdelegate中实现方法：</li>
+</ol>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">void</span>)application:(<span class="built_in">UIApplication</span> *)application performActionForShortcutItem:(<span class="built_in">UIApplicationShortcutItem</span> *)shortcutItem completionHandler:(<span class="keyword">void</span> (^)(<span class="built_in">BOOL</span>))completionHandler</span><br></pre></td></tr></table></figure>
+<p>根据shortcutItem.type来确定具体的shortcutItem，并将其要实现的功能实现。</p>
+<h3 id="Peek__26amp_3B_Pop"><a href="#Peek__26amp_3B_Pop" class="headerlink" title="Peek &amp; Pop"></a>Peek &amp; Pop</h3><ol>
+<li><p>注册Peek &amp; Pop 代理</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span> &lt;<span class="built_in">UIViewControllerPreviewing</span>&gt;)registerForPreviewingWithDelegate:(<span class="keyword">id</span>&lt;<span class="built_in">UIViewControllerPreviewingDelegate</span>&gt;)delegate sourceView:(<span class="built_in">UIView</span> *)sourceView <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现Peek方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (nullable <span class="built_in">UIViewController</span> *)previewingContext:(<span class="keyword">id</span> &lt;<span class="built_in">UIViewControllerPreviewing</span>&gt;)previewingContext viewControllerForLocation:(<span class="built_in">CGPoint</span>)location <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现Pop方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (nullable <span class="built_in">UIViewController</span> *)previewingContext:(<span class="keyword">id</span> &lt;<span class="built_in">UIViewControllerPreviewing</span>&gt;)previewingContext viewControllerForLocation:(<span class="built_in">CGPoint</span>)location <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Peek_u4E0A_u6ED1"><a href="#Peek_u4E0A_u6ED1" class="headerlink" title="Peek上滑"></a>Peek上滑</h3><ol>
+<li><p>override对应ViewController的<code>- (NSArray&lt;**id**&lt;UIPreviewActionItem&gt;&gt; *)previewActionItems</code>方法</p>
+</li>
+<li><p>在该方法中，创建我们需要的<code>UIPreviewAction</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (instancetype)actionWithTitle:(<span class="built_in">NSString</span> *)title style:(<span class="built_in">UIPreviewActionStyle</span>)style handler:(<span class="keyword">void</span> (^)(<span class="built_in">UIPreviewAction</span> *action, <span class="built_in">UIViewController</span> *previewViewController))handler;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将创建的<code>UIPreviewAction</code>组成NSArray返回</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-iOS小知识（八）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1131,88 +1225,6 @@
 <p><code>titleEdgeInsets:</code>  表示titleLabel相对于原frame的inset/outset，其insets (top, left, bottom, right) 正值将使titleLabel右移/下移，负值将使titleLabel左移/上移。其中的top/bottom 和 left/right 应互为相反数。需要注意的是：insets是在titleLable.text 进行sizetToFits 之后才设置的，因此，正值的inset可能会使text被截断。</p>
 <p><code>imageEdgeInsets:</code>  表示imageView相对于原frame的inset/outset，其insets (top, left, bottom, right) 正值将使titleLabel右移/下移，负值将使titleLabel左移/上移。其中的top/bottom 和 left/right 应互为相反数。</p>
 <p>`</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-iOS小知识（四）" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/06/19/iOS小知识（四）/" class="article-date">
-  	<time datetime="2018-06-19T08:02:57.000Z" itemprop="datePublished">2018-06-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/19/iOS小知识（四）/">iOS小知识（四）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li><p>contentOffset 表示UIScrollView滚动的位置。（其实就是内容视图左上角与scrollView显示视图左上角的间距值）</p>
-<p>contentsize：内容显示的尺寸，包括tableheadview。 cell， tableFootView，而且tableview添加子视图的顶点是contentsize的左上角，但如果子视图的起点为-50，则contentsize自动会向上扩展50.</p>
-<p>contentInset：附着内容尺寸，在contentsize的四周</p>
-<p>contentOffset.y：已滚动的y值，contentsize顶部到目前屏幕的顶部</p>
-</li>
-<li><p>OSSpinLock 自旋锁，性能最高的锁。原理很简单，就是一直 do while 忙等。它的缺点是当等待时会消耗大量 CPU 资源，所以它不适用于较长时间的任务。对于内存缓存的存取来说，它非常合适。</p>
-<p>dispatch_semaphore 是信号量，但当信号总量设为 1 时也可以当作锁来。在没有等待情况出现时，它的性能比 pthread_mutex 还要高，但一旦有等待情况出现时，性能就会下降许多。相对于 OSSpinLock 来说，它的优势在于等待时不会消耗 CPU 资源。对磁盘缓存来说，它比较合适</p>
-</li>
-<li><p><code>removeFromSuperview</code>就是一个视图节点删除的操作，执行这个方法，就等于在树形结构中找到该节点，从树型数据结构中删除该节点及其子节点，而并非只是删除该节点自己。同时，另一个操作就是把该对象从响应者链中移除。removeFromSuperview，子视图只remove一次</p>
-</li>
-<li><p>new 等于 alloc init ，除了alloc 会分配一块相邻的zone来提升程序处理速度。并且，new 实质上隐形的调用了init，alloc init 可以调用更多的初始化函数。因此，在iOS开发中，人们更加习惯于alloc init。</p>
-</li>
-<li><p><code>addsubview:</code>，子视图只添加一次。多个superView对同一subView执行<code>addSubview:</code>操作，以最后一次为准</p>
-</li>
-<li><p>block被成员变量引用后，会被copy一份_NSConcreteMallocBlock类型的block。因此，在weakSelf已经释放的情况下，block还能存在。</p>
-</li>
-<li><p>图片缩放不止可以用手势，也可以用ScrollView</p>
-</li>
-<li><p>在OC中，不允许直接修改OC对象的结构体属性的成员</p>
-</li>
-<li><p>Multiple locks on web thread not allowed! Please file a bug. Crashing now… 是因为在子线程中请求了网络</p>
-</li>
-<li><p>NSBlockOperation只有其内部是并发执行的，其本身还是同步执行</p>
-</li>
-</ol>
 
       
     </div>

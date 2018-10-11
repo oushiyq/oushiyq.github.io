@@ -4,24 +4,42 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>iOS小知识（八） | Daniel Young&#39;s blog</title>
+  <title>iOS小知识（九） | Daniel Young&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="屏幕旋转
-需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown
-123456789- (UIInt">
+  <meta name="description" content="三方登录
+注册第三方应用的AppID
+添加第三方SDK及其所需系统依赖库
+在Targets-&amp;gt;Info-&amp;gt;URL Types添加各自的URL Schemes
+在info.plist添加LSApplicationQueriesSchemes字段并添加白名单
+在AppDelegate中初始化，各自回调，实现代理
+
+同一开发者账号下，QQ登录绑定同一ID，需要申请。微信登录不需要
+Home">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS小知识（八）">
-<meta property="og:url" content="http://yoursite.com/2018/09/10/iOS小知识（八）/index.html">
+<meta property="og:title" content="iOS小知识（九）">
+<meta property="og:url" content="http://yoursite.com/2018/10/11/iOS小知识（九）/index.html">
 <meta property="og:site_name" content="Daniel Young's blog">
-<meta property="og:description" content="屏幕旋转
-需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown
-123456789- (UIInt">
-<meta property="og:updated_time" content="2018-09-10T08:29:40.422Z">
+<meta property="og:description" content="三方登录
+注册第三方应用的AppID
+添加第三方SDK及其所需系统依赖库
+在Targets-&amp;gt;Info-&amp;gt;URL Types添加各自的URL Schemes
+在info.plist添加LSApplicationQueriesSchemes字段并添加白名单
+在AppDelegate中初始化，各自回调，实现代理
+
+同一开发者账号下，QQ登录绑定同一ID，需要申请。微信登录不需要
+Home">
+<meta property="og:updated_time" content="2018-10-11T03:16:03.925Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS小知识（八）">
-<meta name="twitter:description" content="屏幕旋转
-需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown
-123456789- (UIInt">
+<meta name="twitter:title" content="iOS小知识（九）">
+<meta name="twitter:description" content="三方登录
+注册第三方应用的AppID
+添加第三方SDK及其所需系统依赖库
+在Targets-&amp;gt;Info-&amp;gt;URL Types添加各自的URL Schemes
+在info.plist添加LSApplicationQueriesSchemes字段并添加白名单
+在AppDelegate中初始化，各自回调，实现代理
+
+同一开发者账号下，QQ登录绑定同一ID，需要申请。微信登录不需要
+Home">
   
     <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
   
@@ -178,11 +196,11 @@
 	</div>
 </nav>
 
-      <div class="body-wrap"><article id="post-iOS小知识（八）" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-iOS小知识（九）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/09/10/iOS小知识（八）/" class="article-date">
-  	<time datetime="2018-09-10T08:28:11.000Z" itemprop="datePublished">2018-09-10</time>
+      <a href="/2018/10/11/iOS小知识（九）/" class="article-date">
+  	<time datetime="2018-10-11T03:15:15.000Z" itemprop="datePublished">2018-10-11</time>
 </a>
     </div>
   
@@ -195,7 +213,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      iOS小知识（八）
+      iOS小知识（九）
     </h1>
   
 
@@ -215,20 +233,42 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ol>
-<li><p>屏幕旋转</p>
-<p>需要保持APP整体为UIDeviceOrientationPortrait，部分ViewController（如视频ViewController）可旋转时。我们可以在AppDelegate里将iPhone的supportedInterfaceOrientations设为UIInterfaceOrientationMaskAllButUpsideDown</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIInterfaceOrientationMask</span>)application:(<span class="built_in">UIApplication</span> *)application supportedInterfaceOrientationsForWindow:(nullable <span class="built_in">UIWindow</span> *)window</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIDevice</span> currentDevice] wbt_isIPad])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIInterfaceOrientationMaskAll</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span>  <span class="built_in">UIInterfaceOrientationMaskAllButUpsideDown</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>另外，我们还需要将UIViewController的<code>supportedInterfaceOrientations</code>方法hook住，method swizzling成我们自己的<code>sp_supportedInterfaceOrientations</code></p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSUInteger</span>)sp_supportedInterfaceOrientations</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> isKindOfClass:[<span class="built_in">UINavigationController</span> class]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [[(<span class="built_in">UINavigationController</span> *)<span class="keyword">self</span> topViewController] supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ([<span class="keyword">self</span> isKindOfClass:[<span class="built_in">UITabBarController</span> class]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [[(<span class="built_in">UITabBarController</span> *)<span class="keyword">self</span> selectedViewController] supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIDevice</span> currentDevice] wbt_is<span class="built_in">UIUserInterfaceIdiomPad</span>])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIInterfaceOrientationMaskAll</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="keyword">self</span> sp_supportedInterfaceOrientations];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h3 id="u4E09_u65B9_u767B_u5F55"><a href="#u4E09_u65B9_u767B_u5F55" class="headerlink" title="三方登录"></a>三方登录</h3><ul>
+<li>注册第三方应用的AppID</li>
+<li>添加第三方SDK及其所需系统依赖库</li>
+<li>在Targets-&gt;Info-&gt;URL Types添加各自的URL Schemes</li>
+<li>在info.plist添加LSApplicationQueriesSchemes字段并添加白名单</li>
+<li>在AppDelegate中初始化，各自回调，实现代理</li>
+</ul>
+<p><strong>同一开发者账号下，QQ登录绑定同一ID，需要申请。微信登录不需要</strong></p>
+<h3 id="Home_Screen_Quick_Actions"><a href="#Home_Screen_Quick_Actions" class="headerlink" title="Home Screen Quick Actions"></a>Home Screen Quick Actions</h3><ol>
+<li>在appDelegate中创建我们需要的<code>UIApplicationShortcutItem</code>：</li>
+</ol>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (instancetype)initWithType:(<span class="built_in">NSString</span> *)type localizedTitle:(<span class="built_in">NSString</span> *)localizedTitle localizedSubtitle:(nullable <span class="built_in">NSString</span> *)localizedSubtitle icon:(nullable <span class="built_in">UIApplicationShortcutIcon</span> *)icon userInfo:(nullable <span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *, <span class="keyword">id</span> &lt;<span class="built_in">NSSecureCoding</span>&gt;&gt; *)userInfo <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br></pre></td></tr></table></figure>
+<p>其中type和title是必须要有的，type表示该shortcutItem的唯一标识符，title表示在屏幕上显示的标题。并将创建好的shortcutItem添加到<code>[UIApplication sharedApplication].shortcutItems</code></p>
+<ol>
+<li>在appdelegate中实现方法：</li>
+</ol>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">void</span>)application:(<span class="built_in">UIApplication</span> *)application performActionForShortcutItem:(<span class="built_in">UIApplicationShortcutItem</span> *)shortcutItem completionHandler:(<span class="keyword">void</span> (^)(<span class="built_in">BOOL</span>))completionHandler</span><br></pre></td></tr></table></figure>
+<p>根据shortcutItem.type来确定具体的shortcutItem，并将其要实现的功能实现。</p>
+<h3 id="Peek__26amp_3B_Pop"><a href="#Peek__26amp_3B_Pop" class="headerlink" title="Peek &amp; Pop"></a>Peek &amp; Pop</h3><ol>
+<li><p>注册Peek &amp; Pop 代理</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span> &lt;<span class="built_in">UIViewControllerPreviewing</span>&gt;)registerForPreviewingWithDelegate:(<span class="keyword">id</span>&lt;<span class="built_in">UIViewControllerPreviewingDelegate</span>&gt;)delegate sourceView:(<span class="built_in">UIView</span> *)sourceView <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>CMTime为了解决float 的不准确性.</p>
+<li><p>实现Peek方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (nullable <span class="built_in">UIViewController</span> *)previewingContext:(<span class="keyword">id</span> &lt;<span class="built_in">UIViewControllerPreviewing</span>&gt;)previewingContext viewControllerForLocation:(<span class="built_in">CGPoint</span>)location <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>父类在h文件中实现的protocol ，子类也能继承。</p>
+<li><p>实现Pop方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (nullable <span class="built_in">UIViewController</span> *)previewingContext:(<span class="keyword">id</span> &lt;<span class="built_in">UIViewControllerPreviewing</span>&gt;)previewingContext viewControllerForLocation:(<span class="built_in">CGPoint</span>)location <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>用户账号/密码这类的敏感信息可以存在系统的keychain中，用户删除APP也不会删除keychain中的密码。同一公司的APP可以用keychain group打通</p>
+</ol>
+<h3 id="Peek_u4E0A_u6ED1"><a href="#Peek_u4E0A_u6ED1" class="headerlink" title="Peek上滑"></a>Peek上滑</h3><ol>
+<li><p>override对应ViewController的<code>- (NSArray&lt;**id**&lt;UIPreviewActionItem&gt;&gt; *)previewActionItems</code>方法</p>
 </li>
-<li><p>AOP（面向切面编程）可以 基于protocol 也可以 基于runtime。AOP实际上是把某些方法的功能，抽出来，形成一个单独的方法（切面）</p>
+<li><p>在该方法中，创建我们需要的<code>UIPreviewAction</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (instancetype)actionWithTitle:(<span class="built_in">NSString</span> *)title style:(<span class="built_in">UIPreviewActionStyle</span>)style handler:(<span class="keyword">void</span> (^)(<span class="built_in">UIPreviewAction</span> *action, <span class="built_in">UIViewController</span> *previewViewController))handler;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将创建的<code>UIPreviewAction</code>组成NSArray返回</p>
 </li>
 </ol>
 
@@ -240,18 +280,9 @@
     
 <nav id="article-nav">
   
-    <a href="/2018/10/11/iOS小知识（九）/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          iOS小知识（九）
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/08/22/GET和POST的区别/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">GET和POST的区别</div>
+    <a href="/2018/09/10/iOS小知识（八）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS小知识（八）</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -286,7 +317,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS小知识（八）" data-title="iOS小知识（八）" data-url="http://yoursite.com/2018/09/10/iOS小知识（八）/"></div>
+	<div class="ds-thread" data-thread-key="iOS小知识（九）" data-title="iOS小知识（九）" data-url="http://yoursite.com/2018/10/11/iOS小知识（九）/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
