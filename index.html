@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Core-Animation/" style="font-size: 10px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a>
+						<a href="/tags/Core-Animation/" style="font-size: 15px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a> <a href="/tags/笔记/" style="font-size: 10px;">笔记</a>
 					</div>
 				</section>
 				
@@ -172,6 +172,73 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-Category方法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/27/Category方法/" class="article-date">
+  	<time datetime="2018-11-27T07:19:29.000Z" itemprop="datePublished">2018-11-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/27/Category方法/">Category方法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li><p>对于静态库中的category方法。在静态链接时，category因为其动态加载的特性导致其目标文件（.o）没有被其他目标文件调用，从而linker认为category没有被使用。因此，在linker把静态库中的所有目标文件link成为一个.a文件时，linker并不会将category的目标文件进行link，这就导致了静态库中的category无法调用。</p>
+<p>为了解决这个问题，我们可以将xcode中的 “Other Linker Flags”设置为’-ObjC’、 ‘-all_load’ 或者是 ‘-force_load’ 。强行将静态库中的所有.o文件link。</p>
+<p>-<strong>all_load</strong> Loads all members of static archive libraries.</p>
+<p>-<strong>ObjC</strong> Loads all members of static archive libraries that implement an Objective-C class or category.</p>
+<p>-<strong>force_load (path_to_archive)</strong> Loads all members of the specified static archive library. Note: -all_load forces all members of all archives to be loaded. This option allows you to target a specific archive.</p>
+</li>
+<li><p>对于覆盖了原生方法的category方法。根据runtime中category的实现，我们知道category只是将category方法放在了原来类的实例方法的前面，而OC只要找到了对应的方法就不会沿着方法列表进行查找了。因此，category并没有真正覆盖原生方法。我们只需要找到原来类的方法列表中最后一个对应的实例方法即是原生方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> original_method(<span class="keyword">id</span> cls, <span class="built_in">NSString</span>* methodStr)</span><br><span class="line">&#123;</span><br><span class="line">    Class currentCls = [cls class];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (currentCls)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> methodCount;</span><br><span class="line">        Method *methods = class_copyMethodList(currentCls, &amp;methodCount);</span><br><span class="line">        IMP lastImp = <span class="literal">NULL</span>;</span><br><span class="line">        SEL lastSel = <span class="literal">NULL</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; methodCount; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            Method method = methods[i];</span><br><span class="line">            <span class="built_in">NSString</span> *methodName = [<span class="built_in">NSString</span> stringWithCString:sel_getName(method_getName(method)) encoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">            <span class="keyword">if</span>([methodStr isEqualToString:methodName])</span><br><span class="line">            &#123;</span><br><span class="line">                lastImp = method_getImplementation(method);</span><br><span class="line">                lastSel = method_getName(method);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">typedef</span> <span class="keyword">void</span> (*fn)(<span class="keyword">id</span>,SEL);</span><br><span class="line">        <span class="keyword">if</span> (lastImp != <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            fn f = (fn)lastImp;</span><br><span class="line">            f(cls,lastSel);</span><br><span class="line">        &#125;</span><br><span class="line">        free(methods);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/笔记/">笔记</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-iOS小知识（十）" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -529,7 +596,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="u4E00_u3001_u79BB_u5C4F_u6E32_u67D3"><a href="#u4E00_u3001_u79BB_u5C4F_u6E32_u67D3" class="headerlink" title="一、离屏渲染"></a>一、离屏渲染</h4><p>离屏渲染 包含两类 CPU离屏渲染和GPU离屏渲染</p>
-<p>一般意义上的“离屏渲染”是指GPU离屏渲染：在GPU中屏幕外context生成一个buffer（render buffer），用来渲染不能直接在屏幕上进行绘制的图层。当图层合并成为一个屏幕能直接绘制的图层后，render buffer 将合成后的图层交给 frame buffer 由屏幕内context进行绘制。因为涉及到GPU context 的切换，所以会导致屏幕绘制时间变长，从而引起丢帧，导致卡顿。</p>
+<p>一般意义上的“离屏渲染”是指GPU离屏渲染：在GPU中屏幕外context生成一个buffer，用来渲染不能直接在屏幕上进行绘制的图层。当图层合并成为一个屏幕能直接绘制的图层后，buffer 将合成后的图层交给 frame buffer 由屏幕内context进行绘制。因为涉及到GPU context 的切换，所以会导致屏幕绘制时间变长，从而引起丢帧，导致卡顿。</p>
 <p>CPU离屏渲染是由Core Graphics 框架造成的，并不是一般意义上的“离屏渲染”。当使用drawRect/CG 进行绘图时，实际上是使用CPU进行同步绘制。当绘制一些简单图形时，CPU占用的时间 &lt; GPU上下文转换的时间，在这种情况下，我们可以考虑CG的离屏渲染。</p>
 <p>shouldRasterize 会引发GPU离屏渲染，但是只要光栅化图层的子图层不改变，那么光栅化会被缓存并在每帧进行绘制。</p>
 <h4 id="u4E8C_u3001UITabBarController_u5224_u65AD_u662F_u5426_u8DF3_u8F6C"><a href="#u4E8C_u3001UITabBarController_u5224_u65AD_u662F_u5426_u8DF3_u8F6C" class="headerlink" title="二、UITabBarController判断是否跳转"></a>二、UITabBarController判断是否跳转</h4><p>可以使用<code>tabBarController: shouldSelectViewController:</code>方法，能跳转的tabBar返回YES，否则返回NO</p>
@@ -1160,74 +1227,6 @@
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Core-Animation/">Core Animation</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-iOS小知识（六）" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/07/06/iOS小知识（六）/" class="article-date">
-  	<time datetime="2018-07-06T04:23:51.000Z" itemprop="datePublished">2018-07-06</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/06/iOS小知识（六）/">iOS小知识（六）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1、UINavigationBar 和 UINavigationItem</p>
-<p>UINavigationBar 对于一个navigationController来说是唯一存在的，用来显示UINavigationItem的buttons和views。</p>
-<p>每个push进navigationController的viewController都拥有UINavigationItem。UINavigationItem 用于管理UINavigationBar的buttons和views</p>
-<p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/12000758-16e4ef9d1fcc4afaa35e4d03dfb3f0aa.png" alt="UINavigationController 层级关系"></p>
-<p>2、 在一个VC中，VC.navigationViewController 不能连续push两个VC，若需要连续push，需要操纵navigationViewController 的viewControllers数组。可以参考下列代码</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray *controllers = [self.navigationController.viewControllers mutableCopy];[controllers addObject:secondVc];&#10;[controllers addObject:thirdVC];&#10;[self.navigationController setViewControllers:controllers animated:YES];&#10;/*&#10;&#9;&#36825;&#22359;&#20195;&#30721;&#20250;&#22312;self(firstVC)&#20013;&#30452;&#25509;push&#21040;thirdVC&#12290;&#24403;&#29992;&#25143;&#28857;&#20987;back&#25353;&#38062;&#26102;&#65292;&#20250;&#36864;&#22238;secondVC&#10;*/</span><br></pre></td></tr></table></figure>
-<p>3、 RAC的@weakify和@strongify。</p>
-<p>​    将@weakify @strongify 宏展开，可以得到以下代码：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@weakify(self) = __weak __typeof_ (self) self_weak = (self);&#10;@strongify(self) = __strong __typeof__(self) self = self_weak_;</span><br></pre></td></tr></table></figure>
-<p>​    由于@strongify(self) 重新定义的strongSelf 是self，因此在block中使用ivar时，需注意指明self，否则会导致循环引用。</p>
-<p>4、 使用CALayer显示图片时，需注意layer的contents 属性不支持UIImage，需将 UIImage转为CGImage。</p>
-<p>5、 transform 会改变frame 的大小，对bounds无影响</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
 	</div>
 
       

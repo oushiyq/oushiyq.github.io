@@ -4,27 +4,21 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>iOS小知识（一） | Daniel Young&#39;s blog</title>
+  <title>Category方法 | Daniel Young&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。
-在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中
-iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x
-UIScrollView带有一个 contentInsetAdjustm">
+  <meta name="description" content="对于静态库中的category方法。在静态链接时，category因为其动态加载的特性导致其目标文件（.o）没有被其他目标文件调用，从而linker认为category没有被使用。因此，在linker把静态库中的所有目标文件link成为一个.a文件时，linker并不会将category的目标文件进行link，这就导致了静态库中的category无法调用。
+为了解决这个问题，我们可以将xcode中">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS小知识（一）">
-<meta property="og:url" content="http://yoursite.com/2018/06/01/iOS小知识（一）/index.html">
+<meta property="og:title" content="Category方法">
+<meta property="og:url" content="http://yoursite.com/2018/11/27/Category方法/index.html">
 <meta property="og:site_name" content="Daniel Young's blog">
-<meta property="og:description" content="创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。
-在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中
-iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x
-UIScrollView带有一个 contentInsetAdjustm">
-<meta property="og:updated_time" content="2018-08-09T09:56:13.289Z">
+<meta property="og:description" content="对于静态库中的category方法。在静态链接时，category因为其动态加载的特性导致其目标文件（.o）没有被其他目标文件调用，从而linker认为category没有被使用。因此，在linker把静态库中的所有目标文件link成为一个.a文件时，linker并不会将category的目标文件进行link，这就导致了静态库中的category无法调用。
+为了解决这个问题，我们可以将xcode中">
+<meta property="og:updated_time" content="2018-11-27T07:23:17.768Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS小知识（一）">
-<meta name="twitter:description" content="创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。
-在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中
-iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x
-UIScrollView带有一个 contentInsetAdjustm">
+<meta name="twitter:title" content="Category方法">
+<meta name="twitter:description" content="对于静态库中的category方法。在静态链接时，category因为其动态加载的特性导致其目标文件（.o）没有被其他目标文件调用，从而linker认为category没有被使用。因此，在linker把静态库中的所有目标文件link成为一个.a文件时，linker并不会将category的目标文件进行link，这就导致了静态库中的category无法调用。
+为了解决这个问题，我们可以将xcode中">
   
     <link rel="alternative" href="/atom.xml" title="Daniel Young&#39;s blog" type="application/atom+xml">
   
@@ -181,11 +175,11 @@ UIScrollView带有一个 contentInsetAdjustm">
 	</div>
 </nav>
 
-      <div class="body-wrap"><article id="post-iOS小知识（一）" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Category方法" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/06/01/iOS小知识（一）/" class="article-date">
-  	<time datetime="2018-06-01T04:43:22.000Z" itemprop="datePublished">2018-06-01</time>
+      <a href="/2018/11/27/Category方法/" class="article-date">
+  	<time datetime="2018-11-27T07:19:29.000Z" itemprop="datePublished">2018-11-27</time>
 </a>
     </div>
   
@@ -198,7 +192,7 @@ UIScrollView带有一个 contentInsetAdjustm">
         
   
     <h1 class="article-title" itemprop="name">
-      iOS小知识（一）
+      Category方法
     </h1>
   
 
@@ -207,7 +201,7 @@ UIScrollView带有一个 contentInsetAdjustm">
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS小知识/">iOS小知识</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/笔记/">笔记</a></li></ul>
 	</div>
 
         
@@ -219,18 +213,15 @@ UIScrollView带有一个 contentInsetAdjustm">
     <div class="article-entry" itemprop="articleBody">
       
         <ol>
-<li>创建 NSDateFormatter，性能较低，使用时应该使用单例，不要每次使用的时候都重新创建。</li>
-<li>在 layoutSubviews 中，绝对不能调用setNeedLayout（死循环)，算高方法应该在sizeThatFits中</li>
-<li>iPhone SE，iPhone 6 及以下机型都是 @2x，iPhone 6P及以上都是@3x</li>
-<li>UIScrollView带有一个 contentInsetAdjustmentBehavior属性，特别是在webView中进行iPhone X 适配的时候，要将其设置为UIScrollViewContentInsetAdjustmentNever</li>
-<li><p>iOS7之后，UIScrollView增加了keyboardDismissMode属性，可以设置在scrollView滑动的时候，将键盘关闭。</p>
+<li><p>对于静态库中的category方法。在静态链接时，category因为其动态加载的特性导致其目标文件（.o）没有被其他目标文件调用，从而linker认为category没有被使用。因此，在linker把静态库中的所有目标文件link成为一个.a文件时，linker并不会将category的目标文件进行link，这就导致了静态库中的category无法调用。</p>
+<p>为了解决这个问题，我们可以将xcode中的 “Other Linker Flags”设置为’-ObjC’、 ‘-all_load’ 或者是 ‘-force_load’ 。强行将静态库中的所有.o文件link。</p>
+<p>-<strong>all_load</strong> Loads all members of static archive libraries.</p>
+<p>-<strong>ObjC</strong> Loads all members of static archive libraries that implement an Objective-C class or category.</p>
+<p>-<strong>force_load (path_to_archive)</strong> Loads all members of the specified static archive library. Note: -all_load forces all members of all archives to be loaded. This option allows you to target a specific archive.</p>
 </li>
-<li><p>UIWebView可以跟据链接的来源UIWebViewNavigationType对其操作。</p>
+<li><p>对于覆盖了原生方法的category方法。根据runtime中category的实现，我们知道category只是将category方法放在了原来类的实例方法的前面，而OC只要找到了对应的方法就不会沿着方法列表进行查找了。因此，category并没有真正覆盖原生方法。我们只需要找到原来类的方法列表中最后一个对应的实例方法即是原生方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> original_method(<span class="keyword">id</span> cls, <span class="built_in">NSString</span>* methodStr)</span><br><span class="line">&#123;</span><br><span class="line">    Class currentCls = [cls class];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (currentCls)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> methodCount;</span><br><span class="line">        Method *methods = class_copyMethodList(currentCls, &amp;methodCount);</span><br><span class="line">        IMP lastImp = <span class="literal">NULL</span>;</span><br><span class="line">        SEL lastSel = <span class="literal">NULL</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; methodCount; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            Method method = methods[i];</span><br><span class="line">            <span class="built_in">NSString</span> *methodName = [<span class="built_in">NSString</span> stringWithCString:sel_getName(method_getName(method)) encoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">            <span class="keyword">if</span>([methodStr isEqualToString:methodName])</span><br><span class="line">            &#123;</span><br><span class="line">                lastImp = method_getImplementation(method);</span><br><span class="line">                lastSel = method_getName(method);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">typedef</span> <span class="keyword">void</span> (*fn)(<span class="keyword">id</span>,SEL);</span><br><span class="line">        <span class="keyword">if</span> (lastImp != <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            fn f = (fn)lastImp;</span><br><span class="line">            f(cls,lastSel);</span><br><span class="line">        &#125;</span><br><span class="line">        free(methods);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li>Runloop 对象是利用字典来进行存储， Key(thread) – Value(loop)</li>
-<li>NSNotificationCenter是一个同步的单例模式，而这个通知中心的对象会一直存在于一个应用的生命周期。</li>
-<li>勿滥用通知，每次<code>post</code>一个通知时，通知中心都会去遍历一下它的分发表，然后将通知转发给相应的观察者，这样导致性能降低。</li>
-<li>addObserverForName 会生成一个匿名对象，需要remove。</li>
 </ol>
 
       
@@ -241,18 +232,9 @@ UIScrollView带有一个 contentInsetAdjustm">
     
 <nav id="article-nav">
   
-    <a href="/2018/06/06/iOS小知识（二）/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          iOS小知识（二）
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/05/29/hexo-github-搭建博客/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">hexo + github 搭建博客</div>
+    <a href="/2018/10/30/iOS小知识（十）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"> iOS小知识（十）</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -287,7 +269,7 @@ UIScrollView带有一个 contentInsetAdjustm">
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS小知识（一）" data-title="iOS小知识（一）" data-url="http://yoursite.com/2018/06/01/iOS小知识（一）/"></div>
+	<div class="ds-thread" data-thread-key="Category方法" data-title="Category方法" data-url="http://yoursite.com/2018/11/27/Category方法/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

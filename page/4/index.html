@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Core-Animation/" style="font-size: 10px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a>
+						<a href="/tags/Core-Animation/" style="font-size: 15px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a> <a href="/tags/笔记/" style="font-size: 10px;">笔记</a>
 					</div>
 				</section>
 				
@@ -172,6 +172,91 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-我所理解的RunLoop" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/11/我所理解的RunLoop/" class="article-date">
+  	<time datetime="2016-03-11T06:35:07.000Z" itemprop="datePublished">2016-03-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/我所理解的RunLoop/">我所理解的RunLoop</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="u8D77_u56E0"><a href="#u8D77_u56E0" class="headerlink" title="起因"></a>起因</h3><p>一直都知道RunLoop是个非常重要的点，可是自己在实际开发中一直都没有遇到。而且对其一直都抱着高山仰止的态度，感觉RunLoop对于我来说是一个特别难理解的东西。但是，就在昨天接到了腾讯的电面，一开始就问我『是否知道什么是RunLoop』，还好RunLoop的概念我还是很熟，回答了上来；接下来，HR又问『RunLoop和多线程的关系』，直接蒙圈了。于是，自己疼定思疼，狠狠的把之前找到的关于RunLoop资料拿出来重新一点一点的看了下去，总算是有点理解了RunLoop吧。</p>
+<h2 id="1-__u4EC0_u4E48_u662FRunLoop"><a href="#1-__u4EC0_u4E48_u662FRunLoop" class="headerlink" title="1. 什么是RunLoop"></a>1. 什么是RunLoop</h2><p>在通常情况下，一次线程只能处理一个任务，当任务完成，线程也就结束了，这样的线程如图1.1所示。但是，这样的线程并不是我们总需要的，我们需要有线程可以一直等待我们的操作，相当于一个do-while语句。当我们需要结束进程时，线程才结束，这样的线程如图1.2所示。<br><img src="http://7xqzfr.com1.z0.glb.clouddn.com/1.1.png?imageView/2/w/800/q/90" alt="图1.1"> <img src="http://7xqzfr.com1.z0.glb.clouddn.com/1.2.png?imageView/2/w/800/q/90" alt="图1.2"><br>图1.2所示的模型被称为Event Loop，也就是iOS系统中的RunLoop。RunLoop在没有任务处理的时候sleep，而有任务进来是被唤醒。<br>在iOS系统中，提供了两个这样的对象：NSRunLoop 和 CFRunLoopRef。<br>CFRunLoopRef 是在 CoreFoundation 框架内的，它提供了纯 C 函数的 API，所有这些 API 都是线程安全的。<br>NSRunLoop 是基于 CFRunLoopRef 的封装，提供了面向对象的 API，但是这些 API 不是线程安全的。</p>
+<h2 id="2-__u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981RunLoop"><a href="#2-__u4E3A_u4EC0_u4E48_u6211_u4EEC_u9700_u8981RunLoop" class="headerlink" title="2. 为什么我们需要RunLoop"></a>2. 为什么我们需要RunLoop</h2><ul>
+<li>使程序一直运行并接受用户输入</li>
+<li>决定程序在何时应该处理哪些Event</li>
+<li>调用解耦</li>
+<li>节约CPU时间</li>
+</ul>
+<h2 id="3-_RunLoop_u4E0E_u7EBF_u7A0B_u7684_u5173_u7CFB"><a href="#3-_RunLoop_u4E0E_u7EBF_u7A0B_u7684_u5173_u7CFB" class="headerlink" title="3. RunLoop与线程的关系"></a>3. RunLoop与线程的关系</h2><p>在iOS程序中，主线程自带一个RunLoop，如下列代码所示：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#import <span class="title">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#import <span class="title">"AppDelegate.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Xcode创建一个project时，系统会自动生成的一个main函数，初始化UIApplicationMain后，便开启了RunLoop。而在其他线程中，则需要自己『获取』一个RunLoop。线程和RunLoop一一对应。这里为什么需要强调『获取』，而不是创建呢？因为苹果不允许直接创建RunLoop，它只提供了两个自动获取的函数：CFRunLoopGetMain() 和 CFRunLoopGetCurrent()。</p>
+<h2 id="4-_RunLoop_u7684_u6784_u6210_u5143_u7D20"><a href="#4-_RunLoop_u7684_u6784_u6210_u5143_u7D20" class="headerlink" title="4. RunLoop的构成元素"></a>4. RunLoop的构成元素</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/4.1.png?imageView/2/w/800/q/90" alt="图4.1"><br>如图所示，一个RunLoop可以包含多个Mode，而一个Mode可以包含多个Source/Timer/Observer。每次RunLoop只能调用一个Mode，如果需要切换Mode，那么得先退出Loop，再切换Mode重新进入Loop。</p>
+<h3 id="4-1_CFRunLoopMode"><a href="#4-1_CFRunLoopMode" class="headerlink" title="4.1 CFRunLoopMode"></a>4.1 CFRunLoopMode</h3><p>CFRunLoopMode 和 CFRunLoop 的结构大致如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> __<span class="built_in">CFRunLoopMode</span> &#123;</span><br><span class="line">    <span class="built_in">CFStringRef</span> _name;            <span class="comment">// Mode Name, 例如 @"kCFRunLoopDefaultMode"</span></span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _sources0;    <span class="comment">// Set</span></span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _sources1;    <span class="comment">// Set</span></span><br><span class="line">    <span class="built_in">CFMutableArrayRef</span> _observers; <span class="comment">// Array</span></span><br><span class="line">    <span class="built_in">CFMutableArrayRef</span> _timers;    <span class="comment">// Array</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">struct</span> __<span class="built_in">CFRunLoop</span> &#123;</span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _commonModes;     <span class="comment">// Set</span></span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _commonModeItems; <span class="comment">// Set&lt;Source/Observer/Timer&gt;</span></span><br><span class="line">    <span class="built_in">CFRunLoopModeRef</span> _currentMode;    <span class="comment">// Current Runloop Mode</span></span><br><span class="line">    <span class="built_in">CFMutableSetRef</span> _modes;           <span class="comment">// Set</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这里有个概念叫 “CommonModes”：一个 Mode 可以将自己标记为”Common”属性（通过将其 ModeName 添加到 RunLoop 的 “commonModes” 中）。每当 RunLoop 的内容发生变化时，RunLoop 都会自动将 _commonModeItems 里的 Source/Observer/Timer 同步到具有 “Common” 标记的所有Mode里。</p>
+<p>应用场景举例：主线程的 RunLoop 里有两个预置的 Mode：kCFRunLoopDefaultMode 和 UITrackingRunLoopMode。这两个 Mode 都已经被标记为”Common”属性。DefaultMode 是 App 平时所处的状态，TrackingRunLoopMode 是追踪 ScrollView 滑动时的状态。当你创建一个 Timer 并加到 DefaultMode 时，Timer 会得到重复回调，但此时滑动一个TableView时，RunLoop 会将 mode 切换为 TrackingRunLoopMode，这时 Timer 就不会被回调，并且也不会影响到滑动操作。</p>
+<p>有时你需要一个 Timer，在两个 Mode 中都能得到回调，一种办法就是将这个 Timer 分别加入这两个 Mode。还有一种方式，就是将 Timer 加入到顶层的 RunLoop 的 “commonModeItems” 中。”commonModeItems” 被 RunLoop 自动更新到所有具有”Common”属性的 Mode 里去。</p>
+<h3 id="4-2_CFRunLoopSourceRef"><a href="#4-2_CFRunLoopSourceRef" class="headerlink" title="4.2 CFRunLoopSourceRef"></a>4.2 CFRunLoopSourceRef</h3><p>CFRunLoopSourceRef 是事件产生的地方。Source有两个版本：Source0 和 Source1。</p>
+<ul>
+<li>source0：处理如UIEvent，CFSocket这样的事件</li>
+<li>source1：Mach port驱动，CFMachport，CFMessagePort</li>
+</ul>
+<h3 id="4-3_CFRunLoopTimerRef"><a href="#4-3_CFRunLoopTimerRef" class="headerlink" title="4.3 CFRunLoopTimerRef"></a>4.3 CFRunLoopTimerRef</h3><p>CFRunLoopTimerRef 是基于时间的触发器，它和 NSTimer 是toll-free bridged 的，可以混用。其包含一个时间长度和一个回调（函数指针）。当其加入到 RunLoop 时，RunLoop会注册对应的时间点，当时间点到时，RunLoop会被唤醒以执行那个回调。<br>另外，需要注意的是，当GCD进行dispatch主线程时，他的Timer和RunLoop的Timer分别执行。</p>
+<h3 id="4-4_RunLoopObserver"><a href="#4-4_RunLoopObserver" class="headerlink" title="4.4 RunLoopObserver"></a>4.4 RunLoopObserver</h3><p>Cocoa框架中很多机制比如CAAnimation等都是由RunLoopObserver触发的。observer到当前状态的变化进行通知。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">CF_OPTIONS</span>(<span class="built_in">CFOptionFlags</span>, <span class="built_in">CFRunLoopActivity</span>) &#123;</span><br><span class="line">     k<span class="built_in">CFRunLoopEntry</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">0</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopBeforeTimers</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">1</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopBeforeSources</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">2</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopBeforeWaiting</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">5</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopAfterWaiting</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">6</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopExit</span> = (<span class="number">1</span>UL &lt;&lt; <span class="number">7</span>),</span><br><span class="line">     k<span class="built_in">CFRunLoopAllActivities</span> = <span class="number">0x0FFFFFFF</span>U</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="5-_RunLoop_u7684sleep_u548C_u5524_u9192"><a href="#5-_RunLoop_u7684sleep_u548C_u5524_u9192" class="headerlink" title="5. RunLoop的sleep和唤醒"></a>5. RunLoop的sleep和唤醒</h2><ul>
+<li>指定用于唤醒的mach_port端口；</li>
+<li>调用mach_msg()监听唤醒端口，在唤醒前，该线程sleep，停留在mach_msg_trap状态；</li>
+<li>由其他线程向内核发送mach_port端口的msg后，该线程被唤醒。</li>
+</ul>
+<p>RunLoop 的核心就是一个mach_msg()，RunLoop调用这个函数去接收消息，如果没有别人发送port消息过来，内核会将线程置于sleep状态。</p>
+<h2 id="6-_RunLoop_u7684_u6267_u884C_u987A_u5E8F"><a href="#6-_RunLoop_u7684_u6267_u884C_u987A_u5E8F" class="headerlink" title="6. RunLoop的执行顺序"></a>6. RunLoop的执行顺序</h2><p><img src="http://7xqzfr.com1.z0.glb.clouddn.com/6.1.png?imageView/2/w/800/q/90" alt="图6.1"></p>
+<p>可以看到，实际上 RunLoop 就是这样一个函数，其内部是一个 do-while 循环。当你调用 CFRunLoopRun() 时，线程就会一直停留在这个循环里；直到超时或被手动停止，该函数才会返回。</p>
+<h2 id="7-__u603B_u7ED3"><a href="#7-__u603B_u7ED3" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>上面的文字大多都是综合参考资料中的两篇博客，加上了一点自己对于RunLoop的理解合成了这篇文章。</p>
+<p>参考资料：</p>
+<p>1.<a href="http://blog.ibireme.com/2015/05/18/runloop/" target="_blank" rel="external">深入理解RunLoop</a> ibireme<br>2.<a href="http://yun.baidu.com/share/home?uk=2885973690" target="_blank" rel="external">sunnyxx的视频runloop.mov</a> sunnyxx</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-浅析category和class-extension" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -861,63 +946,6 @@ views：传入含有变量绑定的字典，该字典会把作为变量名的字
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//[[className alloc]init]源代码</span></span><br><span class="line">+ alloc&#123;</span><br><span class="line">	<span class="keyword">return</span> (*_zoneAlloc)((Class)<span class="keyword">self</span>, <span class="number">0</span>, malloc_default_zone());</span><br><span class="line">&#125;</span><br><span class="line">- init &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//[className new]源代码</span></span><br><span class="line">+ new&#123;</span><br><span class="line">	<span class="keyword">id</span> newObject = (*_alloc)((Class)<span class="keyword">self</span>, <span class="number">0</span>);</span><br><span class="line">	Class metaClass = <span class="keyword">self</span>-&gt;isa;</span><br><span class="line">	<span class="keyword">if</span> (class_getVersion(metaClass) &gt; <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">return</span> [newObject init]</span><br><span class="line">	<span class="keyword">else</span> </span><br><span class="line">		<span class="keyword">return</span> newObject;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>通过上面的代码，我们可以看出[[className alloc]init]和[className new]基本是相同的，只是alloc分配内存的时候使用了zone。而这个zone可以把对象分配到一块相邻的内存区域中，提高了程序的读取速度。另外在使用[[className alloc]init]时，还可以通过initXXX来实现其他参数。</p>
 <h2 id="u603B_u800C_u8A00_u4E4B_uFF0C_u4ED6_u4FE9_u5728_u529F_u80FD_u4E0A_u51E0_u4E4E_u662F_u4E00_u81F4_u7684_uFF0C_u5E76_u4E14alloc/init_u5BF9_u4E8Enew_u5728_u5904_u7406_u901F_u5EA6_u548C_u4E2A_u6027_u5316_u8FDB_u884C_u4E86_u4F18_u5316_u3002_u56E0_u6B64_uFF0C_u540C_u6837_u662F_u521D_u59CB_u5316_u5BF9_u8C61_uFF0C_u4E3A_u4EC0_u4E48_u4E0D_u7528alloc/init_u5462_uFF1F"><a href="#u603B_u800C_u8A00_u4E4B_uFF0C_u4ED6_u4FE9_u5728_u529F_u80FD_u4E0A_u51E0_u4E4E_u662F_u4E00_u81F4_u7684_uFF0C_u5E76_u4E14alloc/init_u5BF9_u4E8Enew_u5728_u5904_u7406_u901F_u5EA6_u548C_u4E2A_u6027_u5316_u8FDB_u884C_u4E86_u4F18_u5316_u3002_u56E0_u6B64_uFF0C_u540C_u6837_u662F_u521D_u59CB_u5316_u5BF9_u8C61_uFF0C_u4E3A_u4EC0_u4E48_u4E0D_u7528alloc/init_u5462_uFF1F" class="headerlink" title="总而言之，他俩在功能上几乎是一致的，并且alloc/init对于new在处理速度和个性化进行了优化。因此，同样是初始化对象，为什么不用alloc/init呢？"></a>总而言之，他俩在功能上几乎是一致的，并且alloc/init对于new在处理速度和个性化进行了优化。因此，同样是初始化对象，为什么不用alloc/init呢？</h2>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-MapKit-for-iOS8-later" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/14/MapKit-for-iOS8-later/" class="article-date">
-  	<time datetime="2016-01-14T08:30:28.000Z" itemprop="datePublished">2016-01-14</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/14/MapKit-for-iOS8-later/">MapKit for iOS8 &amp; later</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="MapKit_u6846_u67B6"><a href="#MapKit_u6846_u67B6" class="headerlink" title="MapKit框架"></a>MapKit框架</h1><pre><code>MapKit框架能显示世界地图，其大部分功能由MKMapView实例提供，负责显示地图、跟踪触摸屏幕动作以及显示标注等功能。
-</code></pre><p>使用MapKit可以短短三行代码实现定位功能，代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [worldMap setShowsUserLocation:<span class="number">1</span>];</span><br><span class="line">    [worldMap setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>然而这里需要注意的地方是：在iOS8版本以后，在Supporting Files下需要info.plis里面添加NSLocationAlwaysUsageDescription 和 NSLocationWhenInUseDescription 两个String字段，value设置为YES </li>
-</ul>
-
       
     </div>
     
