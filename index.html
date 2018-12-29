@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Core-Animation/" style="font-size: 15px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a> <a href="/tags/笔记/" style="font-size: 10px;">笔记</a>
+						<a href="/tags/Core-Animation/" style="font-size: 15px;">Core Animation</a> <a href="/tags/iOS小知识/" style="font-size: 20px;">iOS小知识</a> <a href="/tags/笔记/" style="font-size: 10px;">笔记</a> <a href="/tags/音视频/" style="font-size: 10px;">音视频</a>
 					</div>
 				</section>
 				
@@ -172,6 +172,179 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-iOS播放AMR文件" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/12/29/iOS播放AMR文件/" class="article-date">
+  	<time datetime="2018-12-29T08:17:05.000Z" itemprop="datePublished">2018-12-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/29/iOS播放AMR文件/">iOS播放AMR文件</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近公司项目中，有个播放AMR音频的需求。把此次需求中调研的东西记录一下。</p>
+<h2 id="u4E00_u3001_u89C6_u9891_u64AD_u653E_u5668_u539F_u7406"><a href="#u4E00_u3001_u89C6_u9891_u64AD_u653E_u5668_u539F_u7406" class="headerlink" title="一、视频播放器原理"></a>一、视频播放器原理</h2><p>视音频技术主要包含以下几点：封装技术，视频压缩编码技术以及音频压缩编码技术。如果考虑到网络传输的话，还包括流媒体协议技术。</p>
+<p>视频播放器播放一个互联网上的视频文件，需要经过以下几个步骤：解协议，解封装，解码视音频，视音频同步。如果播放本地文件则不需要解协议，为以下几个步骤：解封装，解码视音频，视音频同步。他们的过程如图所示。</p>
+<p><img src="assets/SouthEast-20181229162538366.jpeg" alt="视频播放流程图"></p>
+<p><strong>解协议</strong>：就是将流媒体协议的数据，解析为标准的相应的封装格式数据。视音频在网络上传播的时候，常常采用各种流媒体协议，例如HTTP，RTMP，或是MMS等等。这些协议在传输视音频数据的同时，也会传输一些信令数据。这些信令数据包括对播放的控制（播放，暂停，停止），或者对网络状态的描述等。解协议的过程中会去除掉信令数据而只保留视音频数据。例如，采用RTMP协议传输的数据，经过解协议操作后，输出FLV格式的数据。</p>
+<p><strong>解封装</strong>：就是将输入的封装格式的数据，分离成为音频流压缩编码数据和视频流压缩编码数据。封装格式种类很多，例如MP4，MKV，RMVB，TS，FLV，AVI等等，它的作用就是将已经压缩编码的视频数据和音频数据按照一定的格式放到一起。例如，FLV格式的数据，经过解封装操作后，输出H.264编码的视频码流和AAC编码的音频码流。</p>
+<p><strong>解码</strong>：就是将视频/音频压缩编码数据，解码成为非压缩的视频/音频原始数据。音频的压缩编码标准包含AAC，MP3，AC-3等等，视频的压缩编码标准则包含H.264，MPEG2，VC-1等等。解码是整个系统中最重要也是最复杂的一个环节。通过解码，压缩编码的视频数据输出成为非压缩的颜色数据，例如YUV420P，RGB等等；压缩编码的音频数据输出成为非压缩的音频抽样数据，例如PCM数据。</p>
+<p><strong>视音频同步</strong>：就是根据解封装模块处理过程中获取到的参数信息，同步解码出来的视频和音频数据，并将视频音频数据送至系统的显卡和声卡播放出来。</p>
+<h2 id="u4E8C_u3001_AMR"><a href="#u4E8C_u3001_AMR" class="headerlink" title="二、 AMR"></a>二、 AMR</h2><p>AMR语音帧格式为帧头和语音数据组成。其结构为</p>
+<p>| 帧头 | 语音数据 |</p>
+<p>其中 帧头占一个字节，具体结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P</td>
+<td>FT</td>
+<td>FT</td>
+<td>FT</td>
+<td>FT</td>
+<td>Q</td>
+<td>P</td>
+<td>P</td>
+</tr>
+</tbody>
+</table>
+<p>其中: P = 0，Q为帧质量指示器，0表示坏帧。FT对应不同的编码，如下所示</p>
+<table>
+<thead>
+<tr>
+<th>规格</th>
+<th>FT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMR 4.75</td>
+<td>0000</td>
+</tr>
+<tr>
+<td>AMR 5.15</td>
+<td>0001</td>
+</tr>
+<tr>
+<td>AMR 5.9</td>
+<td>0010</td>
+</tr>
+<tr>
+<td>AMR 6.7</td>
+<td>0011</td>
+</tr>
+<tr>
+<td>AMR 7.4</td>
+<td>0100</td>
+</tr>
+<tr>
+<td>AMR 7.95</td>
+<td>0101</td>
+</tr>
+<tr>
+<td>AMR 10.2</td>
+<td>0110</td>
+</tr>
+<tr>
+<td>AMR 12.2</td>
+<td>0111</td>
+</tr>
+</tbody>
+</table>
+<p><img src="assets/4.bmp" alt=""></p>
+<h2 id="u4E09_u3001_WAV"><a href="#u4E09_u3001_WAV" class="headerlink" title="三、 WAV"></a>三、 WAV</h2><p><code>WAV</code>文件遵循RIFF规则，其内容以区块（<code>chunk</code>）为最小单位进行存储。<code>WAV</code>文件一般由3个区块组成：<code>RIFF chunk</code>、<code>Format chunk</code>和<code>Data chunk</code>。另外，文件中还可能包含一些可选的区块，如：<code>Fact chunk</code>、<code>Cue points chunk</code>、<code>Playlist chunk</code>、<code>Associated data list chunk</code>等。</p>
+<p><img src="assets/20160911090642999.gif" alt="wav格式图"></p>
+<ol>
+<li><p>RIFF chunk</p>
+<p>| 名称 | 偏移地址 | 字节数 | 端序 | 内容                |<br>| —- | ——– | —— | —- | ——————- |<br>| ID   | 0x00     | 4Byte  | 大端 | ‘RIFF’ (0x52494646) |<br>| Size | 0x04     | 4Byte  | 小端 | fileSize - 8        |<br>| Type | 0x08     | 4Byte  | 大端 | ‘WAVE’(0x57415645)  |</p>
+<ul>
+<li>以<code>&#39;RIFF&#39;</code>为标识</li>
+<li><code>Size</code>是整个文件的长度减去<code>ID</code>和<code>Size</code>的长度</li>
+<li><code>Type</code>是<code>WAVE</code>表示后面需要两个子块：<code>Format</code>区块和<code>Data</code>区块</li>
+</ul>
+</li>
+<li><p>FORMAT chunk</p>
+<p>| 名称          | 偏移地址 | 字节数 | 端序 | 内容                |<br>| ————- | ——– | —— | —- | ——————- |<br>| ID            | 0x00     | 4Byte  | 大端 | ‘fmt ‘ (0x666D7420) |<br>| Size          | 0x04     | 4Byte  | 小端 | 16                  |<br>| AudioFormat   | 0x08     | 2Byte  | 小端 | 音频格式            |<br>| NumChannels   | 0x0A     | 2Byte  | 小端 | 声道数              |<br>| SampleRate    | 0x0C     | 4Byte  | 小端 | 采样率              |<br>| ByteRate      | 0x10     | 4Byte  | 小端 | 每秒数据字节数      |<br>| BlockAlign    | 0x14     | 2Byte  | 小端 | 数据块对齐          |<br>| BitsPerSample | 0x16     | 2Byte  | 小端 | 采样位数            |</p>
+<ul>
+<li>以<code>&#39;fmt &#39;</code>为标识</li>
+<li><code>Size</code>表示该区块数据的长度（不包含<code>ID</code>和<code>Size</code>的长度）</li>
+<li><code>AudioFormat</code>表示<code>Data</code>区块存储的音频数据的格式，<code>PCM</code>音频数据的值为1</li>
+<li><code>NumChannels</code>表示音频数据的声道数，1：单声道，2：双声道</li>
+<li><code>SampleRate</code>表示音频数据的采样率</li>
+<li><code>ByteRate</code>每秒数据字节数 = SampleRate <em> NumChannels </em> BitsPerSample / 8</li>
+<li><code>BlockAlign</code>每个采样所需的字节数 = NumChannels * BitsPerSample / 8</li>
+<li><code>BitsPerSample</code>每个采样存储的bit数，8：8bit，16：16bit，32：32bit</li>
+</ul>
+</li>
+<li><p>DATA chunk</p>
+<p>| 名称 | 偏移地址 | 字节数 | 端序 | 内容                |<br>| —- | ——– | —— | —- | ——————- |<br>| ID   | 0x00     | 4Byte  | 大端 | ‘data’ (0x64617461) |<br>| Size | 0x04     | 4Byte  | 小端 | N                   |<br>| Data | 0x08     | NByte  | 小端 | 音频数据            |</p>
+<ul>
+<li>以<code>&#39;data&#39;</code>为标识</li>
+<li><code>Size</code>表示音频数据的长度，N = ByteRate * seconds</li>
+<li><code>Data</code>音频数据</li>
+</ul>
+</li>
+</ol>
+<h2 id="u56DB_u3001_AMR_u8F6CWAV"><a href="#u56DB_u3001_AMR_u8F6CWAV" class="headerlink" title="四、 AMR转WAV"></a>四、 AMR转WAV</h2><p>由于苹果在iOS在4.3以后的版本，取消了对AMR文件的硬解。因此，我们需要使用libopencore来将AMR文件转成苹果支持的WAV格式进行播放。</p>
+<p>参考资料：</p>
+<p><a href="https://blog.csdn.net/leixiaohua1020/article/details/18893769" target="_blank" rel="external">总结]视音频编解码技术零基础学习方法</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/音视频/">音视频</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-Category方法" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -1036,190 +1209,6 @@
 </ul>
 <h2 id="5-3_CADisplayLink"><a href="#5-3_CADisplayLink" class="headerlink" title="5.3 CADisplayLink"></a>5.3 <code>CADisplayLink</code></h2><p> <code>CADisplayLink</code>是CoreAnimation提供的另一个类似于<code>NSTimer</code>的类，它总是在屏幕完成一次更新之前启动。</p>
 <p>当使用<code>NSTimer</code>的时候，一旦有机会计时器就会开启，但是<code>CADisplayLink</code>却不一样：如果它丢失了帧，就会直接忽略它们，然后在下一次更新的时候接着运行。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Core-Animation/">Core Animation</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-iOS-Core-Animation-Advanced-Techniques阅读笔记（一）" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/07/20/iOS-Core-Animation-Advanced-Techniques阅读笔记（一）/" class="article-date">
-  	<time datetime="2018-07-20T04:15:51.000Z" itemprop="datePublished">2018-07-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/20/iOS-Core-Animation-Advanced-Techniques阅读笔记（一）/">iOS Core Animation Advanced Techniques阅读笔记（一）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<h1 id="u4E00_u3001_u56FE_u5C42_u6811"><a href="#u4E00_u3001_u56FE_u5C42_u6811" class="headerlink" title="一、图层树"></a>一、图层树</h1><p>Core Animation是一个复合引擎，它的职责就是尽可能快地组合屏幕上不同的可视内容，这个内容是被分解成独立的图层，存储在一个叫做图层树的体系之中。</p>
-<h2 id="1-1__u56FE_u5C42_u4E0E_u89C6_u56FE"><a href="#1-1__u56FE_u5C42_u4E0E_u89C6_u56FE" class="headerlink" title="1.1 图层与视图"></a>1.1 图层与视图</h2><p>在iOS当中，所有的视图都从一个叫做<code>UIVIew</code>的基类派生而来，<code>UIView</code>可以处理触摸事件，可以支持基于<em>Core Graphics</em>绘图，可以做仿射变换（例如旋转或者缩放），或者简单的类似于滑动或者渐变的动画。</p>
-<h2 id="1-2_CALayer"><a href="#1-2_CALayer" class="headerlink" title="1.2 CALayer"></a>1.2 CALayer</h2><p><code>CALayer</code>和<code>UIView</code>最大的不同是<code>CALayer</code>不处理用户的交互。<code>CALayer</code>不知晓具体的响应链，即使它提供了一些方法来判断是否一个触点在图层的范围之内。</p>
-<h2 id="1-3__u5E73_u884C_u7684_u5C42_u7EA7_u5173_u7CFB"><a href="#1-3__u5E73_u884C_u7684_u5C42_u7EA7_u5173_u7CFB" class="headerlink" title="1.3 平行的层级关系"></a>1.3 平行的层级关系</h2><p>每一个<code>UIview</code>都有一个<code>CALayer</code>实例的图层属性，也就是所谓的<em>backing layer</em>，视图的职责就是创建并管理这个图层，以确保当子视图在层级关系中添加或者被移除的时候，他们关联的图层也同样对应在层级关系树当中有相同的操作。</p>
-<p><code>CALayer</code>才是真正用来在屏幕上显示和做动画，<code>UIView</code>仅仅是对它的一个封装，提供了一些iOS类似于处理触摸的具体功能，以及Core Animation底层方法的高级接口。</p>
-<p>这个做的原因在于要做职责分离。</p>
-<p>在<strong>视图层级</strong>和<strong>图层树</strong>之外，还存在<strong>呈现树</strong>和<strong>渲染树</strong>。</p>
-<h2 id="1-4__u56FE_u5C42_u7684_u80FD_u529B"><a href="#1-4__u56FE_u5C42_u7684_u80FD_u529B" class="headerlink" title="1.4 图层的能力"></a>1.4 图层的能力</h2><ul>
-<li>阴影，圆角，带颜色的边框</li>
-<li>3D变换</li>
-<li>非矩形范围</li>
-<li>透明遮罩</li>
-<li>多级非线性动画</li>
-</ul>
-<h2 id="1-5__u4F7F_u7528_u56FE_u5C42"><a href="#1-5__u4F7F_u7528_u56FE_u5C42" class="headerlink" title="1.5 使用图层"></a>1.5 使用图层</h2><p>一个视图只有一个相关联的图层（自动创建），同时它也可以支持添加无数多个子图层。</p>
-<p>使用图层关联的视图而不是<code>CALayer</code>的好处在于，你能在使用所有<code>CALayer</code>底层特性的同时，也可以使用<code>UIView</code>的高级API（比如自动排版，布局和事件处理）。</p>
-<h1 id="u4E8C_u3001_u5BC4_u5BBF_u56FE_uFF08_u56FE_u5C42_u5305_u542B_u7684_u56FE_uFF09"><a href="#u4E8C_u3001_u5BC4_u5BBF_u56FE_uFF08_u56FE_u5C42_u5305_u542B_u7684_u56FE_uFF09" class="headerlink" title="二、寄宿图（图层包含的图）"></a>二、寄宿图（图层包含的图）</h1><h2 id="2-1_contents_u5C5E_u6027"><a href="#2-1_contents_u5C5E_u6027" class="headerlink" title="2.1 contents属性"></a>2.1 contents属性</h2><p>CALayer 有一个属性叫做contents，这个属性的类型被定义为id，意味着它可以是任何类型的对象。在这种情况下，你可以给contents属性赋任何值，你的app仍然能够编译通过。但是，在实践中，如果你给contents赋的不是CGImage，那么你得到的图层将是空白的。</p>
-<p><code>layer.contents = (__bridge id)image.CGImage;</code></p>
-<p><code>contents</code>这个奇怪的表现是由Mac OS的历史原因造成的。它之所以被定义为id类型，是因为在Mac OS系统上，这个属性对CGImage和NSImage类型的值都起作用。</p>
-<h2 id="2-2_contentGravity"><a href="#2-2_contentGravity" class="headerlink" title="2.2 contentGravity"></a>2.2 contentGravity</h2><p>CALayer与<code>contentMode</code>对应的属性叫做<code>contentsGravity</code>，但是它是一个NSString类型，而不是像对应的UIKit部分，那里面的值是枚举。<code>contentsGravity</code>可选的常量值有以下一些：</p>
-<ul>
-<li>kCAGravityCenter</li>
-<li>kCAGravityTop</li>
-<li>kCAGravityBottom</li>
-<li>kCAGravityLeft</li>
-<li>kCAGravityRight</li>
-<li>kCAGravityTopLeft</li>
-<li>kCAGravityTopRight</li>
-<li>kCAGravityBottomLeft</li>
-<li>kCAGravityBottomRight</li>
-<li>kCAGravityResize</li>
-<li>kCAGravityResizeAspect</li>
-<li>kCAGravityResizeAspectFill</li>
-</ul>
-<h2 id="2-3_contentsScale"><a href="#2-3_contentsScale" class="headerlink" title="2.3 contentsScale"></a>2.3 contentsScale</h2><p><code>contentsScale</code>属性定义了寄宿图的像素尺寸和视图大小的比例，默认情况下它是一个值为1.0的浮点数。</p>
-<p> CGImage没有拉伸的概念。当我们使用UIImage类去读取图片的时候，它读取了Retina版本的图片。但是当我们用CGImage来设置我们的图层的内容时，拉伸这个因素在转换的时候就丢失了。</p>
-<h2 id="2-4_maskToBounds"><a href="#2-4_maskToBounds" class="headerlink" title="2.4 maskToBounds"></a>2.4 maskToBounds</h2><p>CALayer与<code>clipsToBounds</code>对应的属性为<code>masksToBounds</code></p>
-<h2 id="2-5_contentsRect"><a href="#2-5_contentsRect" class="headerlink" title="2.5 contentsRect"></a>2.5 contentsRect</h2><p>CALayer的<code>contentsRect</code>属性允许我们在图层边框里显示寄宿图的一个子域。</p>
-<p><code>contentsRect</code>不是按点来计算的，它使用了<em>单位坐标</em>，单位坐标指定在0到1之间，是一个相对值。默认的<code>contentsRect</code>是{0, 0, 1, 1}，这意味着整个寄宿图默认都是可见的，如果我们指定一个小一点的矩形，图片就会被裁剪。</p>
-<p>iOS使用了以下的坐标系统：</p>
-<ul>
-<li>点 —— 在iOS和Mac OS中最常见的坐标体系。点就像是虚拟的像素，也被称作逻辑像素。在标准清晰度的设备上，一个点就是一个像素，但是在Retina设备上，一个点等于2*2个像素。iOS用点作为屏幕的坐标测算体系就是为了在Retina设备和普通设备上能有一致的视觉效果。</li>
-<li>像素 —— 物理像素坐标并不会用来屏幕布局，但是它们在处理图片时仍然是相关的。UIImage可以识别屏幕分辨，并以点为单位指定其大小。但是一些底层的图片表示如CGImage就会使用像素，所以你要清楚在Retina设备和普通设备上，它们表现出来了不同的大小。</li>
-<li>单位 —— 对于与图片大小或是图层边界相关的显示，单位坐标是一个方便的度量方式， 当大小改变的时候，也不需要再次调整。单位坐标在OpenGL这种纹理坐标系统中用得很多，Core Animation中也用到了单位坐标。</li>
-</ul>
-<h2 id="2-6_contentsCenter"><a href="#2-6_contentsCenter" class="headerlink" title="2.6 contentsCenter"></a>2.6 contentsCenter</h2><p><code>contentsCenter</code>其实是一个CGRect，它定义了图层中的可拉伸区域和一个固定的边框。 改变<code>contentsCenter</code>的值并不会影响到寄宿图的显示，除非这个图层的大小改变了，你才看得到效果。</p>
-<h2 id="2-7_Custome_Drawing"><a href="#2-7_Custome_Drawing" class="headerlink" title="2.7 Custome Drawing"></a>2.7 Custome Drawing</h2><p>给<code>contents</code>赋CGImage的值不是唯一的设置寄宿图的方法。我们也可以直接用Core Graphics直接绘制寄宿图。能够通过继承UIView并实现<code>-drawRect:</code>方法来自定义绘制。</p>
-<p>如果UIView检测到<code>-drawRect:</code> 方法被调用了，它就会为视图分配一个寄宿图，这个寄宿图的像素尺寸等于视图大小乘以 <code>contentsScale</code>的值。</p>
-<p>当视图在屏幕上出现的时候 <code>-drawRect:</code>方法就会被自动调用。虽然<code>-drawRect:</code>方法是一个UIView方法，事实上都是底层的CALayer安排了重绘工作和保存了因此产生的图片。</p>
-<p>需要注意的是：</p>
-<ul>
-<li>不同于UIView，当图层显示在屏幕上时，CALayer不会自动重绘它的内容。它把重绘的决定权交给了开发者。</li>
-<li>使用CALayerDelegate绘制寄宿图的时候，并没有对超出边界外的内容提供绘制支持。</li>
-</ul>
-<h1 id="u4E09_u3001_u56FE_u50CF_u51E0_u4F55_u5B66"><a href="#u4E09_u3001_u56FE_u50CF_u51E0_u4F55_u5B66" class="headerlink" title="三、图像几何学"></a>三、图像几何学</h1><h2 id="3-1__u5E03_u5C40"><a href="#3-1__u5E03_u5C40" class="headerlink" title="3.1 布局"></a>3.1 布局</h2><p>UIView有三个比较重要的布局属性：frame，bounds和center，CALayer对应地叫做frame，bounds和position。为了能清楚区分，图层用了“position”，视图用了“center”，但是他们都代表同样的值。</p>
-<p><code>frame</code>代表了图层的外部坐标（也就是在父图层上占据的空间），<code>bounds</code>是内部坐标（{0, 0}通常是图层的左上角），<code>center</code>和<code>position</code>都代表了相对于父图层<code>anchorPoint</code>所在的位置。</p>
-<p>视图的<code>frame</code>，<code>bounds</code>和<code>center</code>属性仅仅是<em>存取方法</em>，当操纵视图的<code>frame</code>，实际上是在改变位于视图下方<code>CALayer</code>的<code>frame</code>，不能够独立于图层之外改变视图的<code>frame</code>。</p>
-<p>对于视图或者图层来说，<code>frame</code>并不是一个非常清晰的属性，它其实是一个虚拟属性，是根据<code>bounds</code>，<code>position</code>和<code>transform</code>计算而来，所以当其中任何一个值发生改变，frame都会变化。相反，改变frame的值同样会影响到他们当中的值。</p>
-<p>记住当对图层做变换的时候，比如旋转或者缩放，frame实际上代表了覆盖在图层旋转之后的整个轴对齐的矩形区域，也就是说frame的宽高可能和bounds的宽高不再一致了（在旋转中，layer和view俩者bounds保持不变，frame改变）</p>
-<h2 id="3-2__u951A_u70B9"><a href="#3-2__u951A_u70B9" class="headerlink" title="3.2 锚点"></a>3.2 锚点</h2><p>图层的<code>anchorPoint</code>通过<code>position</code>来控制它的<code>frame</code>的位置，你可以认为<code>anchorPoint</code>是用来移动图层的<em>把柄</em>。</p>
-<p>默认来说，<code>anchorPoint</code>位于图层的中点，所以图层的将会以这个点为中心放置。<code>anchorPoint</code>属性并没有被<code>UIView</code>接口暴露出来，这也是视图的position属性被叫做“center”的原因。但是图层的<code>anchorPoint</code>可以被移动，比如你可以把它置于图层<code>frame</code>的左上角，于是图层的内容将会向右下角的<code>position</code>方向移动，而不是居中了。当CALayer的anchorPoint改变时，其frame随之改变，而position保存不变。</p>
-<h2 id="3-3__u7FFB_u8F6C_u7684_u51E0_u4F55_u7ED3_u6784"><a href="#3-3__u7FFB_u8F6C_u7684_u51E0_u4F55_u7ED3_u6784" class="headerlink" title="3.3 翻转的几何结构"></a>3.3 翻转的几何结构</h2><p>常规说来，在iOS上，一个图层的<code>position</code>位于父图层的左上角，但是在Mac OS上，通常是位于左下角。Core Animation可以通过<code>geometryFlipped</code>属性来适配这两种情况，它决定了一个图层的坐标是否相对于父图层垂直翻转，是一个<code>BOOL</code>类型。在iOS上通过设置它为<code>YES</code>意味着它的子图层将会被垂直翻转，也就是将会沿着底部排版而不是通常的顶部。</p>
-<h2 id="3-4_Z_u5750_u6807_u8F74"><a href="#3-4_Z_u5750_u6807_u8F74" class="headerlink" title="3.4 Z坐标轴"></a>3.4 Z坐标轴</h2><p>和<code>UIView</code>严格的二维坐标系不同，<code>CALayer</code>存在于一个三维空间当中。除了我们已经讨论过的<code>position</code>和<code>anchorPoint</code>属性之外，<code>CALayer</code>还有另外两个属性，<code>zPosition</code>和<code>anchorPointZ</code>，二者都是在Z轴上描述图层位置的浮点类型。</p>
-<p><code>zPosition</code>最实用的功能就是改变图层的<em>显示顺序</em>了。通常，图层是根据它们子图层的<code>sublayers</code>出现的顺序来类绘制的，这就是所谓的<strong>画家的算法</strong></p>
-<h2 id="3-5_Hit_Testing"><a href="#3-5_Hit_Testing" class="headerlink" title="3.5 Hit Testing"></a>3.5 Hit Testing</h2><p><code>CALayer</code>对响应链一无所知，所以它不能直接处理触摸事件或者手势。但是它有一系列的方法帮你处理事件：<code>-containsPoint:</code>和<code>-hitTest:</code>。</p>
-<p><code>-containsPoint:</code>接受一个在本图层坐标系下的<code>CGPoint</code>，如果这个点在图层<code>frame</code>范围内就返回<code>YES</code>。</p>
-<p><code>-hitTest:</code>方法同样接受一个<code>CGPoint</code>类型参数，而不是<code>BOOL</code>类型，它返回图层本身，或者包含这个坐标点的叶子节点图层。</p>
-<p><strong>注意</strong>：当调用图层的<code>-hitTest:</code>方法时，测算的顺序严格依赖于图层树当中的图层顺序（和UIView处理事件类似）。之前提到的<code>zPosition</code>属性可以明显改变屏幕上图层的顺序，但不能改变触摸事件被处理的顺序。</p>
-<h2 id="3-6__u81EA_u52A8_u5E03_u5C40"><a href="#3-6__u81EA_u52A8_u5E03_u5C40" class="headerlink" title="3.6 自动布局"></a>3.6 自动布局</h2><p>当使用视图的时候，可以充分利用<code>UIView</code>类接口暴露出来的<code>UIViewAutoresizingMask</code>和<code>NSLayoutConstraint</code>API，但如果想随意控制<code>CALayer</code>的布局，就需要手工操作。最简单的方法就是使用<code>CALayerDelegate</code>如下函数：</p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="pp">- <span class="params">(void)</span>layoutSublayersOfLayer:<span class="params">(<span class="variable">CALayer</span> *)</span>layer;</span></span><br></pre></td></tr></table></figure>
-<p>当图层的<code>bounds</code>发生改变，或者图层的<code>-setNeedsLayout</code>方法被调用的时候，这个函数将会被执行。这使得你可以手动地重新摆放或者重新调整子图层的大小，但是不能像<code>UIView</code>的<code>autoresizingMask</code>和<code>constraints</code>属性做到自适应屏幕旋转。</p>
-<h1 id="u56DB_u3001_u89C6_u89C9_u6548_u679C"><a href="#u56DB_u3001_u89C6_u89C9_u6548_u679C" class="headerlink" title="四、视觉效果"></a>四、视觉效果</h1><h2 id="4-1__u5706_u89D2"><a href="#4-1__u5706_u89D2" class="headerlink" title="4.1 圆角"></a>4.1 圆角</h2><p>CALayer有一个叫做<code>conrnerRadius</code>的属性控制着图层角的曲率。默认情况下，这个曲率值只影响背景颜色而不影响背景图片或是子图层。不过，如果把<code>masksToBounds</code>设置成YES的话，图层里面的所有东西都会被截取。</p>
-<h2 id="4-2__u56FE_u5C42_u8FB9_u6846"><a href="#4-2__u56FE_u5C42_u8FB9_u6846" class="headerlink" title="4.2 图层边框"></a>4.2 图层边框</h2><p>CALayer另外两个非常有用属性就是<code>borderWidth</code>和<code>borderColor</code>。二者共同定义了图层边的绘制样式。</p>
-<p><code>borderWidth</code>是以点为单位的定义边框粗细的浮点数，默认为0.<code>borderColor</code>定义了边框的颜色，默认为黑色。</p>
-<p><code>borderColor</code>是CGColorRef类型，而不是UIColor，所以它不是Cocoa的内置对象。</p>
-<p>边框是绘制在图层边界里面的，而且在所有子内容之前，也在子图层之前。边框是跟随图层的边界变化的。</p>
-<h2 id="4-3__u9634_u5F71"><a href="#4-3__u9634_u5F71" class="headerlink" title="4.3 阴影"></a>4.3 阴影</h2><p><code>shadowColor</code>属性控制着阴影的颜色，和<code>borderColor</code>和<code>backgroundColor</code>一样，它的类型也是<code>CGColorRef</code>。</p>
-<p><code>shadowOffset</code>属性控制着阴影的方向和距离。它是一个<code>CGSize</code>的值，宽度控制着阴影横向的位移，高度控制着纵向的位移。<code>shadowOffset</code>的默认值是 {0, -3}，意即阴影相对于Y轴有3个点的向上位移。</p>
-<p><code>shadowRadius</code>属性控制着阴影的<em>模糊度</em>，当它的值是0的时候，阴影就和视图一样有一个非常确定的边界线。</p>
-<h2 id="4-4__u9634_u5F71_u88C1_u526A"><a href="#4-4__u9634_u5F71_u88C1_u526A" class="headerlink" title="4.4 阴影裁剪"></a>4.4 阴影裁剪</h2><p>和图层边框不同，图层的阴影来源于其内容的确切形状，而不是仅仅是边界和<code>cornerRadius</code>。</p>
-<p>图层的阴影继承自内容的外形，而不是根据边界和角半径来确定。为了计算出阴影的形状，Core Animation会将寄宿图（包括子视图，如果有的话）考虑在内。</p>
-<p>当阴影和裁剪扯上关系的时候就有一个头疼的限制：阴影通常就是在Layer的边界之外，如果你开启了masksToBounds属性，所有从图层中突出来的内容都会被才剪掉。</p>
-<h2 id="4-5_shadowPath_u5C5E_u6027"><a href="#4-5_shadowPath_u5C5E_u6027" class="headerlink" title="4.5 shadowPath属性"></a>4.5 <code>shadowPath</code>属性</h2><p>如果你事先知道你的阴影形状会是什么样子的，你可以通过指定一个<code>shadowPath</code>来提高性能。<code>shadowPath</code>是一个<code>CGPathRef</code>类型（一个指向<code>CGPath</code>的指针）。<code>CGPath</code>是一个Core Graphics对象，用来指定任意的一个矢量图形。我们可以通过这个属性独立于图层形状之外指定阴影的形状。</p>
-<p>实时计算阴影非常消耗资源，可以使用<strong>shadowPath</strong>来提高性能。</p>
-<h2 id="4-6__u56FE_u5C42_u8499_u677F"><a href="#4-6__u56FE_u5C42_u8499_u677F" class="headerlink" title="4.6 图层蒙板"></a>4.6 图层蒙板</h2><p>CALayer有一个属性叫做<code>mask</code>。这个属性本身就是个CALayer类型，有和其他图层一样的绘制和布局属性。它类似于一个子图层，相对于父图层（即拥有该属性的图层）布局，但是它却不是一个普通的子图层。不同于那些绘制在父图层中的子图层，<code>mask</code>图层定义了父图层的部分可见区域。</p>
-<h2 id="4-7__u62C9_u4F38_u8FC7_u6EE4"><a href="#4-7__u62C9_u4F38_u8FC7_u6EE4" class="headerlink" title="4.7 拉伸过滤"></a>4.7 拉伸过滤</h2><p>当图片需要显示不同的大小的时候，有一种叫做<em>拉伸过滤</em>的算法就起到作用了。它作用于原图的像素上并根据需要生成新的像素显示在屏幕上。</p>
-<p><code>CALayer</code>为此提供了三种拉伸过滤方法:</p>
-<ul>
-<li>kCAFilterLinear 速度中等</li>
-<li>kCAFilterNearest 速度最快，适用于比较小的图或者是差异特别明显，极少斜线的大图</li>
-<li>kCAFilterTrilinear 速度最慢</li>
-</ul>
-<h2 id="4-8__u7EC4_u900F_u660E"><a href="#4-8__u7EC4_u900F_u660E" class="headerlink" title="4.8 组透明"></a>4.8 组透明</h2><p>UIView有一个叫做<code>alpha</code>的属性来确定视图的透明度。CALayer有一个等同的属性叫做<code>opacity</code>，这两个属性都是影响子层级的。</p>
-<p>整个图层树像一个整体一样的透明效果可以使用：</p>
-<ol>
-<li>设置Info.plist文件中的<code>UIViewGroupOpacity</code>为YES</li>
-<li>设置CALayer的shouldRasterize属性为YES</li>
-</ol>
-<h1 id="u4E94_u3001_u53D8_u6362"><a href="#u4E94_u3001_u53D8_u6362" class="headerlink" title="五、变换"></a>五、变换</h1><p><code>UIView</code>的<code>transform</code>属性是一个<code>CGAffineTransform</code>类型，用于在二维空间做旋转，缩放和平移。</p>
-<p>CGAffineTransform中的“仿射”的意思是无论变换矩阵用什么值，图层中平行的两条线在变换之后任然保持平行。</p>
-<p>UIView可以通过设置transform属性做变换，但实际上它只是封装了内部图层的变换。</p>
-<p>CALayer对应于UIView的transform属性叫做affineTransform。</p>
-<p>变换的顺序会影响最终的结果，也就是说旋转之后的平移和平移之后的旋转结果可能不同。</p>
-<p>CALayer有一个属性叫做sublayerTransform。它也是CATransform3D类型，但和对一个图层的变换不同，它影响到所有的子图层。</p>
-<h1 id="u516D_u3001_u4E13_u7528_u56FE_u5C42"><a href="#u516D_u3001_u4E13_u7528_u56FE_u5C42" class="headerlink" title="六、专用图层"></a>六、专用图层</h1><h2 id="6-1_CAShapeLayer"><a href="#6-1_CAShapeLayer" class="headerlink" title="6.1 CAShapeLayer"></a>6.1 CAShapeLayer</h2><p>CAShapeLayer是一个通过矢量图形而不是bitmap来绘制的图层子类。</p>
-<ul>
-<li>渲染快速。CAShapeLayer使用了硬件加速，绘制同一图形会比用Core Graphics快很多。</li>
-<li>高效使用内存。一个CAShapeLayer不需要像普通CALayer一样创建一个寄宿图形，所以无论有多大，都不会占用太多的内存。</li>
-<li>不会被图层边界剪裁掉。一个CAShapeLayer可以在边界之外绘制。你的图层路径不会像在使用Core Graphics的普通CALayer一样被剪裁掉（如我们在第二章所见）。</li>
-<li>不会出现像素化。当你给CAShapeLayer做3D变换时，它不像一个有寄宿图的普通图层一样变得像素化。</li>
-</ul>
-<h2 id="6-2_CATextLayer"><a href="#6-2_CATextLayer" class="headerlink" title="6.2 CATextLayer"></a>6.2 CATextLayer</h2><p>Core Animation提供了一个CALayer的子类CATextLayer，它以图层的形式包含了UILabel几乎所有的绘制特性，并且额外提供了一些新的特性。</p>
-<p>一个UIFont类型，而是一个CFTypeRef类型。这样可以根据你的具体需要来决定字体属性应该是用CGFontRef类型还是CTFontRef类型（Core Text字体）。</p>
-<p>每一个UIView都是寄宿在一个CALayer的示例上。这个图层是由视图自动创建和管理的，那我们可以用别的图层类型替代它么？一旦被创建，我们就无法代替这个图层了。但是如果我们继承了UIView，那我们就可以重写+layerClass方法使得在创建的时候能返回一个不同的图层子类。UIView会在初始化的时候调用+layerClass方法，然后用它的返回类型来创建宿主图层。</p>
-<p>把CATextLayer作为宿主图层的另一好处就是视图自动设置了contentsScale属性。</p>
-<h2 id="6-3_CATransformLayer"><a href="#6-3_CATransformLayer" class="headerlink" title="6.3 CATransformLayer"></a>6.3 CATransformLayer</h2><p>CATransformLayer不同于普通的CALayer，因为它不能显示它自己的内容。只有当存在了一个能作用域子图层的变换它才真正存在。CATransformLayer并不平面化它的子图层，所以它能够用于构造一个层级的3D结构</p>
-<h2 id="6-4_CAGradientLayer"><a href="#6-4_CAGradientLayer" class="headerlink" title="6.4 CAGradientLayer"></a>6.4 CAGradientLayer</h2><p>CAGradientLayer是用来生成两种或更多颜色平滑渐变的。用Core Graphics复制一个CAGradientLayer并将内容绘制到一个普通图层的寄宿图也是有可能的，但是CAGradientLayer的真正好处在于绘制使用了硬件加速。</p>
-<h2 id="6-5_CAReplicatorLayer"><a href="#6-5_CAReplicatorLayer" class="headerlink" title="6.5 CAReplicatorLayer"></a>6.5 CAReplicatorLayer</h2><p>CAReplicatorLayer的目的是为了高效生成许多相似的图层。它会绘制一个或多个图层的子图层，并在每个复制体上应用不同的变换。</p>
-<h2 id="6-6_CAScrollLayer"><a href="#6-6_CAScrollLayer" class="headerlink" title="6.6 CAScrollLayer"></a>6.6 CAScrollLayer</h2><p>CAScrollLayer有一个-scrollToPoint:方法，它自动适应bounds的原点以便图层内容出现在滑动的地方。注意，这就是它做的所有事情。前面提到过，Core Animation并不处理用户输入，所以CAScrollLayer并不负责将触摸事件转换为滑动事件，既不渲染滚动条，也不实现任何iOS指定行为例如滑动反弹（当视图滑动超多了它的边界的将会反弹回正确的地方）。</p>
-<h2 id="6-7_CATiledLayer"><a href="#6-7_CATiledLayer" class="headerlink" title="6.7 CATiledLayer"></a>6.7 CATiledLayer</h2><p>所有显示在屏幕上的图片最终都会被转化为OpenGL纹理，同时OpenGL有一个最大的纹理尺寸（通常是2048<em> 2048，或4096</em> 4096，这个取决于设备型号）。Core Animation强制用CPU处理图片而不是更快的GPU.</p>
-<p>CATiledLayer为载入大图造成的性能问题提供了一个解决方案：将大图分解成小片然后将他们单独按需载入。</p>
-<h2 id="6-8_CAEmitterLayer"><a href="#6-8_CAEmitterLayer" class="headerlink" title="6.8 CAEmitterLayer"></a>6.8 CAEmitterLayer</h2><p>在iOS 5中，苹果引入了一个新的CALayer子类叫做CAEmitterLayer。CAEmitterLayer是一个高性能的粒子引擎，被用来创建实时例子动画如：烟雾，火，雨等等这些效果。</p>
-<h2 id="6-9_CAEAGLLayer"><a href="#6-9_CAEAGLLayer" class="headerlink" title="6.9 CAEAGLLayer"></a>6.9 CAEAGLLayer</h2><p>当iOS要处理高性能图形绘制，必要时就是OpenGL。OpenGL提供了Core Animation的基础，它是底层的C接口，直接和iPhone，iPad的硬件通信，极少地抽象出来的方法。OpenGL没有对象或是图层的继承概念。它只是简单地处理三角形。OpenGL中所有东西都是3D空间中有颜色和纹理的三角形。</p>
-<p>在iOS 5中，苹果引入了一个新的框架叫做GLKit，它去掉了一些设置OpenGL的复杂性，提供了一个叫做CLKView的UIView的子类，帮你处理大部分的设置和绘制工作。前提是各种各样的OpenGL绘图缓冲的底层可配置项仍然需要你用CAEAGLLayer完成，它是CALayer的一个子类，用来显示任意的OpenGL图形。</p>
-<h2 id="6-10_AVPlayerLayer"><a href="#6-10_AVPlayerLayer" class="headerlink" title="6.10 AVPlayerLayer"></a>6.10 AVPlayerLayer</h2><p>AVPlayerLayer不是Core Animation框架的一部分（AV前缀看上去像），AVPlayerLayer是有别的框架（AVFoundation）提供的，它和Core Animation紧密地结合在一起，提供了一个CALayer子类来显示自定义的内容类型。</p>
-<p>AVPlayerLayer是用来在iOS上播放视频的。他是高级接口例如MPMoivePlayer的底层实现，提供了显示视频的底层控制。AVPlayerLayer的使用相当简单：你可以用+playerLayerWithPlayer:方法创建一个已经绑定了视频播放器的图层，或者你可以先创建一个图层，然后用player属性绑定一个AVPlayer实例。</p>
-<p>因为AVPlayerLayer是CALayer的子类，它继承了父类的所有特性。我们并不会受限于要在一个矩形中播放视频</p>
 
       
     </div>
