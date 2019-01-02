@@ -16,10 +16,10 @@
 <meta property="og:description" content="最近公司项目中，有个播放AMR音频的需求。把此次需求中调研的东西记录一下。
 一、视频播放器原理视音频技术主要包含以下几点：封装技术，视频压缩编码技术以及音频压缩编码技术。如果考虑到网络传输的话，还包括流媒体协议技术。
 视频播放器播放一个互联网上的视频文件，需要经过以下几个步骤：解协议，解封装，解码视音频，视音频同步。如果播放本地文件则不需要解协议，为以下几个步骤：解封装，解码视音频，视音频同步。他">
-<meta property="og:image" content="http://yoursite.com/assets/SouthEast-20181229162538366.jpeg">
-<meta property="og:image" content="http://yoursite.com/assets/4.bmp">
-<meta property="og:image" content="http://yoursite.com/assets/20160911090642999.gif">
-<meta property="og:updated_time" content="2018-12-29T09:05:11.520Z">
+<meta property="og:image" content="https://img-blog.csdn.net/20140201120523046?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://p-blog.csdn.net/images/p_blog_csdn_net/dinggo/4.bmp">
+<meta property="og:image" content="https://img-blog.csdn.net/20160911090642999">
+<meta property="og:updated_time" content="2019-01-02T07:04:12.027Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS播放AMR文件">
 <meta name="twitter:description" content="最近公司项目中，有个播放AMR音频的需求。把此次需求中调研的东西记录一下。
@@ -77,10 +77,10 @@
 					<div class="tips-arrow"></div>
 					<ul class="tips-inner">
 						<li>菜单</li>
-						<li>標籤</li>
+						<li>标签</li>
 						
 						
-						<li>關於</li>
+						<li>关于我</li>
 						
 					</ul>
 				</div>
@@ -221,7 +221,7 @@
         <p>最近公司项目中，有个播放AMR音频的需求。把此次需求中调研的东西记录一下。</p>
 <h2 id="u4E00_u3001_u89C6_u9891_u64AD_u653E_u5668_u539F_u7406"><a href="#u4E00_u3001_u89C6_u9891_u64AD_u653E_u5668_u539F_u7406" class="headerlink" title="一、视频播放器原理"></a>一、视频播放器原理</h2><p>视音频技术主要包含以下几点：封装技术，视频压缩编码技术以及音频压缩编码技术。如果考虑到网络传输的话，还包括流媒体协议技术。</p>
 <p>视频播放器播放一个互联网上的视频文件，需要经过以下几个步骤：解协议，解封装，解码视音频，视音频同步。如果播放本地文件则不需要解协议，为以下几个步骤：解封装，解码视音频，视音频同步。他们的过程如图所示。</p>
-<p><img src="assets/SouthEast-20181229162538366.jpeg" alt="视频播放流程图"></p>
+<p><img src="https://img-blog.csdn.net/20140201120523046?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="视频播放流程图"></p>
 <p><strong>解协议</strong>：就是将流媒体协议的数据，解析为标准的相应的封装格式数据。视音频在网络上传播的时候，常常采用各种流媒体协议，例如HTTP，RTMP，或是MMS等等。这些协议在传输视音频数据的同时，也会传输一些信令数据。这些信令数据包括对播放的控制（播放，暂停，停止），或者对网络状态的描述等。解协议的过程中会去除掉信令数据而只保留视音频数据。例如，采用RTMP协议传输的数据，经过解协议操作后，输出FLV格式的数据。</p>
 <p><strong>解封装</strong>：就是将输入的封装格式的数据，分离成为音频流压缩编码数据和视频流压缩编码数据。封装格式种类很多，例如MP4，MKV，RMVB，TS，FLV，AVI等等，它的作用就是将已经压缩编码的视频数据和音频数据按照一定的格式放到一起。例如，FLV格式的数据，经过解封装操作后，输出H.264编码的视频码流和AAC编码的音频码流。</p>
 <p><strong>解码</strong>：就是将视频/音频压缩编码数据，解码成为非压缩的视频/音频原始数据。音频的压缩编码标准包含AAC，MP3，AC-3等等，视频的压缩编码标准则包含H.264，MPEG2，VC-1等等。解码是整个系统中最重要也是最复杂的一个环节。通过解码，压缩编码的视频数据输出成为非压缩的颜色数据，例如YUV420P，RGB等等；压缩编码的音频数据输出成为非压缩的音频抽样数据，例如PCM数据。</p>
@@ -298,40 +298,186 @@
 </tr>
 </tbody>
 </table>
-<p><img src="assets/4.bmp" alt=""></p>
+<p><img src="https://p-blog.csdn.net/images/p_blog_csdn_net/dinggo/4.bmp" alt="AMR音频读取流程图"></p>
 <h2 id="u4E09_u3001_WAV"><a href="#u4E09_u3001_WAV" class="headerlink" title="三、 WAV"></a>三、 WAV</h2><p><code>WAV</code>文件遵循RIFF规则，其内容以区块（<code>chunk</code>）为最小单位进行存储。<code>WAV</code>文件一般由3个区块组成：<code>RIFF chunk</code>、<code>Format chunk</code>和<code>Data chunk</code>。另外，文件中还可能包含一些可选的区块，如：<code>Fact chunk</code>、<code>Cue points chunk</code>、<code>Playlist chunk</code>、<code>Associated data list chunk</code>等。</p>
-<p><img src="assets/20160911090642999.gif" alt="wav格式图"></p>
+<p><img src="https://img-blog.csdn.net/20160911090642999" alt="wav格式图"></p>
 <ol>
-<li><p>RIFF chunk</p>
-<p>| 名称 | 偏移地址 | 字节数 | 端序 | 内容                |<br>| —- | ——– | —— | —- | ——————- |<br>| ID   | 0x00     | 4Byte  | 大端 | ‘RIFF’ (0x52494646) |<br>| Size | 0x04     | 4Byte  | 小端 | fileSize - 8        |<br>| Type | 0x08     | 4Byte  | 大端 | ‘WAVE’(0x57415645)  |</p>
+<li>RIFF chunk</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>偏移地址</th>
+<th>字节数</th>
+<th>端序</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID</td>
+<td>0x00</td>
+<td>4Byte</td>
+<td>大端</td>
+<td>‘RIFF’ (0x52494646)</td>
+</tr>
+<tr>
+<td>Size</td>
+<td>0x04</td>
+<td>4Byte</td>
+<td>小端</td>
+<td>fileSize - 8</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>0x08</td>
+<td>4Byte</td>
+<td>大端</td>
+<td>‘WAVE’(0x57415645)</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>以<code>&#39;RIFF&#39;</code>为标识</li>
-<li><code>Size</code>是整个文件的长度减去<code>ID</code>和<code>Size</code>的长度</li>
-<li><code>Type</code>是<code>WAVE</code>表示后面需要两个子块：<code>Format</code>区块和<code>Data</code>区块</li>
-</ul>
+<li><p>以<code>&#39;RIFF&#39;</code>为标识</p>
 </li>
-<li><p>FORMAT chunk</p>
-<p>| 名称          | 偏移地址 | 字节数 | 端序 | 内容                |<br>| ————- | ——– | —— | —- | ——————- |<br>| ID            | 0x00     | 4Byte  | 大端 | ‘fmt ‘ (0x666D7420) |<br>| Size          | 0x04     | 4Byte  | 小端 | 16                  |<br>| AudioFormat   | 0x08     | 2Byte  | 小端 | 音频格式            |<br>| NumChannels   | 0x0A     | 2Byte  | 小端 | 声道数              |<br>| SampleRate    | 0x0C     | 4Byte  | 小端 | 采样率              |<br>| ByteRate      | 0x10     | 4Byte  | 小端 | 每秒数据字节数      |<br>| BlockAlign    | 0x14     | 2Byte  | 小端 | 数据块对齐          |<br>| BitsPerSample | 0x16     | 2Byte  | 小端 | 采样位数            |</p>
+<li><p><code>Size</code>是整个文件的长度减去<code>ID</code>和<code>Size</code>的长度</p>
+</li>
+<li><p><code>Type</code>是<code>WAVE</code>表示后面需要两个子块：<code>Format</code>区块和<code>Data</code>区块</p>
+</li>
+</ul>
+<ol>
+<li>FORMAT chunk</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>偏移地址</th>
+<th>字节数</th>
+<th>端序</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID</td>
+<td>0x00</td>
+<td>4Byte</td>
+<td>大端</td>
+<td>‘fmt ‘ (0x666D7420)</td>
+</tr>
+<tr>
+<td>Size</td>
+<td>0x04</td>
+<td>4Byte</td>
+<td>小端</td>
+<td>16</td>
+</tr>
+<tr>
+<td>AudioFormat</td>
+<td>0x08</td>
+<td>2Byte</td>
+<td>小端</td>
+<td>音频格式</td>
+</tr>
+<tr>
+<td>NumChannels</td>
+<td>0x0A</td>
+<td>2Byte</td>
+<td>小端</td>
+<td>声道数</td>
+</tr>
+<tr>
+<td>SampleRate</td>
+<td>0x0C</td>
+<td>4Byte</td>
+<td>小端</td>
+<td>采样率</td>
+</tr>
+<tr>
+<td>ByteRate</td>
+<td>0x10</td>
+<td>4Byte</td>
+<td>小端</td>
+<td>每秒数据字节数</td>
+</tr>
+<tr>
+<td>BlockAlign</td>
+<td>0x14</td>
+<td>2Byte</td>
+<td>小端</td>
+<td>数据块对齐</td>
+</tr>
+<tr>
+<td>BitsPerSample</td>
+<td>0x16</td>
+<td>2Byte</td>
+<td>小端</td>
+<td>采样位数</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>以<code>&#39;fmt &#39;</code>为标识</li>
-<li><code>Size</code>表示该区块数据的长度（不包含<code>ID</code>和<code>Size</code>的长度）</li>
-<li><code>AudioFormat</code>表示<code>Data</code>区块存储的音频数据的格式，<code>PCM</code>音频数据的值为1</li>
-<li><code>NumChannels</code>表示音频数据的声道数，1：单声道，2：双声道</li>
-<li><code>SampleRate</code>表示音频数据的采样率</li>
-<li><code>ByteRate</code>每秒数据字节数 = SampleRate <em> NumChannels </em> BitsPerSample / 8</li>
-<li><code>BlockAlign</code>每个采样所需的字节数 = NumChannels * BitsPerSample / 8</li>
-<li><code>BitsPerSample</code>每个采样存储的bit数，8：8bit，16：16bit，32：32bit</li>
-</ul>
+<li><p>以<code>&#39;fmt &#39;</code>为标识</p>
 </li>
-<li><p>DATA chunk</p>
-<p>| 名称 | 偏移地址 | 字节数 | 端序 | 内容                |<br>| —- | ——– | —— | —- | ——————- |<br>| ID   | 0x00     | 4Byte  | 大端 | ‘data’ (0x64617461) |<br>| Size | 0x04     | 4Byte  | 小端 | N                   |<br>| Data | 0x08     | NByte  | 小端 | 音频数据            |</p>
+<li><p><code>Size</code>表示该区块数据的长度（不包含<code>ID</code>和<code>Size</code>的长度）</p>
+</li>
+<li><p><code>AudioFormat</code>表示<code>Data</code>区块存储的音频数据的格式，<code>PCM</code>音频数据的值为1</p>
+</li>
+<li><p><code>NumChannels</code>表示音频数据的声道数，1：单声道，2：双声道</p>
+</li>
+<li><p><code>SampleRate</code>表示音频数据的采样率</p>
+</li>
+<li><p><code>ByteRate</code>每秒数据字节数 = SampleRate <em> NumChannels </em> BitsPerSample / 8</p>
+</li>
+<li><p><code>BlockAlign</code>每个采样所需的字节数 = NumChannels * BitsPerSample / 8</p>
+</li>
+<li><p><code>BitsPerSample</code>每个采样存储的bit数，8：8bit，16：16bit，32：32bit</p>
+</li>
+</ul>
+<ol>
+<li>DATA chunk</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>偏移地址</th>
+<th>字节数</th>
+<th>端序</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID</td>
+<td>0x00</td>
+<td>4Byte</td>
+<td>大端</td>
+<td>‘data’ (0x64617461)</td>
+</tr>
+<tr>
+<td>Size</td>
+<td>0x04</td>
+<td>4Byte</td>
+<td>小端</td>
+<td>N</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>0x08</td>
+<td>NByte</td>
+<td>小端</td>
+<td>音频数据</td>
+</tr>
+</tbody>
+</table>
 <ul>
 <li>以<code>&#39;data&#39;</code>为标识</li>
 <li><code>Size</code>表示音频数据的长度，N = ByteRate * seconds</li>
 <li><code>Data</code>音频数据</li>
 </ul>
-</li>
-</ol>
 <h2 id="u56DB_u3001_AMR_u8F6CWAV"><a href="#u56DB_u3001_AMR_u8F6CWAV" class="headerlink" title="四、 AMR转WAV"></a>四、 AMR转WAV</h2><p>由于苹果在iOS在4.3以后的版本，取消了对AMR文件的硬解。因此，我们需要使用libopencore来将AMR文件转成苹果支持的WAV格式进行播放。</p>
 <p>参考资料：</p>
 <p><a href="https://blog.csdn.net/leixiaohua1020/article/details/18893769" target="_blank" rel="external">总结]视音频编解码技术零基础学习方法</a></p>
@@ -406,7 +552,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2018 Daniel Young
+    		&copy; 2019 Daniel Young
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
