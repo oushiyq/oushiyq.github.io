@@ -200,9 +200,30 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>最近公司项目中，有个播放AMR音频的需求。把此次需求中调研的东西记录一下。</p>
+<h2 id="u57FA_u7840_u77E5_u8BC6"><a href="#u57FA_u7840_u77E5_u8BC6" class="headerlink" title="基础知识"></a>基础知识</h2><h4 id="u97F3_u9891_u538B_u7F29_3A"><a href="#u97F3_u9891_u538B_u7F29_3A" class="headerlink" title="音频压缩:"></a>音频压缩:</h4><p>1、音频文件的采样率一般在40~50KHZ </p>
+<p>2、对声音进行采样、量化的过程被称为脉冲编码调制，简称PCM。因为PCM是原始数据，所以体积庞大，所以后续有了多种不同的方式对音频数据进行压缩，无损压缩（ALAC、APE、FLAC）和有损压缩（MP3、AAC、OGG、WMA）。大部分的音频格式为MP3。 </p>
+<p>3、码率：压缩质量，现在的码率有128kbit/s,160kbit/s,,320kbit/s等，值越高，声音质量越高。MP3一般编码有两种分别是固定码率(Constan bitrate,CBR)和可变码率(Variable bitrate,VBR)。 </p>
+<p>4、MP3格式中数据一般由两部分组成： (1).ID3，用来存储歌名、演唱者、专辑、音轨数等。 (2).音频数据。部分以帧为单位存储 ￼</p>
+<h4 id="u97F3_u9891_u64AD_u653E_u6D41_u7A0B_28_u4EE5MP3_u4E3A_u4F8B_29_uFF1A"><a href="#u97F3_u9891_u64AD_u653E_u6D41_u7A0B_28_u4EE5MP3_u4E3A_u4F8B_29_uFF1A" class="headerlink" title="音频播放流程(以MP3为例)："></a>音频播放流程(以MP3为例)：</h4><p>1、读取MP3文件 </p>
+<p>2、解析采样率、码率、时长等信息，分离MP3中的音频帧 </p>
+<p>3、对分离出来音频帧解码得到PCM数据 </p>
+<p>4、对PCM数据进行音效处理（均衡器、混响器等）</p>
+<p> 5、把PCM数据解码成音频信号 </p>
+<p>6、把音频信号交给硬件播放</p>
+<p> 7、重复1-6直到播放完成</p>
+<p><img src="http://msching.github.io/images/iOS-audio/api-architectural-layers.png" alt=""></p>
+<p> · Audio File Services:读写音频数据，可以完成播放流程的第2步</p>
+<p> · Audio File Stream Services:对音频解码，可以完成播放流程的第2步</p>
+<p> · Audio Converter services:音频数据转换，可以完成播放流程的第3步</p>
+<p> · Audio Processing Graph Services:音效处理模块，可以完成播放流程的第4步 </p>
+<p> · Audio Unit Services:播放音频数据，可以完成播放流程的第5、6步 </p>
+<p> · Extended Audio File Services: Audio File Services和Audio Converter services的结合体 </p>
+<p> · AVAudioPlayer/AVPlayer(AVFoundation)：高级接口，可以完成整个播放流程（包括本地文件和网络流播放，第4步除外）</p>
+<p> · Audio Queue Services：告诫接口，可进行录音和播放，可以完成播放流程的第3、5、6步 </p>
+<p> · OpenAL：用于游戏音频播放</p>
+<p>如果你的app需要对音频进行流播放并且同时存储，那么AudioFileStreamer加AudioQueue能够帮到你，你可以先把音频数据下载到本地，一边下载一边用NSFileHandler等接口读取本地音频文件并交给AudioFileStreamer或者AudioFile解析分离音频帧，分离出来的音频帧可以送给AudioQueue进行解码和播放。如果是本地文件直接读取文件解析即可。（这两个都是比较直接的做法，这类需求也可以用AVFoundation+本地server的方式实现，AVAudioPlayer会把请求发送给本地server，由本地server转发出去，获取数据后在本地server中存储并转送给AVAudioPlayer。另一个比较trick的做法是先把音频下载到文件中，在下载到一定量的数据后把文件路径给AVAudioPlayer播放，当然这种做法在音频seek后就会有问题了。）</p>
 <h2 id="u4E00_u3001_u89C6_u9891_u64AD_u653E_u5668_u539F_u7406"><a href="#u4E00_u3001_u89C6_u9891_u64AD_u653E_u5668_u539F_u7406" class="headerlink" title="一、视频播放器原理"></a>一、视频播放器原理</h2><p>视音频技术主要包含以下几点：封装技术，视频压缩编码技术以及音频压缩编码技术。如果考虑到网络传输的话，还包括流媒体协议技术。</p>
-<p>视频播放器播放一个互联网上的视频文件，需要经过以下几个步骤：解协议，解封装，解码视音频，视音频同步。如果播放本地文件则不需要解协议，为以下几个步骤：解封装，解码视音频，视音频同步。他们的过程如图所示。</p>
-<p><img src="https://img-blog.csdn.net/20140201120523046?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGVpeGlhb2h1YTEwMjA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="视频播放流程图"></p>
+<p>视频播放器播放一个互联网上的视频文件，需要经过以下几个步骤：解协议，解封装，解码视音频，视音频同步。如果播放本地文件则不需要解协议，为以下几个步骤：解封装，解码视音频，视音频同步。</p>
 <p><strong>解协议</strong>：就是将流媒体协议的数据，解析为标准的相应的封装格式数据。视音频在网络上传播的时候，常常采用各种流媒体协议，例如HTTP，RTMP，或是MMS等等。这些协议在传输视音频数据的同时，也会传输一些信令数据。这些信令数据包括对播放的控制（播放，暂停，停止），或者对网络状态的描述等。解协议的过程中会去除掉信令数据而只保留视音频数据。例如，采用RTMP协议传输的数据，经过解协议操作后，输出FLV格式的数据。</p>
 <p><strong>解封装</strong>：就是将输入的封装格式的数据，分离成为音频流压缩编码数据和视频流压缩编码数据。封装格式种类很多，例如MP4，MKV，RMVB，TS，FLV，AVI等等，它的作用就是将已经压缩编码的视频数据和音频数据按照一定的格式放到一起。例如，FLV格式的数据，经过解封装操作后，输出H.264编码的视频码流和AAC编码的音频码流。</p>
 <p><strong>解码</strong>：就是将视频/音频压缩编码数据，解码成为非压缩的视频/音频原始数据。音频的压缩编码标准包含AAC，MP3，AC-3等等，视频的压缩编码标准则包含H.264，MPEG2，VC-1等等。解码是整个系统中最重要也是最复杂的一个环节。通过解码，压缩编码的视频数据输出成为非压缩的颜色数据，例如YUV420P，RGB等等；压缩编码的音频数据输出成为非压缩的音频抽样数据，例如PCM数据。</p>
@@ -279,7 +300,6 @@
 </tr>
 </tbody>
 </table>
-<p><img src="https://p-blog.csdn.net/images/p_blog_csdn_net/dinggo/4.bmp" alt="AMR音频读取流程图"></p>
 <h2 id="u4E09_u3001_WAV"><a href="#u4E09_u3001_WAV" class="headerlink" title="三、 WAV"></a>三、 WAV</h2><p><code>WAV</code>文件遵循RIFF规则，其内容以区块（<code>chunk</code>）为最小单位进行存储。<code>WAV</code>文件一般由3个区块组成：<code>RIFF chunk</code>、<code>Format chunk</code>和<code>Data chunk</code>。另外，文件中还可能包含一些可选的区块，如：<code>Fact chunk</code>、<code>Cue points chunk</code>、<code>Playlist chunk</code>、<code>Associated data list chunk</code>等。</p>
 <p><img src="https://img-blog.csdn.net/20160911090642999" alt="wav格式图"></p>
 <ol>
